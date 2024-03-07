@@ -1,92 +1,113 @@
-# PPO
+# ППО
+
+## Название проекта
+Eschool
+
+## Краткое описание идеи проекта
+Сайт для онлайн образования с возможностью создания собственных учебных программ или курсов.
+
+Предоставить каждому пользователю возможность покупать и проходить курсы различной тематики. 
+Также у каждого пользователя должна быть возможность создать собственную школу и образовательную программу 
+или присоединиться к уже существующей школе в качестве преподавателя или составителя курса.
+
+По прохождению курса пользователь должен иметь возможность получить сертификат о прохождении обучения, 
+включающий подробное описание его успеваемости и итоговую оценку.
+
+## Краткое описание предметной области
+
+Предметная область - онлайн образование.
+
+Онлайн обучение - образовательный процесс с применением совокупности телекоммуникационных технологий, 
+имеющих целью предоставление возможности обучаемым освоить основной объём требуемой им 
+информации без непосредственного контакта обучаемых и преподавателей в ходе процесса обучения.
+
+Онлайн школа предоставляет возможность получать как теоретические знания, так и практические 
+путем прохождения тестирования после завершения урока. В рамках школы могут быть реализованы нескольких курсов. 
+
+## Анализ аналогичных решений по 3 критериям
+
+| Решение          | Подробный отчет об обучении | Наличие теории и практики | Нагруженный интерфейс |
+|------------------|-----------------------------|---------------------------|-----------------------|
+| Eschool          | +                           | +                         | -                     |
+| Stepik           | -                           | +                         | +                     |
+| Coursera         | +                           | +                         | +                     |
+| Yandex practicum | -                           | -                         | -                     |
+
+## Актуальность
+
+Онлайн образовательные платформы для создания курсов являются актуальными, 
+предоставляя современным обучающимся возможность получить качественное образование, 
+а преподавателям – эффективный инструмент для создания и распространения образовательного контента.
+
+Онлайн обучение позволяет избежать затрат на поездки, проживание и другие расходы, связанные 
+с традиционными формами образования. Это делает обучение более доступным и экономически эффективным.
+Онлайн платформы позволяют преодолеть географические и социальные барьеры, 
+предоставляя возможность обучаться из любой точки мира.
 
 
+## Описание ролей
+**Гость** - неавторизованный пользователь, который может посмотривать информацию о курсе, 
+авторизоваться, зарегистрироваться
 
-## Getting started
+**Студент** - авторизованный, может посмотреть курсы, проходить, оплачивать их, 
+по завершении курса получать сертификат/отчет об успеваемости и оставлять отзывы, 
+а также стать преподавателем.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+**Преподаватель** - авторизованный, может создать собственную школу и курсы в ней, 
+а также присоединиться к существующей школе в качестве ментора/преподавателя, имеет отзывы о созданных курсах.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Use-Case диаграмма
 
-## Add your files
+![Use-case](docs/images/usecase.png)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## ER диаграмма
 
-```
-cd existing_repo
-git remote add origin https://git.iu7.bmstu.ru/shpa21u524/ppo.git
-git branch -M main
-git push -uf origin main
-```
+![ER](docs/images/er.png)
 
-## Integrate with your tools
+## Сложные сценарии
 
-- [ ] [Set up project integrations](https://git.iu7.bmstu.ru/shpa21u524/ppo/-/settings/integrations)
+#### Формирование сертификата о пройденном курсе
 
-## Collaborate with your team
+Происходит анализ статистики прохождения курса студентом:
+* аггрегируется информация о пройденных тестах;
+* анализируется количество пройденных теоретических блоков;
+* учитывается общее время прохождения курса;
+* проверяется, что курс начат и окончен в поставленные сроки;
+* в формировании общей оценки учитывается заявленная сложность курса (для начинающих/продвинутых);
+* формируется общая оценка в баллах по шкале от 1 до 100;
+* на основании проведенной аналитики формируется сертификат. 
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+#### Аутентификация пользователей при входе
+1. Пользователь вводит логин и пароль;
+2. Проводится идентификация пользователся по переданным данным;
+3. Создается пара JWT токенов - access токен и refresh токен;
+4. Создается новая сессия;
+5. Сессия помещается в хранилище сессий;
+6. Пользователю возвращется access и refresh токены.
 
-## Test and Deploy
+## Пользовательские сценарии
 
-Use the built-in continuous integration in GitLab.
+**Гость** может:
+- просмотривать информацию о курсах;
+- пройти аутентификацию (ввести логин и пароль учетной записи);
+- зарегистрироваться.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+После авторизации гость становится студентом, то есть авторищованным пользователем системы.
 
-***
+**Студент** может:
+- просмотривать информацию о курсах;
+- покупать курсы и проходить их;
+- по прохождении курса получать сертификат с подробным описанием успеваемости;
+- стать преподавателем в существующей школе или основать свою школу;
+- оставлять отзывы о пройденных курсах.
 
-# Editing this README
+После заявки на становление преподавателем.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+**Преподаватель** может:
+- составить свой курс;
+- редактировать/модерировать существующий курс в другой школе;
+- просматривать статистику об успеваемости студентов собственного курса.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## BPMN-диаграмма
 
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+![BPMN](docs/images/bpmn.png)
