@@ -7,6 +7,11 @@ build:
 run: build
 	docker-compose up app redis postgres
 
+migrate:
+	# if "error: file does not exist" was occurred,
+    # it means that data is up to date
+	docker-compose up migrate
+
 clean:
 	rm -rf .bin .data
 

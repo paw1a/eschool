@@ -12,10 +12,29 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
       POSTGRES_DB: eschool
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - backend
+
+  migrate:
+    image: migrate/migrate
+    container_name: 'migrate'
+    volumes:
+      - ./migrations:/migrations
+    command: ["-path", "/migrations", "-database",
+              "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable",
+              "up", "2"]
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - backend
 
@@ -45,8 +64,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "8080:8080"
     networks:
@@ -54,4 +75,5 @@ services:
 
 networks:
   backend:
+    name: "backend"
     driver: bridge
