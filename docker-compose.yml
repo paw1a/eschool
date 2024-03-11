@@ -3,6 +3,9 @@ version: '3.9'
 services:
   postgres:
     image: postgres
+    container_name: 'postgres'
+    logging:
+      driver: none
     restart: always
     shm_size: 128mb
     environment:
@@ -12,13 +15,43 @@ services:
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
+    networks:
+      - backend
 
   redis:
     image: redis
-    command: redis-server
+    container_name: 'redis'
+    command: redis-server --save 60 1 --loglevel warning
+    logging:
+      driver: none
     volumes:
       - ./.data/redis:/var/lib/redis
       - ./.data/redis-config:/usr/local/etc/redis/redis.conf
     ports:
-      - 6379:6379
+      - "6379:6379"
+    networks:
+      - backend
+
+  app:
+    image: 'app'
+    container_name: 'app'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
