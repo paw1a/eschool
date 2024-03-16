@@ -1,6 +1,8 @@
 package main
 
-import "github.com/paw1a/eschool/internal/app"
+import (
+	"github.com/paw1a/eschool/internal/app"
+)
 
 // @title        Eschool API
 // @version      1.0

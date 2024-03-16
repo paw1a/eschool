@@ -1,12 +1,11 @@
 package postgres
 
 import (
-	"context"
 	"fmt"
-	"github.com/pkg/errors"
+	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 	"time"
-
-	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type Config struct {
@@ -18,16 +17,12 @@ type Config struct {
 }
 
 const (
-	maxConn           = 50
-	healthCheckPeriod = 1 * time.Minute
-	maxConnIdleTime   = 1 * time.Minute
-	maxConnLifetime   = 3 * time.Minute
-	minConns          = 10
-	lazyConnect       = false
+	maxConn         = 100
+	maxConnIdleTime = 1 * time.Minute
+	maxConnLifetime = 3 * time.Minute
 )
 
-func NewPgxPool(cfg *Config) (*pgxpool.Pool, error) {
-	ctx := context.Background()
+func NewPostgresDB(cfg *Config) (*sqlx.DB, error) {
 	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s",
 		cfg.Host,
 		cfg.Port,
@@ -36,27 +31,21 @@ func NewPgxPool(cfg *Config) (*pgxpool.Pool, error) {
 		cfg.Password,
 	)
 
-	poolCfg, err := pgxpool.ParseConfig(connectionString)
+	db, err := sqlx.Connect("pgx", connectionString)
 	if err != nil {
+		log.Errorf("failed to connect postgres db: %s", connectionString)
 		return nil, err
 	}
 
-	poolCfg.MaxConns = maxConn
-	poolCfg.HealthCheckPeriod = healthCheckPeriod
-	poolCfg.MaxConnIdleTime = maxConnIdleTime
-	poolCfg.MaxConnLifetime = maxConnLifetime
-	poolCfg.MinConns = minConns
-	poolCfg.LazyConnect = lazyConnect
+	db.SetMaxOpenConns(maxConn)
+	db.SetConnMaxLifetime(maxConnLifetime)
+	db.SetConnMaxIdleTime(maxConnIdleTime)
 
-	connPool, err := pgxpool.ConnectConfig(ctx, poolCfg)
+	err = db.Ping()
 	if err != nil {
-		return nil, errors.Wrap(err, "pgx.ConnectConfig")
+		log.Errorf("failed to ping postgres db: %s", connectionString)
+		return nil, err
 	}
 
-	err = connPool.Ping(ctx)
-	if err != nil {
-		return nil, errors.Wrap(err, "pgx.Ping")
-	}
-
-	return connPool, nil
+	return db, nil
 }

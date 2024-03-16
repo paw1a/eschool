@@ -1,14 +1,11 @@
 package v1
 
 import (
-	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/paw1a/eschool/internal/domain"
 	"github.com/paw1a/eschool/internal/domain/dto"
 	"github.com/paw1a/eschool/pkg/auth"
-	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 )
 
@@ -34,11 +31,7 @@ func (h *Handler) userSignIn(context *gin.Context) {
 
 	user, err := h.userService.FindByCredentials(context, signInDTO)
 	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			unauthorizedResponse(context, "invalid user email or password")
-		} else {
-			internalErrorResponse(context, err)
-		}
+		unauthorizedResponse(context, "invalid user email or password")
 		return
 	}
 
@@ -82,22 +75,19 @@ func (h *Handler) userSignUp(context *gin.Context) {
 
 	user, err := h.userService.Create(context, dto.CreateUserDTO{
 		Name:     signUpDTO.Name,
+		Surname:  signUpDTO.Surname,
 		Email:    signUpDTO.Email,
 		Password: signUpDTO.Password,
 	})
 	if err != nil {
-		if mongo.IsDuplicateKeyError(err) {
-			badRequestResponse(context,
-				fmt.Sprintf("user with email %s already exists", signUpDTO.Email), err)
-		} else {
-			internalErrorResponse(context, err)
-		}
+		internalErrorResponse(context, err)
 		return
 	}
 
 	createdResponse(context, domain.UserInfo{
-		Name:  user.Name,
-		Email: user.Email,
+		Name:    user.Name,
+		Surname: user.Surname,
+		Email:   user.Email,
 	})
 }
 
@@ -140,8 +130,7 @@ func (h *Handler) userLogout(context *gin.Context) {
 		return
 	}
 
-	context.SetCookie("refreshToken", "",
-		-1, "/", h.config.Server.Host, false, false)
+	context.SetCookie("refreshToken", "", -1, "/", h.config.Server.Host, false, false)
 
 	successResponse(context, nil)
 }

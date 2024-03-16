@@ -73,6 +73,32 @@ services:
     networks:
       - backend
 
+  debug:
+    image: 'debug'
+    container_name: 'debug'
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "8080:8080"
+      - "40000:40000"
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - backend
+
 networks:
   backend:
     name: "backend"

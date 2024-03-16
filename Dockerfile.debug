@@ -1,0 +1,12 @@
+FROM golang:1.19 AS build-env
+# Build Delve
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+FROM debian:buster
+
+EXPOSE 40000 8080
+
+WORKDIR /app
+COPY --from=build-env /go/bin/dlv /
+
+CMD ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/app/app"]

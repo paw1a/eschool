@@ -2,10 +2,16 @@ include .env
 export
 
 build:
-	go mod download && CGO_ENABLED=0 GOOS=linux go build -o ./.bin/app ./cmd/app/main.go
+	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/app/main.go
 
-run: build
-	docker-compose up app redis postgres
+run: build storage
+	docker-compose up app
+
+debug: build storage
+	docker-compose up debug
+
+storage:
+	docker-compose up redis postgres
 
 migrate:
 	# if "error: file does not exist" was occurred,

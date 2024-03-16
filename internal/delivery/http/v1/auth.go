@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/paw1a/eschool/pkg/auth"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"strings"
 )
@@ -26,13 +25,13 @@ func extractAuthToken(context *gin.Context) (string, error) {
 		return "", errors.New("token is empty")
 	}
 
+	log.Printf("token = %s", headerParts[1])
+
 	return headerParts[1], nil
 }
 
 func (h *Handler) refreshToken(context *gin.Context) {
 	var input auth.RefreshInput
-
-	log.Infof("%v", context.Request.Header)
 
 	err := context.BindJSON(&input)
 	if err != nil {
@@ -87,26 +86,21 @@ func (h *Handler) verifyToken(context *gin.Context, idName string) {
 	context.Set(idName, id)
 }
 
-func (h *Handler) extractIdFromAuthHeader(context *gin.Context, idName string) (primitive.ObjectID, error) {
+func (h *Handler) extractIdFromAuthHeader(context *gin.Context, idName string) (int64, error) {
 	tokenString, err := extractAuthToken(context)
 	if err != nil {
-		return primitive.ObjectID{}, err
+		return 0, err
 	}
 
 	tokenClaims, err := h.tokenProvider.VerifyToken(tokenString)
 	if err != nil {
-		return primitive.ObjectID{}, err
+		return 0, err
 	}
 
-	idHex, ok := tokenClaims[idName]
+	id, ok := tokenClaims[idName]
 	if !ok {
-		return primitive.ObjectID{}, fmt.Errorf("failed to extract %s from auth header", idName)
+		return 0, fmt.Errorf("failed to extract %s from auth header", idName)
 	}
 
-	id, err := primitive.ObjectIDFromHex(idHex.(string))
-	if err != nil {
-		return primitive.ObjectID{}, fmt.Errorf("failed to convert %s to objectId", idHex)
-	}
-
-	return id, nil
+	return id.(int64), nil
 }

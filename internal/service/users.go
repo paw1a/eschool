@@ -36,6 +36,7 @@ func (u *UsersService) FindUserInfo(ctx context.Context, userID int64) (domain.U
 func (u *UsersService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error) {
 	return u.repo.Create(ctx, domain.User{
 		Name:     userDTO.Name,
+		Surname:  userDTO.Surname,
 		Email:    userDTO.Email,
 		Password: userDTO.Password,
 	})

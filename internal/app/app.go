@@ -28,7 +28,7 @@ func Run() {
 			NewGinRouter,
 			delivery.NewHandler,
 			v1.NewHandler,
-			postgres.NewPgxPool,
+			postgres.NewPostgresDB,
 			redis.NewClient,
 			fx.Annotate(
 				auth.NewTokenProvider,

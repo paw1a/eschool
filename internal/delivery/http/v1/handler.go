@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/paw1a/eschool/internal/config"
@@ -67,5 +68,13 @@ func LoggerMiddleware() gin.HandlerFunc {
 }
 
 func getIdFromRequestContext(context *gin.Context, paramName string) (int64, error) {
-	return 0, nil
+	id, ok := context.Get(paramName)
+	if !ok {
+		return 0, errors.New("not authenticated")
+	}
+	tempID, ok := id.(float64)
+	if !ok {
+		return 0, errors.New("not authenticated")
+	}
+	return int64(tempID), nil
 }
