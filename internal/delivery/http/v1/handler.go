@@ -39,6 +39,7 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 	v1 := api.Group("/v1")
 	v1.Use(LoggerMiddleware())
 	{
+		h.initAuthRoutes(v1)
 		h.initUsersRoutes(v1)
 	}
 }
