@@ -2,8 +2,8 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/config"
-	v1 "github.com/paw1a/eschool/internal/delivery/http/v1"
+	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
+	"github.com/paw1a/eschool/internal/app/config"
 )
 
 type Handler struct {

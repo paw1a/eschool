@@ -1,12 +1,12 @@
-package repository
+package port
 
 import (
 	"context"
-	"github.com/paw1a/eschool/internal/domain"
-	"github.com/paw1a/eschool/internal/domain/dto"
+	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/domain/dto"
 )
 
-type Users interface {
+type IUserRepository interface {
 	FindAll(ctx context.Context) ([]domain.User, error)
 	FindByID(ctx context.Context, userID int64) (domain.User, error)
 	FindByCredentials(ctx context.Context, email string, password string) (domain.User, error)

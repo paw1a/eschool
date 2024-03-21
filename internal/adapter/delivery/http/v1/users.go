@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/domain"
+	"github.com/paw1a/eschool/internal/core/domain"
 	"net/http"
 )
 

@@ -1,12 +1,12 @@
 package app
 
 import (
-	"github.com/paw1a/eschool/internal/config"
-	delivery "github.com/paw1a/eschool/internal/delivery/http"
-	v1 "github.com/paw1a/eschool/internal/delivery/http/v1"
-	"github.com/paw1a/eschool/internal/repository"
-	pgRepo "github.com/paw1a/eschool/internal/repository/postgres"
-	"github.com/paw1a/eschool/internal/service"
+	delivery "github.com/paw1a/eschool/internal/adapter/delivery/http"
+	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
+	pgRepo "github.com/paw1a/eschool/internal/adapter/repository/postgres"
+	"github.com/paw1a/eschool/internal/app/config"
+	"github.com/paw1a/eschool/internal/core/port"
+	"github.com/paw1a/eschool/internal/core/service"
 	"github.com/paw1a/eschool/pkg/auth"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
@@ -36,11 +36,11 @@ func Run() {
 			),
 			fx.Annotate(
 				pgRepo.NewUsersRepo,
-				fx.As(new(repository.Users)),
+				fx.As(new(port.IUserRepository)),
 			),
 			fx.Annotate(
-				service.NewUsersService,
-				fx.As(new(service.Users)),
+				service.NewUserService,
+				fx.As(new(port.IUserService)),
 			),
 		),
 		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT),

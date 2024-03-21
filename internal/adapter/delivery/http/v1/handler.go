@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/config"
-	"github.com/paw1a/eschool/internal/service"
+	"github.com/paw1a/eschool/internal/app/config"
+	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/pkg/auth"
 	log "github.com/sirupsen/logrus"
 	"go.uber.org/fx"
@@ -17,14 +17,14 @@ import (
 type Handler struct {
 	config        *config.Config
 	tokenProvider auth.TokenProvider
-	userService   service.Users
+	userService   port.IUserService
 }
 
 type HandlerParams struct {
 	fx.In
 	Config        *config.Config
 	TokenProvider auth.TokenProvider
-	UserService   service.Users
+	UserService   port.IUserService
 }
 
 func NewHandler(params HandlerParams) *Handler {
