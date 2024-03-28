@@ -4,14 +4,11 @@ export
 build:
 	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/app/main.go
 
-run: build storage
-	docker-compose up app
+run: build
+	docker-compose up postgres redis app
 
-debug: build storage
-	docker-compose up debug
-
-storage:
-	docker-compose up redis postgres
+debug: build
+	docker-compose up postgres redis debug
 
 migrate:
 	# if "error: file does not exist" was occurred,
