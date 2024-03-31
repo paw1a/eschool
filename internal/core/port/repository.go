@@ -6,7 +6,6 @@ import (
 	"github.com/paw1a/eschool/internal/core/domain/dto"
 )
 
-//go:generate mockery --dir . --name UserRepository --output ./mocks --filename user.go
 type IUserRepository interface {
 	FindAll(ctx context.Context) ([]domain.User, error)
 	FindByID(ctx context.Context, userID int64) (domain.User, error)
@@ -17,7 +16,6 @@ type IUserRepository interface {
 	Delete(ctx context.Context, userID int64) error
 }
 
-//go:generate mockery --dir . --name CourseRepository --output ./mocks --filename course.go
 type ICourseRepository interface {
 	FindAll(ctx context.Context) ([]domain.Course, error)
 	FindByID(ctx context.Context, courseID int64) (domain.Course, error)
@@ -34,7 +32,6 @@ type ICourseRepository interface {
 	Delete(ctx context.Context, courseID int64) error
 }
 
-//go:generate mockery --dir . --name LessonRepository --output ./mocks --filename lesson.go
 type ILessonRepository interface {
 	FindAll(ctx context.Context) ([]domain.Lesson, error)
 	FindByID(ctx context.Context, lessonID int64) (domain.Lesson, error)
@@ -49,7 +46,6 @@ type ILessonRepository interface {
 	Delete(ctx context.Context, lessonID int64) error
 }
 
-//go:generate mockery --dir . --name SchoolRepository --output ./mocks --filename school.go
 type ISchoolRepository interface {
 	FindAll(ctx context.Context) ([]domain.School, error)
 	FindByID(ctx context.Context, schoolID int64) (domain.School, error)
@@ -61,7 +57,6 @@ type ISchoolRepository interface {
 	Delete(ctx context.Context, schoolID int64) error
 }
 
-//go:generate mockery --dir . --name ReviewRepository --output ./mocks --filename review.go
 type IReviewRepository interface {
 	FindAll(ctx context.Context) ([]domain.Review, error)
 	FindByID(ctx context.Context, reviewID int64) (domain.Review, error)
@@ -72,7 +67,6 @@ type IReviewRepository interface {
 	Delete(ctx context.Context, reviewID int64) error
 }
 
-//go:generate mockery --dir . --name CertificateRepository --output ./mocks --filename certificate.go
 type ICertificateRepository interface {
 	FindAll(ctx context.Context) ([]domain.Certificate, error)
 	FindByID(ctx context.Context, certificateID int64) (domain.Certificate, error)
