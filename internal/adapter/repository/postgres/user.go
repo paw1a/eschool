@@ -57,29 +57,29 @@ func (u *PostgresUserRepository) FindByCredentials(ctx context.Context, email st
 	return user, nil
 }
 
-func (u *PostgresUserRepository) FindUserInfo(ctx context.Context, userID int64) (domain.UserInfo, error) {
-	var userInfo domain.UserInfo
+func (u *PostgresUserRepository) FindUserInfo(ctx context.Context, userID int64) (dto.UserInfo, error) {
+	var userInfo dto.UserInfo
 	err := u.db.GetContext(ctx, &userInfo, usersFindUserInfoQuery, userID)
 	if err != nil {
-		return domain.UserInfo{}, errors.Wrap(err, "user repo find user info")
+		return dto.UserInfo{}, errors.Wrap(err, "user repo find user info")
 	}
 	return userInfo, nil
 }
 
-func (u *PostgresUserRepository) Create(ctx context.Context, user domain.User) (domain.User, error) {
+func (u *PostgresUserRepository) Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error) {
 	var createdUser domain.User
 	err := u.db.QueryRowxContext(ctx, usersCreateQuery,
-		user.Email, user.Password, user.Name, user.Surname).StructScan(&createdUser)
+		userDTO.Email, userDTO.Password, userDTO.Name, userDTO.Surname).StructScan(&createdUser)
 	if err != nil {
 		return domain.User{}, errors.Wrap(err, "user repo create")
 	}
 	return createdUser, nil
 }
 
-func (u *PostgresUserRepository) Update(ctx context.Context, userInput dto.UpdateUserInput,
-	userID int64) (domain.User, error) {
+func (u *PostgresUserRepository) Update(ctx context.Context, userID int64,
+	userDTO dto.UpdateUserDTO) (domain.User, error) {
 	var updatedUser domain.User
-	err := u.db.QueryRowxContext(ctx, usersUpdateQuery, userInput.Name, userID).Scan(&updatedUser)
+	err := u.db.QueryRowxContext(ctx, usersUpdateQuery, userDTO.Name, userID).Scan(&updatedUser)
 	if err != nil {
 		return domain.User{}, errors.Wrap(err, "user repo update")
 	}

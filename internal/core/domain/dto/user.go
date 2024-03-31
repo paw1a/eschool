@@ -1,30 +1,31 @@
 package dto
 
+import "github.com/guregu/null"
+
 type CreateUserDTO struct {
-	Name     string `json:"name" required:"true"`
-	Surname  string `json:"surname" required:"true"`
-	Email    string `json:"email" required:"true"`
-	Password string `json:"password" required:"true"`
+	Name      string
+	Surname   string
+	Email     string
+	Password  string
+	Phone     null.String
+	City      null.String
+	AvatarUrl null.String
 }
 
 type UpdateUserDTO struct {
-	Name    string `json:"name"`
-	Surname string `json:"surname"`
+	Name      null.String
+	Surname   null.String
+	Phone     null.String
+	City      null.String
+	AvatarUrl null.String
 }
 
-type UpdateUserInput struct {
-	Name string `json:"name"`
+type UserCredentials struct {
+	Email    string
+	Password string
 }
 
-type SignUpDTO struct {
-	Name     string `json:"name" required:"true"`
-	Surname  string `json:"surname" required:"true"`
-	Email    string `json:"email" required:"true"`
-	Password string `json:"password" required:"true"`
-}
-
-type SignInDTO struct {
-	Email       string `json:"email" required:"true"`
-	Password    string `json:"password" required:"true"`
-	Fingerprint string `json:"fingerprint" required:"true"`
+type UserInfo struct {
+	Name    string
+	Surname string
 }

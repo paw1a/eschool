@@ -25,30 +25,22 @@ func (u *UserService) FindByID(ctx context.Context, userID int64) (domain.User, 
 	return u.repo.FindByID(ctx, userID)
 }
 
-func (u *UserService) FindByCredentials(ctx context.Context, signInDTO dto.SignInDTO) (domain.User, error) {
+func (u *UserService) FindByCredentials(ctx context.Context, signInDTO dto.UserCredentials) (domain.User, error) {
 	return u.repo.FindByCredentials(ctx, signInDTO.Email, signInDTO.Password)
 }
 
-func (u *UserService) FindUserInfo(ctx context.Context, userID int64) (domain.UserInfo, error) {
+func (u *UserService) FindUserInfo(ctx context.Context, userID int64) (dto.UserInfo, error) {
 	return u.repo.FindUserInfo(ctx, userID)
 }
 
 func (u *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error) {
-	return u.repo.Create(ctx, domain.User{
-		Name:     userDTO.Name,
-		Surname:  userDTO.Surname,
-		Email:    userDTO.Email,
-		Password: userDTO.Password,
-	})
+	return u.repo.Create(ctx, userDTO)
 }
 
-func (u *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO,
-	userID int64) (domain.User, error) {
-	return u.repo.Update(ctx, dto.UpdateUserInput{
-		Name: userDTO.Name,
-	}, userID)
+func (u *UserService) Update(ctx context.Context, userID int64, userDTO dto.UpdateUserDTO) (domain.User, error) {
+	return u.repo.Update(ctx, userID, userDTO)
 }
 
 func (u *UserService) Delete(ctx context.Context, userID int64) error {
-	return nil
+	return u.repo.Delete(ctx, userID)
 }
