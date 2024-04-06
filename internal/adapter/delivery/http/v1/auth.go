@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	dto2 "github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/domain/dto"
 	"github.com/paw1a/eschool/pkg/auth"
@@ -87,7 +88,7 @@ func (h *Handler) userSignUp(context *gin.Context) {
 		return
 	}
 
-	user, err := h.userService.Create(context, dto.CreateUserDTO{
+	user, err := h.userService.Create(context, dto2.CreateUserDTO{
 		Name:     signUpDTO.Name,
 		Surname:  signUpDTO.Surname,
 		Email:    signUpDTO.Email,

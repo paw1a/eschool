@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
-	"github.com/paw1a/eschool/internal/core/domain/dto"
 	"github.com/paw1a/eschool/internal/core/port"
 )
 
@@ -21,26 +20,37 @@ func (u *UserService) FindAll(ctx context.Context) ([]domain.User, error) {
 	return u.repo.FindAll(ctx)
 }
 
-func (u *UserService) FindByID(ctx context.Context, userID int64) (domain.User, error) {
+func (u *UserService) FindByID(ctx context.Context, userID domain.ID) (domain.User, error) {
 	return u.repo.FindByID(ctx, userID)
 }
 
-func (u *UserService) FindByCredentials(ctx context.Context, signInDTO dto.UserCredentials) (domain.User, error) {
-	return u.repo.FindByCredentials(ctx, signInDTO.Email, signInDTO.Password)
+func (u *UserService) FindByCredentials(ctx context.Context,
+	credentials port.UserCredentials) (domain.User, error) {
+	return u.repo.FindByCredentials(ctx, credentials.Email, credentials.Password)
 }
 
-func (u *UserService) FindUserInfo(ctx context.Context, userID int64) (dto.UserInfo, error) {
+func (u *UserService) FindUserInfo(ctx context.Context, userID domain.ID) (port.UserInfo, error) {
 	return u.repo.FindUserInfo(ctx, userID)
 }
 
-func (u *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error) {
-	return u.repo.Create(ctx, userDTO)
+func (u *UserService) Create(ctx context.Context, param port.CreateUserParam) (domain.User, error) {
+	return u.repo.Create(ctx, domain.User{
+		ID:        domain.NewID(),
+		Name:      param.Name,
+		Surname:   param.Surname,
+		Phone:     param.Phone,
+		City:      param.City,
+		AvatarUrl: param.AvatarUrl,
+		Email:     param.Email,
+		Password:  param.Password,
+	})
 }
 
-func (u *UserService) Update(ctx context.Context, userID int64, userDTO dto.UpdateUserDTO) (domain.User, error) {
-	return u.repo.Update(ctx, userID, userDTO)
+func (u *UserService) Update(ctx context.Context, userID domain.ID,
+	param port.UpdateUserParam) (domain.User, error) {
+	return u.repo.Update(ctx, userID, param)
 }
 
-func (u *UserService) Delete(ctx context.Context, userID int64) error {
+func (u *UserService) Delete(ctx context.Context, userID domain.ID) error {
 	return u.repo.Delete(ctx, userID)
 }

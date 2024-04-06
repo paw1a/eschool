@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
+	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
-	"github.com/paw1a/eschool/internal/core/domain/dto"
 )
 
 type ReviewRepository struct {

@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"github.com/jmoiron/sqlx"
+	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
-	"github.com/paw1a/eschool/internal/core/domain/dto"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
@@ -24,8 +24,8 @@ const (
 	usersFindByIDQuery          = "SELECT * FROM public.user WHERE id = $1"
 	usersFindByCredentialsQuery = "SELECT * FROM public.user WHERE email = $1 AND password = $2"
 	usersFindUserInfoQuery      = "SELECT email, name, surname FROM public.user WHERE id = $1"
-	usersCreateQuery            = "INSERT INTO public.user (email, password, name, surname, phone, city, avatar_url) " +
-		"VALUES ($1, $2, $3, $4, NULL, NULL, NULL) RETURNING *"
+	usersCreateQuery            = "INSERT INTO public.user (id, email, password, name, surname, phone, city, avatar_url) " +
+		"VALUES ($1, $2, $3, $4, $5, NULL, NULL, NULL) RETURNING *"
 	usersUpdateQuery = "UPDATE public.user SET name = $1 WHERE id = $2"
 	usersDeleteQuery = "DELETE FROM public.user WHERE id = $1"
 )
@@ -39,7 +39,7 @@ func (u *PostgresUserRepository) FindAll(ctx context.Context) ([]domain.User, er
 	return users, nil
 }
 
-func (u *PostgresUserRepository) FindByID(ctx context.Context, userID int64) (domain.User, error) {
+func (u *PostgresUserRepository) FindByID(ctx context.Context, userID domain.ID) (domain.User, error) {
 	var user domain.User
 	err := u.db.GetContext(ctx, &user, usersFindByIDQuery, userID)
 	if err != nil {

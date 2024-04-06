@@ -1,7 +1,7 @@
 package domain
 
 type School struct {
-	ID          int64
+	ID          ID
+	OwnerID     ID
 	Description string
-	Courses     []Course
 }

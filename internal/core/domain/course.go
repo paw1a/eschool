@@ -3,18 +3,17 @@ package domain
 type CourseStatus int
 
 const (
-	Draft CourseStatus = iota
-	Ready
-	Published
+	CourseDraft CourseStatus = iota
+	CourseReady
+	CoursePublished
 )
 
 type Course struct {
-	ID       int64
+	ID       ID
+	SchoolID ID
 	Name     string
 	Level    int
 	Price    int64
 	Language string
 	Status   CourseStatus
-	Lessons  []Lesson
-	Reviews  []Review
 }

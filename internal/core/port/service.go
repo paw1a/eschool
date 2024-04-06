@@ -3,81 +3,91 @@ package port
 import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
-	"github.com/paw1a/eschool/internal/core/domain/dto"
 )
 
 type IUserService interface {
 	FindAll(ctx context.Context) ([]domain.User, error)
-	FindByID(ctx context.Context, userID int64) (domain.User, error)
-	FindByCredentials(ctx context.Context, credentials dto.UserCredentials) (domain.User, error)
-	FindUserInfo(ctx context.Context, userID int64) (dto.UserInfo, error)
-	Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error)
-	Update(ctx context.Context, userID int64, userDTO dto.UpdateUserDTO) (domain.User, error)
-	Delete(ctx context.Context, userID int64) error
+	FindByID(ctx context.Context, userID domain.ID) (domain.User, error)
+	FindByCredentials(ctx context.Context, credentials UserCredentials) (domain.User, error)
+	FindUserInfo(ctx context.Context, userID domain.ID) (UserInfo, error)
+	Create(ctx context.Context, param CreateUserParam) (domain.User, error)
+	Update(ctx context.Context, userID domain.ID, param UpdateUserParam) (domain.User, error)
+	Delete(ctx context.Context, userID domain.ID) error
 }
 
 type ICourseService interface {
 	FindAll(ctx context.Context) ([]domain.Course, error)
-	FindByID(ctx context.Context, courseID int64) (domain.Course, error)
-	FindCourseInfo(ctx context.Context, courseID int64) (dto.CourseInfo, error)
-	FindStudentCourses(ctx context.Context, studentID int64) ([]domain.Course, error)
-	FindTeacherCourses(ctx context.Context, teacherID int64) ([]domain.Course, error)
-	AddCourseStudent(ctx context.Context, studentID, courseID int64) error
-	AddCourseTeacher(ctx context.Context, teacherID, courseID int64) error
-	AddCourseLesson(ctx context.Context, courseID, lessonID int64) error
-	DeleteCourseLesson(ctx context.Context, courseID, lessonID int64) error
-	ConfirmDraftCourse(ctx context.Context, courseID int64) []error
-	PublishReadyCourse(ctx context.Context, courseID int64) error
-	Create(ctx context.Context, courseDTO dto.CreateCourseDTO) (domain.Course, error)
-	Update(ctx context.Context, courseID int64,
-		courseDTO dto.UpdateCourseDTO) (domain.Course, error)
-	Delete(ctx context.Context, courseID int64) error
+	FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error)
+	FindCourseInfo(ctx context.Context, courseID domain.ID) (CourseInfo, error)
+	FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error)
+	FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error)
+	AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error
+	AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error
+	AddCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
+	DeleteCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
+	ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error
+	PublishReadyCourse(ctx context.Context, courseID domain.ID) error
+	CreateSchoolCourse(ctx context.Context, schoolID domain.ID,
+		param CreateCourseParam) (domain.Course, error)
+	Update(ctx context.Context, courseID domain.ID,
+		param UpdateCourseParam) (domain.Course, error)
+	Delete(ctx context.Context, courseID domain.ID) error
 }
 
 type ILessonService interface {
 	FindAll(ctx context.Context) ([]domain.Lesson, error)
-	FindByID(ctx context.Context, lessonID int64) (domain.Lesson, error)
-	FindCourseLessons(ctx context.Context, courseID int64) ([]domain.Lesson, error)
-	Create(ctx context.Context, lessonDTO dto.CreateLessonDTO) (domain.Lesson, error)
-	AddLessonTests(ctx context.Context, lessonID int64, tests []dto.CreateTestDTO) error
-	DeleteLessonTest(ctx context.Context, lessonID, testID int64) error
-	UpdateLessonTest(ctx context.Context, lessonID, testID int64,
-		testDTO dto.UpdateTestDTO) (domain.Test, error)
-	UpdateLessonTheory(ctx context.Context, lessonID int64, theoryDTO dto.UpdateTheoryDTO) error
-	UpdateLessonVideo(ctx context.Context, lessonID int64, videoDTO dto.UpdateVideoDTO) error
-	Delete(ctx context.Context, lessonID int64) error
+	FindByID(ctx context.Context, lessonID domain.ID) (domain.Lesson, error)
+	FindCourseLessons(ctx context.Context, courseID domain.ID) ([]domain.Lesson, error)
+	CreateCourseLesson(ctx context.Context, courseID domain.ID,
+		param CreateLessonParam) (domain.Lesson, error)
+	AddLessonTests(ctx context.Context, lessonID domain.ID, tests []CreateTestParam) error
+	UpdateLessonTest(ctx context.Context, testID domain.ID, param UpdateTestParam) (domain.Test, error)
+	UpdateLessonTheory(ctx context.Context, lessonID domain.ID, param UpdateTheoryParam) error
+	UpdateLessonVideo(ctx context.Context, lessonID domain.ID, param UpdateVideoParam) error
+	Delete(ctx context.Context, lessonID domain.ID) error
+	DeleteLessonTest(ctx context.Context, testID domain.ID) error
 }
 
 type ISchoolService interface {
 	FindAll(ctx context.Context) ([]domain.School, error)
-	FindByID(ctx context.Context, schoolID int64) (domain.School, error)
-	AddSchoolTeacher(ctx context.Context, schoolID int64, teacherID int64) error
-	CreateUserSchool(ctx context.Context, schoolDTO dto.CreateSchoolDTO,
-		userID int64) (domain.School, error)
-	UpdateUserSchool(ctx context.Context, schoolID int64,
-		schoolDTO dto.UpdateSchoolDTO, userID int64) (domain.School, error)
-	Delete(ctx context.Context, schoolID int64) error
+	FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error)
+	FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error)
+	FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.School, error)
+	AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error
+	CreateUserSchool(ctx context.Context, userID domain.ID, param CreateSchoolParam) (domain.School, error)
+	Update(ctx context.Context, schoolID domain.ID, param UpdateSchoolParam) (domain.School, error)
+	Delete(ctx context.Context, schoolID domain.ID) error
 }
 
 type IReviewService interface {
 	FindAll(ctx context.Context) ([]domain.Review, error)
-	FindByID(ctx context.Context, reviewID int64) (domain.Review, error)
-	FindUserReviews(ctx context.Context, userID int64) ([]domain.Review, error)
-	FindCourseReviews(ctx context.Context, courseID int64) ([]domain.Review, error)
-	CreateCourseReview(ctx context.Context, courseID, userID int64,
-		reviewDTO dto.CreateReviewDTO) (domain.Review, error)
-	Delete(ctx context.Context, reviewID int64) error
+	FindByID(ctx context.Context, reviewID domain.ID) (domain.Review, error)
+	FindUserReviews(ctx context.Context, userID domain.ID) ([]domain.Review, error)
+	FindCourseReviews(ctx context.Context, courseID domain.ID) ([]domain.Review, error)
+	CreateCourseReview(ctx context.Context, courseID, userID domain.ID,
+		param CreateReviewParam) (domain.Review, error)
+	Delete(ctx context.Context, reviewID domain.ID) error
 }
 
 type ICertificateService interface {
 	FindAll(ctx context.Context) ([]domain.Certificate, error)
-	FindByID(ctx context.Context, certificateID int64) (domain.Certificate, error)
-	FindUserCertificates(ctx context.Context, userID int64) ([]domain.Certificate, error)
-	CreateCourseCertificate(ctx context.Context, userID, courseID int64) (domain.Certificate, error)
+	FindByID(ctx context.Context, certificateID domain.ID) (domain.Certificate, error)
+	FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error)
+	FindCourseCertificates(ctx context.Context, courseID domain.ID) ([]domain.Certificate, error)
+	CreateCourseCertificate(ctx context.Context, userID, courseID domain.ID) (domain.Certificate, error)
 }
 
 type IStatisticsService interface {
+	FindUserLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
+	FindUserTestStat(ctx context.Context, userID, testID domain.ID) (domain.TestStat, error)
+	CreateUserLessonStat(ctx context.Context, userID, lessonID domain.ID) error
+	CreateUserTestStat(ctx context.Context, userID, testID domain.ID) error
+	UpdateUserLessonStat(ctx context.Context, userID, lessonID domain.ID,
+		param UpdateLessonStatParam) error
+	UpdateUserTestStat(ctx context.Context, userID, testID domain.ID,
+		param UpdateTestStatParam) error
 }
 
 type IPaymentService interface {
+	PayCourse(ctx context.Context, userID, courseID domain.ID) error
 }

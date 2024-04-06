@@ -5,14 +5,16 @@ import "time"
 type CertificateGrade int
 
 const (
-	Bronze CertificateGrade = iota
-	Silver
-	Gold
+	BronzeCertificate CertificateGrade = iota
+	SilverCertificate
+	GoldCertificate
 )
 
 type Certificate struct {
-	ID    int64
-	Name  string
-	Date  time.Time
-	Grade CertificateGrade
+	ID       ID
+	CourseID ID
+	UserID   ID
+	Name     string
+	Date     time.Time
+	Grade    CertificateGrade
 }

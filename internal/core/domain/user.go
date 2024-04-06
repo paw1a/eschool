@@ -1,12 +1,14 @@
 package domain
 
+import "github.com/guregu/null"
+
 type User struct {
-	ID        int64
+	ID        ID
 	Name      string
 	Surname   string
-	Phone     string
-	City      string
-	AvatarUrl string
+	Phone     null.String
+	City      null.String
+	AvatarUrl null.String
 	Email     string
 	Password  string
 }
