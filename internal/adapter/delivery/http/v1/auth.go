@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	dto2 "github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
-	"github.com/paw1a/eschool/internal/core/domain/dto"
 	"github.com/paw1a/eschool/pkg/auth"
 	log "github.com/sirupsen/logrus"
 	"net/http"

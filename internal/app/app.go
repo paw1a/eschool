@@ -5,8 +5,7 @@ import (
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
 	pgRepo "github.com/paw1a/eschool/internal/adapter/repository/postgres"
 	"github.com/paw1a/eschool/internal/app/config"
-	service2 "github.com/paw1a/eschool/internal/core/port"
-	port2 "github.com/paw1a/eschool/internal/core/port/repository"
+	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/internal/core/service"
 	"github.com/paw1a/eschool/pkg/auth"
 	"github.com/paw1a/eschool/pkg/database/postgres"
@@ -37,11 +36,11 @@ func Run() {
 			),
 			fx.Annotate(
 				pgRepo.NewUsersRepo,
-				fx.As(new(port2.IUserRepository)),
+				fx.As(new(port.IUserRepository)),
 			),
 			fx.Annotate(
 				service.NewUserService,
-				fx.As(new(service2.IUserService)),
+				fx.As(new(port.IUserService)),
 			),
 		),
 		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT),
