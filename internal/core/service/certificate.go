@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/paw1a/eschool/internal/core/domain"
-	domainErr "github.com/paw1a/eschool/internal/core/errors"
+	domainErr "github.com/paw1a/eschool/internal/core/errs"
 	"github.com/paw1a/eschool/internal/core/port"
 	"time"
 )

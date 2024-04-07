@@ -1,4 +1,4 @@
-package errors
+package errs
 
 import "errors"
 
@@ -22,4 +22,12 @@ var (
 
 var (
 	ErrCertificateCourseNotPassed = errors.New("course is not passed to make a certificate")
+)
+
+var (
+	ErrDuplicate         = errors.New("record already exists")
+	ErrNotExist          = errors.New("record does not exist")
+	ErrUpdateFailed      = errors.New("record update failed")
+	ErrDeleteFailed      = errors.New("record delete failed")
+	ErrPersistenceFailed = errors.New("persistence internal error")
 )

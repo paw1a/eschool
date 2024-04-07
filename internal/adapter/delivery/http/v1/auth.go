@@ -49,7 +49,7 @@ func (h *Handler) userSignIn(context *gin.Context) {
 		Password: signInDTO.Password,
 	})
 	if err != nil {
-		unauthorizedResponse(context, "invalid user email or password")
+		internalErrorResponse(context, err)
 		return
 	}
 

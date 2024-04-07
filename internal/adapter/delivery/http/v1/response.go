@@ -65,8 +65,12 @@ func badRequestResponse(context *gin.Context, message string, err error) {
 	context.AbortWithStatusJSON(response.Code, message)
 }
 
-func unauthorizedResponse(context *gin.Context, message string) {
-
+func unauthorizedResponse(c *gin.Context, message string) {
+	log.Error(message)
+	c.AbortWithStatusJSON(http.StatusUnauthorized, failure{
+		Code:    http.StatusUnauthorized,
+		Message: message,
+	})
 }
 
 func notFoundOrInternalErrorResponse(context *gin.Context, notFoundMessage string, err error) {
