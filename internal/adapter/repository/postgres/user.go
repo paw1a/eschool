@@ -9,12 +9,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type PostgresUserRepository struct {
+type PostgresUserRepo struct {
 	db *sqlx.DB
 }
 
-func NewUsersRepo(db *sqlx.DB) *PostgresUserRepository {
-	return &PostgresUserRepository{
+func NewUsersRepo(db *sqlx.DB) *PostgresUserRepo {
+	return &PostgresUserRepo{
 		db: db,
 	}
 }
@@ -30,7 +30,7 @@ const (
 	usersDeleteQuery = "DELETE FROM public.user WHERE id = $1"
 )
 
-func (u *PostgresUserRepository) FindAll(ctx context.Context) ([]domain.User, error) {
+func (u *PostgresUserRepo) FindAll(ctx context.Context) ([]domain.User, error) {
 	var users []domain.User
 	err := u.db.SelectContext(ctx, &users, usersFindAllQuery)
 	if err != nil {
@@ -39,7 +39,7 @@ func (u *PostgresUserRepository) FindAll(ctx context.Context) ([]domain.User, er
 	return users, nil
 }
 
-func (u *PostgresUserRepository) FindByID(ctx context.Context, userID domain.ID) (domain.User, error) {
+func (u *PostgresUserRepo) FindByID(ctx context.Context, userID domain.ID) (domain.User, error) {
 	var user domain.User
 	err := u.db.GetContext(ctx, &user, usersFindByIDQuery, userID)
 	if err != nil {
@@ -48,7 +48,7 @@ func (u *PostgresUserRepository) FindByID(ctx context.Context, userID domain.ID)
 	return user, nil
 }
 
-func (u *PostgresUserRepository) FindByCredentials(ctx context.Context, email string, password string) (domain.User, error) {
+func (u *PostgresUserRepo) FindByCredentials(ctx context.Context, email string, password string) (domain.User, error) {
 	var user domain.User
 	err := u.db.GetContext(ctx, &user, usersFindByCredentialsQuery, email, password)
 	if err != nil {
@@ -57,7 +57,7 @@ func (u *PostgresUserRepository) FindByCredentials(ctx context.Context, email st
 	return user, nil
 }
 
-func (u *PostgresUserRepository) FindUserInfo(ctx context.Context, userID int64) (dto.UserInfo, error) {
+func (u *PostgresUserRepo) FindUserInfo(ctx context.Context, userID int64) (dto.UserInfo, error) {
 	var userInfo dto.UserInfo
 	err := u.db.GetContext(ctx, &userInfo, usersFindUserInfoQuery, userID)
 	if err != nil {
@@ -66,7 +66,7 @@ func (u *PostgresUserRepository) FindUserInfo(ctx context.Context, userID int64)
 	return userInfo, nil
 }
 
-func (u *PostgresUserRepository) Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error) {
+func (u *PostgresUserRepo) Create(ctx context.Context, userDTO dto.CreateUserDTO) (domain.User, error) {
 	var createdUser domain.User
 	err := u.db.QueryRowxContext(ctx, usersCreateQuery,
 		userDTO.Email, userDTO.Password, userDTO.Name, userDTO.Surname).StructScan(&createdUser)
@@ -76,7 +76,7 @@ func (u *PostgresUserRepository) Create(ctx context.Context, userDTO dto.CreateU
 	return createdUser, nil
 }
 
-func (u *PostgresUserRepository) Update(ctx context.Context, userID int64,
+func (u *PostgresUserRepo) Update(ctx context.Context, userID int64,
 	userDTO dto.UpdateUserDTO) (domain.User, error) {
 	var updatedUser domain.User
 	err := u.db.QueryRowxContext(ctx, usersUpdateQuery, userDTO.Name, userID).Scan(&updatedUser)
@@ -87,7 +87,7 @@ func (u *PostgresUserRepository) Update(ctx context.Context, userID int64,
 	return updatedUser, nil
 }
 
-func (u *PostgresUserRepository) Delete(ctx context.Context, userID int64) error {
+func (u *PostgresUserRepo) Delete(ctx context.Context, userID int64) error {
 	_, err := u.db.ExecContext(ctx, usersDeleteQuery, userID)
 	if err != nil {
 		return errors.Wrap(err, "user repo delete")

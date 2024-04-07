@@ -2,69 +2,95 @@ package repository
 
 import (
 	"context"
-	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"github.com/jmoiron/sqlx"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/port"
 )
 
-type CourseRepository struct {
+type PostgresCourseRepo struct {
+	db *sqlx.DB
 }
 
-func (c *CourseRepository) FindAll(ctx context.Context) ([]domain.Course, error) {
+func NewCourseRepo(db *sqlx.DB) *PostgresCourseRepo {
+	return &PostgresCourseRepo{
+		db: db,
+	}
+}
+
+const (
+	courseFindAllQuery           = "SELECT * FROM public.user ORDER BY id"
+	courseFindByIDQuery          = "SELECT * FROM public.user WHERE id = $1"
+	courseFindByCredentialsQuery = "SELECT * FROM public.user WHERE email = $1 AND password = $2"
+	courseFindUserInfoQuery      = "SELECT email, name, surname FROM public.user WHERE id = $1"
+	courseCreateQuery            = "INSERT INTO public.user (id, email, password, name, surname, phone, city, avatar_url) " +
+		"VALUES ($1, $2, $3, $4, $5, NULL, NULL, NULL) RETURNING *"
+	courseUpdateQuery = "UPDATE public.user SET name = $1 WHERE id = $2"
+	courseDeleteQuery = "DELETE FROM public.user WHERE id = $1"
+)
+
+func (p *PostgresCourseRepo) FindAll(ctx context.Context) ([]domain.Course, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) FindByID(ctx context.Context, courseID int64) (domain.Course, error) {
+func (p *PostgresCourseRepo) FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) FindCourseInfo(ctx context.Context, courseID int64) (dto.CourseInfo, error) {
+func (p *PostgresCourseRepo) FindCourseInfo(ctx context.Context, courseID domain.ID) (port.CourseInfo, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) FindStudentCourses(ctx context.Context, studentID int64) ([]domain.Course, error) {
+func (p *PostgresCourseRepo) FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) FindTeacherCourses(ctx context.Context, teacherID int64) ([]domain.Course, error) {
+func (p *PostgresCourseRepo) FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) AddCourseStudent(ctx context.Context, studentID, courseID int64) error {
+func (p *PostgresCourseRepo) AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) AddCourseTeacher(ctx context.Context, teacherID, courseID int64) error {
+func (p *PostgresCourseRepo) AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) AddCourseLesson(ctx context.Context, courseID, lessonID int64) error {
+func (p *PostgresCourseRepo) AddCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) DeleteCourseLesson(ctx context.Context, courseID, lessonID int64) error {
+func (p *PostgresCourseRepo) DeleteCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) Create(ctx context.Context, courseDTO dto.CreateCourseDTO) (domain.Course, error) {
+func (p *PostgresCourseRepo) Create(ctx context.Context, course domain.Course) (domain.Course, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) Update(ctx context.Context, courseID int64, courseDTO dto.UpdateCourseDTO) (domain.Course, error) {
+func (p *PostgresCourseRepo) Update(ctx context.Context, courseID domain.ID,
+	param port.UpdateCourseParam) (domain.Course, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CourseRepository) Delete(ctx context.Context, courseID int64) error {
+func (p *PostgresCourseRepo) UpdateStatus(ctx context.Context, courseID domain.ID,
+	status domain.CourseStatus) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p *PostgresCourseRepo) Delete(ctx context.Context, courseID domain.ID) error {
 	//TODO implement me
 	panic("implement me")
 }
