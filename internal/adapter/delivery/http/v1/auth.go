@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	dto2 "github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/pkg/auth"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -43,7 +44,10 @@ func (h *Handler) userSignIn(context *gin.Context) {
 		return
 	}
 
-	user, err := h.userService.FindByCredentials(context, signInDTO)
+	user, err := h.userService.FindByCredentials(context, port.UserCredentials{
+		Email:    signInDTO.Email,
+		Password: signInDTO.Password,
+	})
 	if err != nil {
 		unauthorizedResponse(context, "invalid user email or password")
 		return
@@ -87,21 +91,23 @@ func (h *Handler) userSignUp(context *gin.Context) {
 		return
 	}
 
-	user, err := h.userService.Create(context, dto2.CreateUserDTO{
-		Name:     signUpDTO.Name,
-		Surname:  signUpDTO.Surname,
-		Email:    signUpDTO.Email,
-		Password: signUpDTO.Password,
+	user, err := h.userService.Create(context, port.CreateUserParam{
+		Name:      signUpDTO.Name,
+		Surname:   signUpDTO.Surname,
+		Email:     signUpDTO.Email,
+		Password:  signUpDTO.Password,
+		Phone:     signUpDTO.Phone,
+		City:      signUpDTO.City,
+		AvatarUrl: signUpDTO.AvatarUrl,
 	})
 	if err != nil {
 		internalErrorResponse(context, err)
 		return
 	}
 
-	createdResponse(context, domain.UserInfo{
+	createdResponse(context, dto.UserInfo{
 		Name:    user.Name,
 		Surname: user.Surname,
-		Email:   user.Email,
 	})
 }
 
@@ -225,21 +231,21 @@ func (h *Handler) verifyToken(context *gin.Context) {
 	context.Set("userID", id)
 }
 
-func (h *Handler) extractIdFromAuthHeader(context *gin.Context, idName string) (int64, error) {
+func (h *Handler) extractIdFromAuthHeader(context *gin.Context, idName string) (domain.ID, error) {
 	tokenString, err := extractAuthToken(context)
 	if err != nil {
-		return 0, err
+		return domain.RandomID(), err
 	}
 
 	tokenClaims, err := h.tokenProvider.VerifyToken(tokenString)
 	if err != nil {
-		return 0, err
+		return domain.RandomID(), err
 	}
 
 	id, ok := tokenClaims[idName]
 	if !ok {
-		return 0, fmt.Errorf("failed to extract %s from auth header", idName)
+		return domain.RandomID(), fmt.Errorf("failed to extract %s from auth header", idName)
 	}
 
-	return id.(int64), nil
+	return id.(domain.ID), nil
 }

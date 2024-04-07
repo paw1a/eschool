@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/twinj/uuid"
+import "github.com/google/uuid"
 
 type ID string
 
@@ -9,7 +9,7 @@ func (id ID) String() string {
 }
 
 func NewID() ID {
-	return ID(uuid.NewV4().String())
+	return ID(uuid.New().String())
 }
 
 func RandomID() ID {

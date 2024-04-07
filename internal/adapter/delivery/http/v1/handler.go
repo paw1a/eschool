@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/paw1a/eschool/internal/app/config"
+	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/pkg/auth"
 	log "github.com/sirupsen/logrus"
 	"go.uber.org/fx"
@@ -16,14 +18,14 @@ import (
 type Handler struct {
 	config        *config.Config
 	tokenProvider auth.TokenProvider
-	userService   service.IUserService
+	userService   port.IUserService
 }
 
 type HandlerParams struct {
 	fx.In
 	Config        *config.Config
 	TokenProvider auth.TokenProvider
-	UserService   service.IUserService
+	UserService   port.IUserService
 }
 
 func NewHandler(params HandlerParams) *Handler {
@@ -67,14 +69,10 @@ func LoggerMiddleware() gin.HandlerFunc {
 	}
 }
 
-func getIdFromRequestContext(context *gin.Context, paramName string) (int64, error) {
+func getIdFromRequestContext(context *gin.Context, paramName string) (domain.ID, error) {
 	id, ok := context.Get(paramName)
 	if !ok {
-		return 0, errors.New("not authenticated")
+		return domain.RandomID(), errors.New("not authenticated")
 	}
-	tempID, ok := id.(float64)
-	if !ok {
-		return 0, errors.New("not authenticated")
-	}
-	return int64(tempID), nil
+	return domain.ID(id.(string)), nil
 }
