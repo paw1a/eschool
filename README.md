@@ -1,92 +1,173 @@
-# PPO
+# ППО
 
+## Название проекта
+Eschool
 
+## Краткое описание идеи проекта
+Сайт для онлайн образования с возможностью создания собственных учебных программ или курсов.
 
-## Getting started
+Предоставить каждому пользователю возможность покупать и проходить курсы различной тематики. 
+Также у каждого пользователя должна быть возможность создать собственную школу и образовательную программу 
+или присоединиться к уже существующей школе в качестве преподавателя или составителя курса.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+По прохождении курса пользователь должен иметь возможность получить сертификат о завершении обучения, 
+включающий подробное описание его успеваемости и итоговую оценку.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Описание предметной области
 
-## Add your files
+Предметная область - онлайн образование.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Онлайн обучение - образовательный процесс с применением совокупности телекоммуникационных технологий, 
+имеющих целью предоставление возможности обучаемым освоить основной объём требуемой им 
+информации без непосредственного контакта обучаемых и преподавателей в ходе процесса обучения.
 
-```
-cd existing_repo
-git remote add origin https://git.iu7.bmstu.ru/shpa21u524/ppo.git
-git branch -M main
-git push -uf origin main
-```
+Школа в данном проекте включает в себя множество преподавателей, студентов и курсов, которые могут быть реализованы
+преподавателями данной школы. Также школа содержит дополнительную информацию о создателе, платежные данные
+для оплаты того или иного курса и т. д.
 
-## Integrate with your tools
+Онлайн школа предоставляет возможность получать как теоретические знания, так и практические. 
+Каждый курс разбит на уроки, которые могут быть нескольких типов: текстовые, видео-уроки и практические.
+Текстовые и видео уроки предоставляют теоретические знания, в то время как практические задания 
+представлены в виде тестов с множественным выбором. За прохождение какого-либо урока, студенту начисляются 
+баллы за прохождение курса.
 
-- [ ] [Set up project integrations](https://git.iu7.bmstu.ru/shpa21u524/ppo/-/settings/integrations)
+## Анализ аналогичных решений по 3 критериям
 
-## Collaborate with your team
+| Решение          | Подробный отчет об обучении | Наличие теории и практики | Понятный интерфейс |
+|------------------|-----------------------------|---------------------------|--------------------|
+| Eschool          | +                           | +                         | +                  |
+| Stepik           | -                           | +                         | -                  |
+| Coursera         | +                           | +                         | -                  |
+| Yandex practicum | -                           | -                         | +                  |
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+## Актуальность
 
-## Test and Deploy
+Онлайн образовательные платформы для создания курсов являются актуальными, 
+предоставляя современным обучающимся возможность получить качественное образование, 
+а преподавателям – эффективный инструмент для создания и распространения образовательного контента.
 
-Use the built-in continuous integration in GitLab.
+Онлайн обучение позволяет избежать затрат на поездки, проживание и другие расходы, связанные 
+с традиционными формами образования. Это делает обучение более доступным и экономически эффективным.
+Онлайн платформы позволяют преодолеть географические и социальные барьеры, 
+предоставляя возможность обучаться из любой точки мира.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Описание ролей
+**Гость** - неавторизованный пользователь, который может посмотривать информацию о курсе, 
+авторизоваться, зарегистрироваться
 
-***
+**Студент** - авторизованный, может посмотреть курсы, проходить, оплачивать их, 
+по завершении курса получать сертификат/отчет об успеваемости и оставлять отзывы, 
+а также стать преподавателем.
 
-# Editing this README
+**Преподаватель** - авторизованный, может создать собственную школу и курсы в ней, 
+а также присоединиться к существующей школе в качестве ментора/преподавателя, имеет отзывы о созданных курсах.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Use-Case диаграмма
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+![Use-case](docs/images/usecase.svg)
 
-## Name
-Choose a self-explaining name for your project.
+## ER диаграмма
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+![ER](docs/images/er.png)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Сложные сценарии
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### Формирование сертификата о пройденном курсе
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+* Каждый урок в курсе имеет максимальный балл, устанавливаемый преподавателем. 
+* Ограничений на кол-во баллов нет, так как итоговая оценка будет рассчитана по процентному соотношению.
+* У каждого курса есть сложность, которая выражается по шкале от 1 до 5 (от новичка до профессионала).
+* При расчете общей оценки курса, каждый полученный балл за урок умножается на уровень курса. 
+* Если кол-во пройденных тестов меньше половины, то курс считается незавершенным 
+и необходимо пройти практические задания. 
+* Сертификат имеет статусы:
+  - Бронзовый - набрано более 50% баллов от максимально возможного кол-ва;
+  - Серебряный - набрано более 70% баллов от максимально возможного кол-ва;
+  - Золотой - набрано более 90% баллов от максимально возможного кол-ва.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Процесс формирования сертификата:
+1.  проверяется, что курс начат и окончен в поставленные сроки;
+2.  рассчитываются количества баллов за тесты Pi, где i - номер теста;
+3.  рассчитываются количества баллов за теоретические уроки Tj, где j - номер теор. урока;
+4.  проверяется что (P1 +...+ PN) и (T1 +...+TM) больше половины от кол-ва тестов и теор. блоков в курсе соответственно.
+5.  к Pi и Tj применяется коэффициент сложности курса D, от 1 до 5;
+6.  рассчитывается максимально возможная оценка за курса по формуле: Nmax = ((P1max +...+PNmax) + (T1max +...+TMmax)) * D;
+7.  рассчитывается реальная оценка студента: Nreal = ((P1 +...+ PN) + (T1 +...+TM)) * D;
+8.  формируется статус сертификата в зависимости от процентного отношения Nreal к Nmax;
+9.  итоговая оценка Nreal переводится в шкалу от 1 до 100 баллов;
+10. фиксируется время начала и окончания курса;
+11. формируется страница с сертификатом студента.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+#### Создание и публикация курса
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Теоретические уроки курса будут выполнены в виде Markdown страниц, 
+практические уроки в виде набора тестов с множественным выбором.
+При этом каждый тест содержит максимальную оценку за его решение.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Курс считается правильно созданным, если:
+* имеет хотя бы один теоретический урок (текстовый или видео);
+* имеет хотя бы один практический урок, состоящий из хотя бы одного теста;
+* уроки курса имеют не нулевую максимальную оценку;
+* текстовые уроки содержат не пустой markdown файл;
+* видео уроки содержат ссылку на видео;
+* дата начала и дата окончания курса отличаются хотя бы на 1 день;
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Процесс создания и публикации курса:
+1. Преподаватель формирует контент курса и соответствующие уроки;
+2. Курс находится в состоянии черновика;
+3. По завершении работы, курс проверяется на корректность по выше описанным правилам;
+4. В случае успешной валидации курс переходит в состояние готовности к публикации;
+5. При запросе преподавателя на публикацию становится видимым другим пользователям и переходит в состояние "опубликован".
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+#### Аутентификация пользователей при входе
+1. Пользователь вводит логин и пароль;
+2. Проводится идентификация пользователся по переданным данным;
+3. Создается пара JWT токенов - access токен и refresh токен;
+4. Создается новая сессия;
+5. Сессия помещается в хранилище сессий;
+6. Пользователю возвращется access и refresh токены.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Пользовательские сценарии
 
-## License
-For open source projects, say how it is licensed.
+**Гость** может:
+- просмотривать информацию о курсах;
+- пройти аутентификацию (ввести логин и пароль учетной записи);
+- зарегистрироваться.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+После авторизации гость становится студентом, то есть авторизованным пользователем системы.
+
+**Студент** может:
+- просмотривать информацию о курсах;
+- покупать курсы и проходить их;
+- по прохождении курса получать сертификат с подробным описанием успеваемости;
+- стать преподавателем в существующей школе или основать свою школу;
+- оставлять отзывы о пройденных курсах.
+
+После заявки на становление преподавателем.
+
+**Преподаватель** может:
+- составить свой курс;
+- редактировать/модерировать существующий курс в другой школе;
+- просматривать статистику об успеваемости студентов собственного курса.
+
+## BPMN-диаграмма
+
+![BPMN](docs/images/bpmn.png)
+
+## Описание технологического стека
+- Язык - Golang
+- Тип UI - Web SPA (фреймворк React с TypeScript)
+- Тип приложения - Web API
+- База данных - PostreSQL
+- Хранилище сессий - Redis
+- Объектное хранилище - S3 MinIO
+- Платежная система - YooMoney
+- Аутентификация - JWT токены
+
+## Верхнеуровневое разбиение на компоненты
+
+![components](docs/images/components.svg)
+
+## UML диаграммы классов
+
+![class](docs/images/class.svg)
