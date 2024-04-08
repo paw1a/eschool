@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
-	domainErr "github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/internal/core/errs"
 	"github.com/paw1a/eschool/internal/core/port"
 )
 
@@ -62,35 +62,35 @@ func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.
 	}
 
 	if course.Status != domain.CourseDraft {
-		return []error{domainErr.ErrCourseReadyState}
+		return []error{errs.ErrCourseReadyState}
 	}
 
-	var errs []error
+	var allErrs []error
 
-	var theoryCount, practiceCount int
 	lessons, err := c.lessonRepo.FindCourseLessons(ctx, courseID)
 	if err != nil {
 		return []error{err}
 	}
 
+	var theoryCount, practiceCount int
 	for _, lesson := range lessons {
 		switch lesson.Type {
-		case domain.TheoryLesson:
-			fallthrough
-		case domain.VideoLesson:
-			theoryCount++
 		case domain.PracticeLesson:
 			practiceCount++
+		case domain.TheoryLesson:
+			theoryCount++
+		case domain.VideoLesson:
+			theoryCount++
 		}
 	}
 
 	if theoryCount == 0 || practiceCount == 0 {
-		errs = append(errs, domainErr.ErrCourseNotEnoughLessons)
+		allErrs = append(allErrs, errs.ErrCourseNotEnoughLessons)
 	}
 
 	for _, lesson := range lessons {
 		if lesson.Mark <= 0 {
-			errs = append(errs, domainErr.ErrCourseLessonInvalidMark)
+			allErrs = append(allErrs, errs.ErrCourseLessonInvalidMark)
 		}
 		switch lesson.Type {
 		case domain.PracticeLesson:
@@ -100,29 +100,33 @@ func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.
 			}
 
 			if len(tests) == 0 {
-				errs = append(errs, domainErr.ErrCoursePracticeLessonTestsEmpty)
+				allErrs = append(allErrs, errs.ErrCoursePracticeLessonTestsEmpty)
+			}
+
+			for _, test := range tests {
+				if test.QuestionUrl == "" {
+					allErrs = append(allErrs, errs.ErrCoursePracticeLessonEmptyTestQuestion)
+				}
+				if len(test.Options) == 0 {
+					allErrs = append(allErrs, errs.ErrCoursePracticeLessonEmptyTestOptions)
+				}
 			}
 		case domain.TheoryLesson:
-			//TODO: load question markdown to string
-			var questionString string
-			if len(questionString) == 0 {
-				errs = append(errs, domainErr.ErrCourseTheoryLessonEmpty)
-			}
 		case domain.VideoLesson:
 			if !lesson.ContentUrl.Valid {
-				errs = append(errs, domainErr.ErrCourseContentUrlInvalid)
+				allErrs = append(allErrs, errs.ErrCourseContentUrlInvalid)
 			}
 		}
 	}
 
-	if errs == nil {
+	if allErrs == nil {
 		err := c.repo.UpdateStatus(ctx, courseID, domain.CourseReady)
 		if err != nil {
 			return []error{err}
 		}
 	}
 
-	return errs
+	return allErrs
 }
 
 func (c *CourseService) PublishReadyCourse(ctx context.Context, courseID domain.ID) error {
@@ -132,7 +136,7 @@ func (c *CourseService) PublishReadyCourse(ctx context.Context, courseID domain.
 	}
 
 	if course.Status != domain.CourseReady {
-		return domainErr.ErrCoursePublishedState
+		return errs.ErrCoursePublishedState
 	}
 
 	return c.repo.UpdateStatus(ctx, courseID, domain.CoursePublished)

@@ -11,13 +11,15 @@ var (
 )
 
 var (
-	ErrCourseNotEnoughLessons         = errors.New("course must have at least 1 theory and 1 practice lessons")
-	ErrCourseLessonInvalidMark        = errors.New("course lesson mark must be > 0")
-	ErrCoursePracticeLessonTestsEmpty = errors.New("course practice lesson must contain at least 1 test")
-	ErrCourseTheoryLessonEmpty        = errors.New("course theory lesson must contain text")
-	ErrCourseContentUrlInvalid        = errors.New("course must contain content url")
-	ErrCourseReadyState               = errors.New("course must be in draft state to make it ready")
-	ErrCoursePublishedState           = errors.New("course must be in ready state to publish it")
+	ErrCourseNotEnoughLessons                = errors.New("course must have at least 1 theory and 1 practice lessons")
+	ErrCourseLessonInvalidMark               = errors.New("course lesson mark must be > 0")
+	ErrCoursePracticeLessonTestsEmpty        = errors.New("course practice lesson must contain at least 1 test")
+	ErrCoursePracticeLessonEmptyTestQuestion = errors.New("course practice lesson test has no question")
+	ErrCoursePracticeLessonEmptyTestOptions  = errors.New("course practice lesson test has no options")
+	ErrCourseTheoryLessonEmpty               = errors.New("course theory lesson must contain text")
+	ErrCourseContentUrlInvalid               = errors.New("course must contain content url")
+	ErrCourseReadyState                      = errors.New("course must be in draft state to make it ready")
+	ErrCoursePublishedState                  = errors.New("course must be in ready state to publish it")
 )
 
 var (
