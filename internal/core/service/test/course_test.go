@@ -106,16 +106,6 @@ var tests = []domain.Test{
 	},
 }
 
-type testLesson struct {
-	lesson domain.Lesson
-	tests  []domain.Test
-}
-
-type testCourse struct {
-	course  domain.Course
-	lessons []testLesson
-}
-
 func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 	testTable := []struct {
 		name           string
