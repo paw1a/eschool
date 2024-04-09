@@ -35,7 +35,6 @@ func (l *LessonService) CreateCourseLesson(ctx context.Context, courseID domain.
 	param port.CreateLessonParam) (domain.Lesson, error) {
 	switch param.Type {
 	case domain.TheoryLesson:
-		//TODO: create empty markdown, if it is a theory and set url
 	case domain.VideoLesson:
 		if !param.ContentUrl.Valid {
 			return domain.Lesson{}, domainErr.ErrLessonContentUrlEmpty
@@ -70,9 +69,8 @@ func (l *LessonService) AddLessonTests(ctx context.Context, lessonID domain.ID, 
 	testArray := make([]domain.Test, len(tests))
 	for i, test := range tests {
 		testArray[i] = domain.Test{
-			ID:       domain.NewID(),
-			LessonID: lessonID,
-			//TODO: add question markdown
+			ID:          domain.NewID(),
+			LessonID:    lessonID,
 			QuestionUrl: "url",
 			Options:     test.Options,
 			Answer:      test.Answer,

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/paw1a/eschool/internal/core/domain"
-	domainErr "github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/internal/core/errs"
 	"github.com/paw1a/eschool/internal/core/port"
 	"time"
 )
@@ -92,7 +92,7 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 	} else if percentage > 0.5 {
 		grade = domain.BronzeCertificate
 	} else {
-		return domain.Certificate{}, domainErr.ErrCertificateCourseNotPassed
+		return domain.Certificate{}, errs.ErrCertificateCourseNotPassed
 	}
 
 	return c.repo.Create(ctx, domain.Certificate{
