@@ -12,12 +12,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-type SchoolRepository struct {
+type PostgresSchoolRepo struct {
 	db *sqlx.DB
 }
 
-func NewSchoolRepo(db *sqlx.DB) *PostgresUserRepo {
-	return &PostgresUserRepo{
+func NewSchoolRepo(db *sqlx.DB) *PostgresSchoolRepo {
+	return &PostgresSchoolRepo{
 		db: db,
 	}
 }
@@ -37,7 +37,7 @@ const (
 	schoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
 )
 
-func (s *SchoolRepository) FindAll(ctx context.Context) ([]domain.School, error) {
+func (s *PostgresSchoolRepo) FindAll(ctx context.Context) ([]domain.School, error) {
 	var pgSchools []entity.PgSchool
 	if err := s.db.GetContext(ctx, &pgSchools, schoolFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
@@ -54,7 +54,7 @@ func (s *SchoolRepository) FindAll(ctx context.Context) ([]domain.School, error)
 	return schools, nil
 }
 
-func (s *SchoolRepository) FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error) {
+func (s *PostgresSchoolRepo) FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error) {
 	var pgSchool entity.PgSchool
 	if err := s.db.GetContext(ctx, &pgSchool, schoolFindByIDQuery, schoolID); err != nil {
 		if err == sql.ErrNoRows {
@@ -66,7 +66,7 @@ func (s *SchoolRepository) FindByID(ctx context.Context, schoolID domain.ID) (do
 	return pgSchool.ToDomain(), nil
 }
 
-func (s *SchoolRepository) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
+func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
 	var pgSchools []entity.PgSchool
 	if err := s.db.GetContext(ctx, &pgSchools, schoolFindUserSchoolsQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
@@ -83,7 +83,7 @@ func (s *SchoolRepository) FindUserSchools(ctx context.Context, userID domain.ID
 	return schools, nil
 }
 
-func (s *SchoolRepository) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
+func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
 	if err := s.db.GetContext(ctx, &pgUsers, schoolFindSchoolTeachersQuery, schoolID); err != nil {
 		if err == sql.ErrNoRows {
@@ -100,7 +100,7 @@ func (s *SchoolRepository) FindSchoolTeachers(ctx context.Context, schoolID doma
 	return teachers, nil
 }
 
-func (s *SchoolRepository) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
+func (s *PostgresSchoolRepo) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
 	_, err := s.db.ExecContext(ctx, schoolAddTeacherQuery, schoolID, teacherID)
 	if err != nil {
 		var pgErr *pgconn.PgError
@@ -117,7 +117,7 @@ func (s *SchoolRepository) AddSchoolTeacher(ctx context.Context, schoolID, teach
 	return nil
 }
 
-func (s *SchoolRepository) Create(ctx context.Context, school domain.School) (domain.School, error) {
+func (s *PostgresSchoolRepo) Create(ctx context.Context, school domain.School) (domain.School, error) {
 	var pgSchool = entity.NewPgSchool(school)
 	_, err := s.db.NamedExecContext(ctx, schoolCreateQuery, pgSchool)
 	if err != nil {
@@ -146,7 +146,7 @@ func (s *SchoolRepository) Create(ctx context.Context, school domain.School) (do
 	return createdSchool.ToDomain(), nil
 }
 
-func (s *SchoolRepository) Update(ctx context.Context, schoolID domain.ID,
+func (s *PostgresSchoolRepo) Update(ctx context.Context, schoolID domain.ID,
 	param port.UpdateSchoolParam) (domain.School, error) {
 	_, err := s.db.ExecContext(ctx, userUpdateQuery, param.Description, schoolID)
 	if err != nil {
@@ -165,7 +165,7 @@ func (s *SchoolRepository) Update(ctx context.Context, schoolID domain.ID,
 	return updatedSchool.ToDomain(), nil
 }
 
-func (s *SchoolRepository) Delete(ctx context.Context, schoolID domain.ID) error {
+func (s *PostgresSchoolRepo) Delete(ctx context.Context, schoolID domain.ID) error {
 	_, err := s.db.ExecContext(ctx, schoolDeleteQuery, schoolID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
