@@ -35,7 +35,7 @@ func Run() {
 				fx.As(new(auth.TokenProvider)),
 			),
 			fx.Annotate(
-				pgRepo.NewUsersRepo,
+				pgRepo.NewUserRepo,
 				fx.As(new(port.IUserRepository)),
 			),
 			fx.Annotate(

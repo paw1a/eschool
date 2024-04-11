@@ -2,39 +2,173 @@ package repository
 
 import (
 	"context"
-	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"database/sql"
+	"github.com/jackc/pgconn"
+	"github.com/jmoiron/sqlx"
+	"github.com/paw1a/eschool/internal/adapter/repository/postgres/entity"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/internal/core/port"
+	"github.com/pkg/errors"
 )
 
 type SchoolRepository struct {
+	db *sqlx.DB
 }
+
+func NewSchoolRepo(db *sqlx.DB) *PostgresUserRepo {
+	return &PostgresUserRepo{
+		db: db,
+	}
+}
+
+const (
+	schoolFindAllQuery            = "SELECT * FROM public.school"
+	schoolFindByIDQuery           = "SELECT * FROM public.school WHERE id = $1"
+	schoolFindUserSchoolsQuery    = "SELECT * FROM public.school WHERE owner_id = $1"
+	schoolFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
+		"JOIN school_teacher st on u.id = st.teacher_id " +
+		"JOIN school s on st.school_id = s.id WHERE s.id = $1"
+	schoolAddTeacherQuery = "INSERT INTO public.school_teacher (teacher_id, school_id) " +
+		"VALUES ($1, $2)"
+	schoolCreateQuery = "INSERT INTO public.school (id, description, owner_id) " +
+		"VALUES (:id, :description, :owner_id) RETURNING *"
+	schoolUpdateQuery = "UPDATE public.school SET description = $1 WHERE id = $2"
+	schoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
+)
 
 func (s *SchoolRepository) FindAll(ctx context.Context) ([]domain.School, error) {
-	//TODO implement me
-	panic("implement me")
+	var pgSchools []entity.PgSchool
+	if err := s.db.GetContext(ctx, &pgSchools, schoolFindAllQuery); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	schools := make([]domain.School, len(pgSchools))
+	for i, school := range pgSchools {
+		schools[i] = school.ToDomain()
+	}
+	return schools, nil
 }
 
-func (s *SchoolRepository) FindByID(ctx context.Context, schoolID int64) (domain.School, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SchoolRepository) FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error) {
+	var pgSchool entity.PgSchool
+	if err := s.db.GetContext(ctx, &pgSchool, schoolFindByIDQuery, schoolID); err != nil {
+		if err == sql.ErrNoRows {
+			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return domain.School{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+	return pgSchool.ToDomain(), nil
 }
 
-func (s *SchoolRepository) AddSchoolTeacher(ctx context.Context, schoolID int64, teacherID int64) error {
-	//TODO implement me
-	panic("implement me")
+func (s *SchoolRepository) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
+	var pgSchools []entity.PgSchool
+	if err := s.db.GetContext(ctx, &pgSchools, schoolFindUserSchoolsQuery, userID); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	schools := make([]domain.School, len(pgSchools))
+	for i, school := range pgSchools {
+		schools[i] = school.ToDomain()
+	}
+	return schools, nil
 }
 
-func (s *SchoolRepository) CreateUserSchool(ctx context.Context, schoolDTO dto.CreateSchoolDTO, userID int64) (domain.School, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SchoolRepository) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
+	var pgUsers []entity.PgUser
+	if err := s.db.GetContext(ctx, &pgUsers, schoolFindSchoolTeachersQuery, schoolID); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	teachers := make([]domain.User, len(pgUsers))
+	for i, teacher := range pgUsers {
+		teachers[i] = teacher.ToDomain()
+	}
+	return teachers, nil
 }
 
-func (s *SchoolRepository) UpdateUserSchool(ctx context.Context, schoolID int64, schoolDTO dto.UpdateSchoolDTO, userID int64) (domain.School, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SchoolRepository) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
+	_, err := s.db.ExecContext(ctx, schoolAddTeacherQuery, schoolID, teacherID)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == PgUniqueViolationCode {
+				return errors.Wrap(errs.ErrDuplicate, err.Error())
+			} else {
+				return errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+			}
+		} else {
+			return errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+	return nil
 }
 
-func (s *SchoolRepository) Delete(ctx context.Context, schoolID int64) error {
-	//TODO implement me
-	panic("implement me")
+func (s *SchoolRepository) Create(ctx context.Context, school domain.School) (domain.School, error) {
+	var pgSchool = entity.NewPgSchool(school)
+	_, err := s.db.NamedExecContext(ctx, schoolCreateQuery, pgSchool)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == PgUniqueViolationCode {
+				return domain.School{}, errors.Wrap(errs.ErrDuplicate, err.Error())
+			} else {
+				return domain.School{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+			}
+		} else {
+			return domain.School{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	var createdSchool entity.PgSchool
+	err = s.db.GetContext(ctx, &createdSchool, schoolFindByIDQuery, pgSchool.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return domain.School{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	return createdSchool.ToDomain(), nil
+}
+
+func (s *SchoolRepository) Update(ctx context.Context, schoolID domain.ID,
+	param port.UpdateSchoolParam) (domain.School, error) {
+	_, err := s.db.ExecContext(ctx, userUpdateQuery, param.Description, schoolID)
+	if err != nil {
+		return domain.School{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
+	}
+
+	var updatedSchool entity.PgSchool
+	err = s.db.GetContext(ctx, &updatedSchool, userFindByIDQuery, schoolID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return domain.School{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+	return updatedSchool.ToDomain(), nil
+}
+
+func (s *SchoolRepository) Delete(ctx context.Context, schoolID domain.ID) error {
+	_, err := s.db.ExecContext(ctx, schoolDeleteQuery, schoolID)
+	if err != nil {
+		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
+	}
+	return nil
 }

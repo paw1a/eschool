@@ -50,7 +50,7 @@ type ISchoolRepository interface {
 	FindAll(ctx context.Context) ([]domain.School, error)
 	FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error)
 	FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error)
-	FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.School, error)
+	FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error)
 	AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error
 	Create(ctx context.Context, school domain.School) (domain.School, error)
 	Update(ctx context.Context, schoolID domain.ID, param UpdateSchoolParam) (domain.School, error)

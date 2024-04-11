@@ -16,7 +16,7 @@ type PostgresUserRepo struct {
 	db *sqlx.DB
 }
 
-func NewUsersRepo(db *sqlx.DB) *PostgresUserRepo {
+func NewUserRepo(db *sqlx.DB) *PostgresUserRepo {
 	return &PostgresUserRepo{
 		db: db,
 	}
@@ -123,12 +123,21 @@ func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain
 
 func (u *PostgresUserRepo) Update(ctx context.Context, userID domain.ID,
 	param port.UpdateUserParam) (domain.User, error) {
-	var updatedUser domain.User
-	err := u.db.QueryRowxContext(ctx, userUpdateQuery, param.Name, userID).Scan(&updatedUser)
+	_, err := u.db.ExecContext(ctx, userUpdateQuery, param.Name, userID)
 	if err != nil {
 		return domain.User{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
 	}
-	return updatedUser, nil
+
+	var updatedUser entity.PgUser
+	err = u.db.GetContext(ctx, &updatedUser, userFindByIDQuery, userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+	return updatedUser.ToDomain(), nil
 }
 
 func (u *PostgresUserRepo) Delete(ctx context.Context, userID domain.ID) error {

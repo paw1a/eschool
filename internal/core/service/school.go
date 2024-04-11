@@ -28,7 +28,7 @@ func (s *SchoolService) FindUserSchools(ctx context.Context, userID domain.ID) (
 	return s.repo.FindUserSchools(ctx, userID)
 }
 
-func (s *SchoolService) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.School, error) {
+func (s *SchoolService) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	return s.repo.FindSchoolTeachers(ctx, schoolID)
 }
 
