@@ -11,6 +11,7 @@ create table public.user (
 
 create table public.school (
     id uuid primary key,
+    name varchar(255) not null,
     description text not null,
     owner_id uuid not null,
     foreign key (owner_id) references public.user(id) on delete cascade

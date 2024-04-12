@@ -49,7 +49,11 @@ func (s *StatisticsService) UpdateUserLessonStat(ctx context.Context, userID, le
 		return err
 	}
 
-	return s.repo.UpdateUserLessonStat(ctx, stat.ID, param)
+	if param.Mark.Valid {
+		stat.Mark = int(param.Mark.Int64)
+	}
+
+	return s.repo.UpdateUserLessonStat(ctx, stat)
 }
 
 func (s *StatisticsService) UpdateUserTestStat(ctx context.Context, userID, testID domain.ID,
@@ -59,5 +63,9 @@ func (s *StatisticsService) UpdateUserTestStat(ctx context.Context, userID, test
 		return err
 	}
 
-	return s.repo.UpdateUserTestStat(ctx, stat.ID, param)
+	if param.Mark.Valid {
+		stat.Mark = int(param.Mark.Int64)
+	}
+
+	return s.repo.UpdateUserTestStat(ctx, stat)
 }

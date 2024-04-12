@@ -157,7 +157,25 @@ func (c *CourseService) CreateSchoolCourse(ctx context.Context, schoolID domain.
 
 func (c *CourseService) Update(ctx context.Context, courseID domain.ID,
 	param port.UpdateCourseParam) (domain.Course, error) {
-	return c.repo.Update(ctx, courseID, param)
+	course, err := c.repo.FindByID(ctx, courseID)
+	if err != nil {
+		return domain.Course{}, err
+	}
+
+	if param.Price.Valid {
+		course.Price = param.Price.Int64
+	}
+	if param.Name.Valid {
+		course.Name = param.Name.String
+	}
+	if param.Level.Valid {
+		course.Level = int(param.Level.Int64)
+	}
+	if param.Language.Valid {
+		course.Language = param.Language.String
+	}
+
+	return c.repo.Update(ctx, course)
 }
 
 func (c *CourseService) Delete(ctx context.Context, courseID domain.ID) error {

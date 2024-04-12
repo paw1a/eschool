@@ -32,4 +32,5 @@ var (
 	ErrUpdateFailed      = errors.New("record update failed")
 	ErrDeleteFailed      = errors.New("record delete failed")
 	ErrPersistenceFailed = errors.New("persistence internal error")
+	ErrEnumValueError    = errors.New("enum value is out of scope")
 )

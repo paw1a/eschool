@@ -27,16 +27,12 @@ const (
 	userFindByIDQuery          = "SELECT * FROM public.user WHERE id = $1"
 	userFindByCredentialsQuery = "SELECT * FROM public.user WHERE email = $1 AND password = $2"
 	userFindUserInfoQuery      = "SELECT name, surname FROM public.user WHERE id = $1"
-	userCreateQuery            = "INSERT INTO public.user " +
-		"(id, email, password, name, surname, phone, city, avatar_url) " +
-		"VALUES (:id, :email, :password, :name, :surname, :phone, :city, :avatar_url) RETURNING *"
-	userUpdateQuery = "UPDATE public.user SET name = $1 WHERE id = $2"
-	userDeleteQuery = "DELETE FROM public.user WHERE id = $1"
+	userDeleteQuery            = "DELETE FROM public.user WHERE id = $1"
 )
 
 func (u *PostgresUserRepo) FindAll(ctx context.Context) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
-	if err := u.db.GetContext(ctx, &pgUsers, userFindAllQuery); err != nil {
+	if err := u.db.SelectContext(ctx, &pgUsers, userFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -94,7 +90,8 @@ func (u *PostgresUserRepo) FindUserInfo(ctx context.Context, userID domain.ID) (
 
 func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain.User, error) {
 	var pgUser = entity.NewPgUser(user)
-	_, err := u.db.NamedExecContext(ctx, userCreateQuery, pgUser)
+	queryString := entity.InsertQueryString(pgUser, "user")
+	_, err := u.db.NamedExecContext(ctx, queryString, pgUser)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -121,15 +118,16 @@ func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain
 	return createdUser.ToDomain(), nil
 }
 
-func (u *PostgresUserRepo) Update(ctx context.Context, userID domain.ID,
-	param port.UpdateUserParam) (domain.User, error) {
-	_, err := u.db.ExecContext(ctx, userUpdateQuery, param.Name, userID)
+func (u *PostgresUserRepo) Update(ctx context.Context, user domain.User) (domain.User, error) {
+	var pgUser = entity.NewPgUser(user)
+	queryString := entity.UpdateQueryString(pgUser, "user")
+	_, err := u.db.NamedExecContext(ctx, queryString, pgUser)
 	if err != nil {
 		return domain.User{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
 	}
 
 	var updatedUser entity.PgUser
-	err = u.db.GetContext(ctx, &updatedUser, userFindByIDQuery, userID)
+	err = u.db.GetContext(ctx, &updatedUser, userFindByIDQuery, pgUser.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())

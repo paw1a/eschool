@@ -11,10 +11,10 @@ const (
 )
 
 type Certificate struct {
-	ID       ID
-	CourseID ID
-	UserID   ID
-	Name     string
-	Date     time.Time
-	Grade    CertificateGrade
+	ID        ID
+	CourseID  ID
+	UserID    ID
+	Name      string
+	CreatedAt time.Time
+	Grade     CertificateGrade
 }

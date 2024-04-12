@@ -47,7 +47,16 @@ func (s *SchoolService) CreateUserSchool(ctx context.Context, userID domain.ID,
 
 func (s *SchoolService) Update(ctx context.Context, schoolID domain.ID,
 	param port.UpdateSchoolParam) (domain.School, error) {
-	return s.repo.Update(ctx, schoolID, param)
+	school, err := s.repo.FindByID(ctx, schoolID)
+	if err != nil {
+		return domain.School{}, err
+	}
+
+	if param.Description.Valid {
+		school.Description = param.Description.String
+	}
+	
+	return s.repo.Update(ctx, school)
 }
 
 func (s *SchoolService) Delete(ctx context.Context, schoolID domain.ID) error {

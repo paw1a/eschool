@@ -48,7 +48,22 @@ func (u *UserService) Create(ctx context.Context, param port.CreateUserParam) (d
 
 func (u *UserService) Update(ctx context.Context, userID domain.ID,
 	param port.UpdateUserParam) (domain.User, error) {
-	return u.repo.Update(ctx, userID, param)
+	user, err := u.repo.FindByID(ctx, userID)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	if param.Name.Valid {
+		user.Name = param.Name.String
+	}
+	if param.Surname.Valid {
+		user.Surname = param.Surname.String
+	}
+	user.City = param.City
+	user.Phone = param.Phone
+	user.AvatarUrl = param.AvatarUrl
+
+	return u.repo.Update(ctx, user)
 }
 
 func (u *UserService) Delete(ctx context.Context, userID domain.ID) error {

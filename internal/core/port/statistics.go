@@ -1,9 +1,11 @@
 package port
 
+import "github.com/guregu/null"
+
 type UpdateLessonStatParam struct {
-	Mark int
+	Mark null.Int
 }
 
 type UpdateTestStatParam struct {
-	Mark int
+	Mark null.Int
 }

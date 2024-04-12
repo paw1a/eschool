@@ -11,7 +11,7 @@ type IUserRepository interface {
 	FindByCredentials(ctx context.Context, email string, password string) (domain.User, error)
 	FindUserInfo(ctx context.Context, userID domain.ID) (UserInfo, error)
 	Create(ctx context.Context, user domain.User) (domain.User, error)
-	Update(ctx context.Context, userID domain.ID, param UpdateUserParam) (domain.User, error)
+	Update(ctx context.Context, user domain.User) (domain.User, error)
 	Delete(ctx context.Context, userID domain.ID) error
 }
 
@@ -26,8 +26,7 @@ type ICourseRepository interface {
 	AddCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
 	DeleteCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
 	Create(ctx context.Context, course domain.Course) (domain.Course, error)
-	Update(ctx context.Context, courseID domain.ID,
-		param UpdateCourseParam) (domain.Course, error)
+	Update(ctx context.Context, course domain.Course) (domain.Course, error)
 	UpdateStatus(ctx context.Context, courseID domain.ID, status domain.CourseStatus) error
 	Delete(ctx context.Context, courseID domain.ID) error
 }
@@ -37,11 +36,11 @@ type ILessonRepository interface {
 	FindByID(ctx context.Context, lessonID domain.ID) (domain.Lesson, error)
 	FindCourseLessons(ctx context.Context, courseID domain.ID) ([]domain.Lesson, error)
 	FindLessonTests(ctx context.Context, lessonID domain.ID) ([]domain.Test, error)
-	Create(ctx context.Context, lesson domain.Lesson) (domain.Lesson, error)
 	AddLessonTests(ctx context.Context, tests []domain.Test) error
-	UpdateLessonTest(ctx context.Context, testID domain.ID, param UpdateTestParam) (domain.Test, error)
-	UpdateLessonTheory(ctx context.Context, lessonID domain.ID, param UpdateTheoryParam) error
-	UpdateLessonVideo(ctx context.Context, lessonID domain.ID, param UpdateVideoParam) error
+	Create(ctx context.Context, lesson domain.Lesson) (domain.Lesson, error)
+	UpdateLessonTest(ctx context.Context, test domain.Test) (domain.Test, error)
+	UpdateLessonTheory(ctx context.Context, lesson domain.Lesson) error
+	UpdateLessonVideo(ctx context.Context, lesson domain.Lesson) error
 	Delete(ctx context.Context, lessonID domain.ID) error
 	DeleteLessonTest(ctx context.Context, testID domain.ID) error
 }
@@ -53,7 +52,7 @@ type ISchoolRepository interface {
 	FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error)
 	AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error
 	Create(ctx context.Context, school domain.School) (domain.School, error)
-	Update(ctx context.Context, schoolID domain.ID, param UpdateSchoolParam) (domain.School, error)
+	Update(ctx context.Context, school domain.School) (domain.School, error)
 	Delete(ctx context.Context, schoolID domain.ID) error
 }
 
@@ -78,6 +77,6 @@ type IStatisticsRepository interface {
 	FindUserTestStat(ctx context.Context, userID, testID domain.ID) (domain.TestStat, error)
 	CreateLessonStat(ctx context.Context, stat domain.LessonStat) error
 	CreateTestStat(ctx context.Context, stat domain.TestStat) error
-	UpdateUserLessonStat(ctx context.Context, statID domain.ID, param UpdateLessonStatParam) error
-	UpdateUserTestStat(ctx context.Context, statID domain.ID, param UpdateTestStatParam) error
+	UpdateUserLessonStat(ctx context.Context, stat domain.LessonStat) error
+	UpdateUserTestStat(ctx context.Context, stat domain.TestStat) error
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/paw1a/eschool/internal/adapter/repository/postgres/entity"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/errs"
-	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/pkg/errors"
 )
 
@@ -31,15 +30,12 @@ const (
 		"JOIN school s on st.school_id = s.id WHERE s.id = $1"
 	schoolAddTeacherQuery = "INSERT INTO public.school_teacher (teacher_id, school_id) " +
 		"VALUES ($1, $2)"
-	schoolCreateQuery = "INSERT INTO public.school (id, description, owner_id) " +
-		"VALUES (:id, :description, :owner_id) RETURNING *"
-	schoolUpdateQuery = "UPDATE public.school SET description = $1 WHERE id = $2"
 	schoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
 )
 
 func (s *PostgresSchoolRepo) FindAll(ctx context.Context) ([]domain.School, error) {
 	var pgSchools []entity.PgSchool
-	if err := s.db.GetContext(ctx, &pgSchools, schoolFindAllQuery); err != nil {
+	if err := s.db.SelectContext(ctx, &pgSchools, schoolFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -119,7 +115,8 @@ func (s *PostgresSchoolRepo) AddSchoolTeacher(ctx context.Context, schoolID, tea
 
 func (s *PostgresSchoolRepo) Create(ctx context.Context, school domain.School) (domain.School, error) {
 	var pgSchool = entity.NewPgSchool(school)
-	_, err := s.db.NamedExecContext(ctx, schoolCreateQuery, pgSchool)
+	queryString := entity.InsertQueryString(pgSchool, "school")
+	_, err := s.db.NamedExecContext(ctx, queryString, pgSchool)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -146,15 +143,16 @@ func (s *PostgresSchoolRepo) Create(ctx context.Context, school domain.School) (
 	return createdSchool.ToDomain(), nil
 }
 
-func (s *PostgresSchoolRepo) Update(ctx context.Context, schoolID domain.ID,
-	param port.UpdateSchoolParam) (domain.School, error) {
-	_, err := s.db.ExecContext(ctx, userUpdateQuery, param.Description, schoolID)
+func (s *PostgresSchoolRepo) Update(ctx context.Context, school domain.School) (domain.School, error) {
+	var pgSchool = entity.NewPgSchool(school)
+	queryString := entity.UpdateQueryString(pgSchool, "school")
+	_, err := s.db.NamedExecContext(ctx, queryString, pgSchool)
 	if err != nil {
 		return domain.School{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
 	}
 
 	var updatedSchool entity.PgSchool
-	err = s.db.GetContext(ctx, &updatedSchool, userFindByIDQuery, schoolID)
+	err = s.db.GetContext(ctx, &updatedSchool, schoolFindByIDQuery, pgSchool.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())

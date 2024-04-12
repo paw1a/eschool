@@ -96,9 +96,9 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 	}
 
 	return c.repo.Create(ctx, domain.Certificate{
-		ID:    domain.NewID(),
-		Name:  fmt.Sprintf("Сертификат о прохождении курса \"%s\"", course.Name),
-		Date:  time.Now(),
-		Grade: grade,
+		ID:        domain.NewID(),
+		Name:      fmt.Sprintf("Сертификат о прохождении курса \"%s\"", course.Name),
+		CreatedAt: time.Now(),
+		Grade:     grade,
 	})
 }

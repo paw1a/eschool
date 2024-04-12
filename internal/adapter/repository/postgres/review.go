@@ -26,9 +26,7 @@ const (
 	reviewFindByIDQuery          = "SELECT * FROM public.review WHERE id = $1"
 	reviewFindUserReviewsQuery   = "SELECT * FROM public.review WHERE user_id = $1"
 	reviewFindCourseReviewsQuery = "SELECT * FROM public.review WHERE course_id = $1"
-	reviewCreateQuery            = "INSERT INTO public.school (id, description, owner_id) " +
-		"VALUES (:id, :description, :owner_id) RETURNING *"
-	reviewDeleteQuery = "DELETE FROM public.school WHERE id = $1"
+	reviewDeleteQuery            = "DELETE FROM public.school WHERE id = $1"
 )
 
 func (r *PostgresReviewRepo) FindAll(ctx context.Context) ([]domain.Review, error) {
@@ -96,7 +94,8 @@ func (r *PostgresReviewRepo) FindCourseReviews(ctx context.Context, courseID dom
 
 func (r *PostgresReviewRepo) Create(ctx context.Context, review domain.Review) (domain.Review, error) {
 	var pgReview = entity.NewPgReview(review)
-	_, err := r.db.NamedExecContext(ctx, reviewCreateQuery, pgReview)
+	queryString := entity.InsertQueryString(pgReview, "review")
+	_, err := r.db.NamedExecContext(ctx, queryString, pgReview)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {

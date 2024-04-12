@@ -88,17 +88,17 @@ func (l *LessonService) DeleteLessonTest(ctx context.Context, testID domain.ID) 
 
 func (l *LessonService) UpdateLessonTest(ctx context.Context, testID domain.ID,
 	param port.UpdateTestParam) (domain.Test, error) {
-	return l.repo.UpdateLessonTest(ctx, testID, param)
+	return l.repo.UpdateLessonTest(ctx, domain.Test{})
 }
 
 func (l *LessonService) UpdateLessonTheory(ctx context.Context, lessonID domain.ID,
 	param port.UpdateTheoryParam) error {
-	return l.repo.UpdateLessonTheory(ctx, lessonID, param)
+	return l.repo.UpdateLessonTheory(ctx, domain.Lesson{})
 }
 
 func (l *LessonService) UpdateLessonVideo(ctx context.Context, lessonID domain.ID,
 	param port.UpdateVideoParam) error {
-	return l.repo.UpdateLessonVideo(ctx, lessonID, param)
+	return l.repo.UpdateLessonVideo(ctx, domain.Lesson{})
 }
 
 func (l *LessonService) Delete(ctx context.Context, lessonID domain.ID) error {
