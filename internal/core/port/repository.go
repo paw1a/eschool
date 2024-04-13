@@ -18,13 +18,10 @@ type IUserRepository interface {
 type ICourseRepository interface {
 	FindAll(ctx context.Context) ([]domain.Course, error)
 	FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error)
-	FindCourseInfo(ctx context.Context, courseID domain.ID) (CourseInfo, error)
 	FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error)
 	FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error)
 	AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error
 	AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error
-	AddCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
-	DeleteCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
 	Create(ctx context.Context, course domain.Course) (domain.Course, error)
 	Update(ctx context.Context, course domain.Course) (domain.Course, error)
 	UpdateStatus(ctx context.Context, courseID domain.ID, status domain.CourseStatus) error

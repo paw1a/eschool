@@ -19,6 +19,7 @@ type PgCertificate struct {
 	Name      string    `db:"name"`
 	CreatedAt time.Time `db:"created_at"`
 	Grade     string    `db:"grade"`
+	Score     int       `db:"score"`
 }
 
 func (s *PgCertificate) ToDomain() domain.Certificate {
@@ -39,6 +40,7 @@ func (s *PgCertificate) ToDomain() domain.Certificate {
 		Name:      s.Name,
 		CreatedAt: s.CreatedAt,
 		Grade:     grade,
+		Score:     s.Score,
 	}
 }
 
@@ -63,5 +65,6 @@ func NewPgCertificate(certificate domain.Certificate) PgCertificate {
 		Name:      certificate.Name,
 		CreatedAt: certificate.CreatedAt,
 		Grade:     grade,
+		Score:     certificate.Score,
 	}
 }

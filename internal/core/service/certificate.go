@@ -100,5 +100,6 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 		Name:      fmt.Sprintf("Сертификат о прохождении курса \"%s\"", course.Name),
 		CreatedAt: time.Now(),
 		Grade:     grade,
+		Score:     mark,
 	})
 }

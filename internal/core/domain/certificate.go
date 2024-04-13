@@ -15,6 +15,7 @@ type Certificate struct {
 	CourseID  ID
 	UserID    ID
 	Name      string
+	Score     int
 	CreatedAt time.Time
 	Grade     CertificateGrade
 }
