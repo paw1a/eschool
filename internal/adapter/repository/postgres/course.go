@@ -25,11 +25,11 @@ const (
 	courseFindAllQuery            = "SELECT * FROM public.course ORDER BY id"
 	courseFindByIDQuery           = "SELECT * FROM public.course WHERE id = $1"
 	courseFindStudentCoursesQuery = "SELECT c.* FROM public.course c " +
-		"JOIN course_student cs on c.id = cs.course_id " +
-		"JOIN user u on cs.student_id = u.id WHERE u.id = $1"
+		"JOIN public.course_student cs on c.id = cs.course_id " +
+		"JOIN public.user u on cs.student_id = u.id WHERE u.id = $1"
 	courseFindTeacherCoursesQuery = "SELECT c.* FROM public.course c " +
-		"JOIN course_teacher ct on c.id = ct.course_id " +
-		"JOIN user u on ct.teacher_id = u.id WHERE u.id = $1"
+		"JOIN public.course_teacher ct on c.id = ct.course_id " +
+		"JOIN public.user u on ct.teacher_id = u.id WHERE u.id = $1"
 	courseAddCourseStudentQuery = "INSERT INTO public.course_student (student_id, course_id) " +
 		"VALUES ($1, $2)"
 	courseAddCourseTeacherQuery = "INSERT INTO public.course_teacher (teacher_id, course_id) " +

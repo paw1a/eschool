@@ -26,8 +26,8 @@ const (
 	schoolFindByIDQuery           = "SELECT * FROM public.school WHERE id = $1"
 	schoolFindUserSchoolsQuery    = "SELECT * FROM public.school WHERE owner_id = $1"
 	schoolFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
-		"JOIN school_teacher st on u.id = st.teacher_id " +
-		"JOIN school s on st.school_id = s.id WHERE s.id = $1"
+		"JOIN public.school_teacher st on u.id = st.teacher_id " +
+		"JOIN public.school s on st.school_id = s.id WHERE s.id = $1"
 	schoolAddTeacherQuery = "INSERT INTO public.school_teacher (teacher_id, school_id) " +
 		"VALUES ($1, $2)"
 	schoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
