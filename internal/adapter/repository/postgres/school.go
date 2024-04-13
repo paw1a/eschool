@@ -64,7 +64,7 @@ func (s *PostgresSchoolRepo) FindByID(ctx context.Context, schoolID domain.ID) (
 
 func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
 	var pgSchools []entity.PgSchool
-	if err := s.db.GetContext(ctx, &pgSchools, schoolFindUserSchoolsQuery, userID); err != nil {
+	if err := s.db.SelectContext(ctx, &pgSchools, schoolFindUserSchoolsQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -81,7 +81,7 @@ func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.
 
 func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
-	if err := s.db.GetContext(ctx, &pgUsers, schoolFindSchoolTeachersQuery, schoolID); err != nil {
+	if err := s.db.SelectContext(ctx, &pgUsers, schoolFindSchoolTeachersQuery, schoolID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -97,7 +97,7 @@ func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID do
 }
 
 func (s *PostgresSchoolRepo) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
-	_, err := s.db.ExecContext(ctx, schoolAddTeacherQuery, schoolID, teacherID)
+	_, err := s.db.ExecContext(ctx, schoolAddTeacherQuery, teacherID, schoolID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {

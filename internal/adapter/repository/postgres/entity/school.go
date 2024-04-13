@@ -23,7 +23,7 @@ func (s *PgSchool) ToDomain() domain.School {
 
 func NewPgSchool(school domain.School) PgSchool {
 	id, _ := uuid.Parse(school.ID.String())
-	ownerID, _ := uuid.Parse(school.ID.String())
+	ownerID, _ := uuid.Parse(school.OwnerID.String())
 	return PgSchool{
 		ID:          id,
 		OwnerID:     ownerID,

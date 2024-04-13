@@ -72,7 +72,7 @@ create table public.certificate (
     user_id uuid not null,
     course_id uuid not null,
     foreign key (user_id) references public.user(id) on delete cascade,
-    foreign key (course_id) references public.course(id)
+    foreign key (course_id) references public.course(id) on delete cascade
 );
 
 create table lesson_stat (

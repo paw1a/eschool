@@ -29,7 +29,7 @@ const (
 
 func (p *PostgresCertificateRepo) FindAll(ctx context.Context) ([]domain.Certificate, error) {
 	var pgCertificates []entity.PgCertificate
-	if err := p.db.GetContext(ctx, &pgCertificates, certificateFindAllQuery); err != nil {
+	if err := p.db.SelectContext(ctx, &pgCertificates, certificateFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -58,7 +58,7 @@ func (p *PostgresCertificateRepo) FindByID(ctx context.Context, certID domain.ID
 
 func (p *PostgresCertificateRepo) FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error) {
 	var pgCertificates []entity.PgCertificate
-	if err := p.db.GetContext(ctx, &pgCertificates, certificateFindUserCertificatesQuery, userID); err != nil {
+	if err := p.db.SelectContext(ctx, &pgCertificates, certificateFindUserCertificatesQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {

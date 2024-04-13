@@ -103,7 +103,7 @@ func TestUserRepository(t *testing.T) {
 			t.Errorf("failed to find all users: %v", err)
 		}
 		require.Equal(t, len(found), len(users))
-		for i, _ := range users {
+		for i := range users {
 			require.Equal(t, users[i], found[i])
 		}
 	})
@@ -174,7 +174,7 @@ func TestUserRepository(t *testing.T) {
 		require.Equal(t, user, updatedUser)
 	})
 
-	t.Run("test update user", func(t *testing.T) {
+	t.Run("test delete user", func(t *testing.T) {
 		t.Cleanup(func() {
 			err = container.Restore(ctx)
 			if err != nil {

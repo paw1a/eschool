@@ -31,7 +31,7 @@ const (
 
 func (r *PostgresReviewRepo) FindAll(ctx context.Context) ([]domain.Review, error) {
 	var pgReviews []entity.PgReview
-	if err := r.db.GetContext(ctx, &pgReviews, reviewFindAllQuery); err != nil {
+	if err := r.db.SelectContext(ctx, &pgReviews, reviewFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -60,7 +60,7 @@ func (r *PostgresReviewRepo) FindByID(ctx context.Context, reviewID domain.ID) (
 
 func (r *PostgresReviewRepo) FindUserReviews(ctx context.Context, userID domain.ID) ([]domain.Review, error) {
 	var pgReviews []entity.PgReview
-	if err := r.db.GetContext(ctx, &pgReviews, reviewFindUserReviewsQuery, userID); err != nil {
+	if err := r.db.SelectContext(ctx, &pgReviews, reviewFindUserReviewsQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -77,7 +77,7 @@ func (r *PostgresReviewRepo) FindUserReviews(ctx context.Context, userID domain.
 
 func (r *PostgresReviewRepo) FindCourseReviews(ctx context.Context, courseID domain.ID) ([]domain.Review, error) {
 	var pgReviews []entity.PgReview
-	if err := r.db.GetContext(ctx, &pgReviews, reviewFindCourseReviewsQuery, courseID); err != nil {
+	if err := r.db.SelectContext(ctx, &pgReviews, reviewFindCourseReviewsQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
