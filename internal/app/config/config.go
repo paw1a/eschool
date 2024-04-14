@@ -4,6 +4,7 @@ import (
 	"github.com/paw1a/eschool/pkg/auth"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
+	"github.com/paw1a/eschool/pkg/minio"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"sync"
@@ -17,6 +18,7 @@ type Config struct {
 	Postgres postgres.Config
 	JWT      auth.Config
 	Redis    redis.Config
+	Minio    minio.Config
 }
 
 var instance *Config
@@ -57,7 +59,11 @@ func bindEnvConfig() error {
 	bindings["postgres.host"] = "DB_HOST"
 	bindings["postgres.port"] = "DB_PORT"
 	bindings["redis.uri"] = "REDIS_URI"
-	
+	bindings["minio.endpoint"] = "MINIO_ENDPOINT"
+	bindings["minio.accessKey"] = "MINIO_ACCESS_KEY"
+	bindings["minio.secretKey"] = "MINIO_SECRET_KEY"
+	bindings["minio.bucketName"] = "MINIO_BUCKET_NAME"
+
 	for name, binding := range bindings {
 		if err := viper.BindEnv(name, binding); err != nil {
 			return err

@@ -91,3 +91,10 @@ type IStatisticsService interface {
 type IPaymentService interface {
 	PayCourse(ctx context.Context, userID, courseID domain.ID) error
 }
+
+type IMediaService interface {
+	SaveMediaFile(ctx context.Context, file domain.File) (domain.Url, error)
+	SaveUserAvatar(ctx context.Context, userID domain.ID, image domain.File) (domain.Url, error)
+	SaveLessonTheory(ctx context.Context, lessonID domain.ID, markdown domain.File) (domain.Url, error)
+	SaveTestQuestion(ctx context.Context, testID domain.ID, markdown domain.File) (domain.Url, error)
+}

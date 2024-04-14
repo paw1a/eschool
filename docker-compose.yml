@@ -52,6 +52,22 @@ services:
     networks:
       - backend
 
+  minio:
+    image: minio/minio
+    container_name: 'minio'
+    command: minio server /data --console-address :9001
+#    logging:
+#      driver: none
+    volumes:
+      - ./.data/minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env
+    networks:
+      - backend
+
   app:
     image: 'app'
     container_name: 'app'

@@ -10,6 +10,6 @@ import "github.com/paw1a/eschool/internal/app"
 // @contact.url    https://t.me/paw1a
 // @contact.email  paw1a@yandex.ru
 func main() {
-	//app.Run()
-	app.Test()
+	app.Run()
+	//app.Test()
 }

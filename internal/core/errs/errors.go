@@ -34,3 +34,11 @@ var (
 	ErrPersistenceFailed = errors.New("persistence internal error")
 	ErrEnumValueError    = errors.New("enum value is out of scope")
 )
+
+var (
+	ErrFilenameEmpty        = errors.New("validation filename is empty error")
+	ErrFilepathEmpty        = errors.New("validation filepath is empty error")
+	ErrFiletypeNotSupported = errors.New("validation filetype is not supported")
+	ErrFileReaderEmpty      = errors.New("validation file reader is nil error")
+	ErrSaveFileError        = errors.New("failed to save file to object storage")
+)

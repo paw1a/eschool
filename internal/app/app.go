@@ -10,6 +10,7 @@ import (
 	"github.com/paw1a/eschool/pkg/auth"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
+	"github.com/paw1a/eschool/pkg/minio"
 	log "github.com/sirupsen/logrus"
 	"go.uber.org/fx"
 	"net/http"
@@ -30,6 +31,7 @@ func Run() {
 			v1.NewHandler,
 			postgres.NewPostgresDB,
 			redis.NewClient,
+			minio.NewMinioClient,
 			fx.Annotate(
 				auth.NewTokenProvider,
 				fx.As(new(auth.TokenProvider)),
@@ -43,7 +45,7 @@ func Run() {
 				fx.As(new(port.IUserService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT),
+		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio),
 		fx.Invoke(func(*http.Server) {}),
 	).Run()
 }

@@ -27,10 +27,6 @@ func (c *CourseService) FindByID(ctx context.Context, courseID domain.ID) (domai
 	return c.repo.FindByID(ctx, courseID)
 }
 
-func (c *CourseService) FindCourseInfo(ctx context.Context, courseID domain.ID) (port.CourseInfo, error) {
-	return c.repo.FindCourseInfo(ctx, courseID)
-}
-
 func (c *CourseService) FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error) {
 	return c.repo.FindStudentCourses(ctx, studentID)
 }
@@ -45,14 +41,6 @@ func (c *CourseService) AddCourseStudent(ctx context.Context, studentID, courseI
 
 func (c *CourseService) AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error {
 	return c.repo.AddCourseTeacher(ctx, teacherID, courseID)
-}
-
-func (c *CourseService) AddCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error {
-	return c.repo.AddCourseLesson(ctx, courseID, lessonID)
-}
-
-func (c *CourseService) DeleteCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error {
-	return c.repo.DeleteCourseLesson(ctx, courseID, lessonID)
 }
 
 func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error {
