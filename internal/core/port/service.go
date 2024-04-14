@@ -3,6 +3,7 @@ package port
 import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"io"
 )
 
 type IUserService interface {
@@ -18,13 +19,10 @@ type IUserService interface {
 type ICourseService interface {
 	FindAll(ctx context.Context) ([]domain.Course, error)
 	FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error)
-	FindCourseInfo(ctx context.Context, courseID domain.ID) (CourseInfo, error)
 	FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error)
 	FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error)
 	AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error
 	AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error
-	AddCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
-	DeleteCourseLesson(ctx context.Context, courseID, lessonID domain.ID) error
 	ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error
 	PublishReadyCourse(ctx context.Context, courseID domain.ID) error
 	CreateSchoolCourse(ctx context.Context, schoolID domain.ID,
@@ -73,7 +71,6 @@ type ICertificateService interface {
 	FindAll(ctx context.Context) ([]domain.Certificate, error)
 	FindByID(ctx context.Context, certificateID domain.ID) (domain.Certificate, error)
 	FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error)
-	FindCourseCertificates(ctx context.Context, courseID domain.ID) ([]domain.Certificate, error)
 	CreateCourseCertificate(ctx context.Context, userID, courseID domain.ID) (domain.Certificate, error)
 }
 
@@ -94,7 +91,7 @@ type IPaymentService interface {
 
 type IMediaService interface {
 	SaveMediaFile(ctx context.Context, file domain.File) (domain.Url, error)
-	SaveUserAvatar(ctx context.Context, userID domain.ID, image domain.File) (domain.Url, error)
-	SaveLessonTheory(ctx context.Context, lessonID domain.ID, markdown domain.File) (domain.Url, error)
-	SaveTestQuestion(ctx context.Context, testID domain.ID, markdown domain.File) (domain.Url, error)
+	SaveUserAvatar(ctx context.Context, userID domain.ID, file domain.File) (domain.Url, error)
+	SaveLessonTheory(ctx context.Context, lessonID domain.ID, reader io.Reader) (domain.Url, error)
+	SaveTestQuestion(ctx context.Context, testID domain.ID, reader io.Reader) (domain.Url, error)
 }
