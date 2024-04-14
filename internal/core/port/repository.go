@@ -33,13 +33,9 @@ type ILessonRepository interface {
 	FindByID(ctx context.Context, lessonID domain.ID) (domain.Lesson, error)
 	FindCourseLessons(ctx context.Context, courseID domain.ID) ([]domain.Lesson, error)
 	FindLessonTests(ctx context.Context, lessonID domain.ID) ([]domain.Test, error)
-	AddLessonTests(ctx context.Context, tests []domain.Test) error
 	Create(ctx context.Context, lesson domain.Lesson) (domain.Lesson, error)
-	UpdateLessonTest(ctx context.Context, test domain.Test) (domain.Test, error)
-	UpdateLessonTheory(ctx context.Context, lesson domain.Lesson) error
-	UpdateLessonVideo(ctx context.Context, lesson domain.Lesson) error
+	Update(ctx context.Context, lesson domain.Lesson) (domain.Lesson, error)
 	Delete(ctx context.Context, lessonID domain.ID) error
-	DeleteLessonTest(ctx context.Context, testID domain.ID) error
 }
 
 type ISchoolRepository interface {

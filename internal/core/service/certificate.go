@@ -62,15 +62,15 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 
 			var maxLessonMark, lessonMark int
 			for _, test := range tests {
-				maxLessonMark += test.Mark * test.Level
+				maxLessonMark += test.Score * test.Level
 				testStat, err := c.statRepo.FindUserTestStat(ctx, userID, test.ID)
 				if err != nil {
 					return domain.Certificate{}, err
 				}
-				lessonMark += testStat.Mark * test.Level
+				lessonMark += testStat.Score * test.Level
 			}
-			maxMark += maxLessonMark + lesson.Mark
-			mark += lessonMark + lesson.Mark
+			maxMark += maxLessonMark + lesson.Score
+			mark += lessonMark + lesson.Score
 		case domain.VideoLesson:
 			fallthrough
 		case domain.TheoryLesson:
@@ -78,8 +78,8 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 			if err != nil {
 				return domain.Certificate{}, err
 			}
-			maxMark += lesson.Mark
-			mark += lessonStat.Mark
+			maxMark += lesson.Score
+			mark += lessonStat.Score
 		}
 	}
 

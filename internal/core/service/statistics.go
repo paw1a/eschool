@@ -29,7 +29,7 @@ func (s *StatisticsService) CreateUserLessonStat(ctx context.Context, userID, le
 		ID:       domain.NewID(),
 		LessonID: lessonID,
 		UserID:   userID,
-		Mark:     0,
+		Score:    0,
 	})
 }
 
@@ -38,7 +38,7 @@ func (s *StatisticsService) CreateUserTestStat(ctx context.Context, userID, test
 		ID:     domain.NewID(),
 		TestID: testID,
 		UserID: userID,
-		Mark:   0,
+		Score:  0,
 	})
 }
 
@@ -50,7 +50,7 @@ func (s *StatisticsService) UpdateUserLessonStat(ctx context.Context, userID, le
 	}
 
 	if param.Mark.Valid {
-		stat.Mark = int(param.Mark.Int64)
+		stat.Score = int(param.Mark.Int64)
 	}
 
 	return s.repo.UpdateUserLessonStat(ctx, stat)
@@ -64,7 +64,7 @@ func (s *StatisticsService) UpdateUserTestStat(ctx context.Context, userID, test
 	}
 
 	if param.Mark.Valid {
-		stat.Mark = int(param.Mark.Int64)
+		stat.Score = int(param.Mark.Int64)
 	}
 
 	return s.repo.UpdateUserTestStat(ctx, stat)

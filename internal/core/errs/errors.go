@@ -11,15 +11,16 @@ var (
 )
 
 var (
-	ErrCourseNotEnoughLessons                = errors.New("course must have at least 1 theory and 1 practice lessons")
-	ErrCourseLessonInvalidMark               = errors.New("course lesson mark must be > 0")
-	ErrCoursePracticeLessonTestsEmpty        = errors.New("course practice lesson must contain at least 1 test")
-	ErrCoursePracticeLessonEmptyTestQuestion = errors.New("course practice lesson test has no question")
-	ErrCoursePracticeLessonEmptyTestOptions  = errors.New("course practice lesson test has no options")
-	ErrCourseTheoryLessonEmpty               = errors.New("course theory lesson must contain text")
-	ErrCourseContentUrlInvalid               = errors.New("course must contain content url")
-	ErrCourseReadyState                      = errors.New("course must be in draft state to make it ready")
-	ErrCoursePublishedState                  = errors.New("course must be in ready state to publish it")
+	ErrCourseNotEnoughLessons               = errors.New("course must have at least 1 theory and 1 practice lessons")
+	ErrCourseLessonInvalidScore             = errors.New("course lesson score must be > 0")
+	ErrCoursePracticeLessonEmptyTests       = errors.New("course practice lesson must contain at least 1 test")
+	ErrCoursePracticeLessonEmptyTestTaskUrl = errors.New("course practice lesson test has no question")
+	ErrCoursePracticeLessonEmptyTestOptions = errors.New("course practice lesson test has no options")
+	ErrCoursePracticeLessonInvalidTestScore = errors.New("course practice lesson test score must be > 0")
+	ErrCourseTheoryLessonEmptyUrl           = errors.New("course theory lesson url is empty")
+	ErrCourseVideoLessonEmptyUrl            = errors.New("course video lesson url is empty")
+	ErrCourseReadyState                     = errors.New("course must be in draft state to make it ready")
+	ErrCoursePublishedState                 = errors.New("course must be in ready state to publish it")
 )
 
 var (
@@ -33,6 +34,7 @@ var (
 	ErrDeleteFailed      = errors.New("record delete failed")
 	ErrPersistenceFailed = errors.New("persistence internal error")
 	ErrEnumValueError    = errors.New("enum value is out of scope")
+	ErrTransactionError  = errors.New("transaction error occurred")
 )
 
 var (

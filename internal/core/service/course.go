@@ -53,8 +53,7 @@ func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.
 		return []error{errs.ErrCourseReadyState}
 	}
 
-	var allErrs []error
-
+	var errList []error
 	lessons, err := c.lessonRepo.FindCourseLessons(ctx, courseID)
 	if err != nil {
 		return []error{err}
@@ -62,6 +61,11 @@ func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.
 
 	var theoryCount, practiceCount int
 	for _, lesson := range lessons {
+		err := lesson.Validate()
+		if err != nil {
+			errList = append(errList, err)
+		}
+
 		switch lesson.Type {
 		case domain.PracticeLesson:
 			practiceCount++
@@ -73,48 +77,17 @@ func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.
 	}
 
 	if theoryCount == 0 || practiceCount == 0 {
-		allErrs = append(allErrs, errs.ErrCourseNotEnoughLessons)
+		errList = append(errList, errs.ErrCourseNotEnoughLessons)
 	}
 
-	for _, lesson := range lessons {
-		if lesson.Mark <= 0 {
-			allErrs = append(allErrs, errs.ErrCourseLessonInvalidMark)
-		}
-		switch lesson.Type {
-		case domain.PracticeLesson:
-			tests, err := c.lessonRepo.FindLessonTests(ctx, lesson.ID)
-			if err != nil {
-				return []error{err}
-			}
-
-			if len(tests) == 0 {
-				allErrs = append(allErrs, errs.ErrCoursePracticeLessonTestsEmpty)
-			}
-
-			for _, test := range tests {
-				if test.QuestionUrl == "" {
-					allErrs = append(allErrs, errs.ErrCoursePracticeLessonEmptyTestQuestion)
-				}
-				if len(test.Options) == 0 {
-					allErrs = append(allErrs, errs.ErrCoursePracticeLessonEmptyTestOptions)
-				}
-			}
-		case domain.TheoryLesson:
-		case domain.VideoLesson:
-			if !lesson.ContentUrl.Valid {
-				allErrs = append(allErrs, errs.ErrCourseContentUrlInvalid)
-			}
-		}
-	}
-
-	if allErrs == nil {
+	if errList == nil {
 		err := c.repo.UpdateStatus(ctx, courseID, domain.CourseReady)
 		if err != nil {
 			return []error{err}
 		}
 	}
 
-	return allErrs
+	return errList
 }
 
 func (c *CourseService) PublishReadyCourse(ctx context.Context, courseID domain.ID) error {
