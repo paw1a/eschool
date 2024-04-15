@@ -110,8 +110,8 @@ func (p *PostgresLessonRepo) FindLessonTests(ctx context.Context, lessonID domai
 	}
 
 	tests := make([]domain.Test, len(pgTests))
-	for j, test := range pgTests {
-		tests[j] = test.ToDomain()
+	for i, test := range pgTests {
+		tests[i] = test.ToDomain()
 	}
 	return tests, nil
 }
@@ -183,7 +183,7 @@ func (p *PostgresLessonRepo) Update(ctx context.Context, lesson domain.Lesson) (
 	}
 
 	if pgLesson.Type == entity.PgLessonPractice {
-		_, err = tx.NamedExecContext(ctx, lessonDeleteLessonTestsQuery, lesson.ID)
+		_, err = tx.ExecContext(ctx, lessonDeleteLessonTestsQuery, lesson.ID)
 		if err != nil {
 			tx.Rollback()
 			return domain.Lesson{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())

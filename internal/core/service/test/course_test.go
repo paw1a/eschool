@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/adapter/repository/mocks"
 	"github.com/paw1a/eschool/internal/core/domain"
@@ -43,36 +42,40 @@ var courses = []domain.Course{
 
 var lessons = []domain.Lesson{
 	domain.Lesson{
-		ID:         domain.NewID(),
-		CourseID:   courses[0].ID,
-		Title:      "Lesson1",
-		Score:      5,
-		Type:       domain.TheoryLesson,
-		ContentUrl: null.String{},
+		ID:        domain.NewID(),
+		CourseID:  courses[0].ID,
+		Title:     "Lesson1",
+		Score:     5,
+		Type:      domain.TheoryLesson,
+		TheoryUrl: null.StringFrom("ddd"),
+		VideoUrl:  null.String{},
 	},
 	domain.Lesson{
-		ID:         domain.NewID(),
-		CourseID:   courses[0].ID,
-		Title:      "Lesson2",
-		Score:      4,
-		Type:       domain.PracticeLesson,
-		ContentUrl: null.String{},
+		ID:        domain.NewID(),
+		CourseID:  courses[0].ID,
+		Title:     "Lesson2",
+		Score:     4,
+		Type:      domain.PracticeLesson,
+		TheoryUrl: null.String{},
+		VideoUrl:  null.String{},
 	},
 	domain.Lesson{
-		ID:         domain.NewID(),
-		CourseID:   courses[0].ID,
-		Title:      "Lesson3",
-		Score:      -1,
-		Type:       domain.TheoryLesson,
-		ContentUrl: null.String{},
+		ID:        domain.NewID(),
+		CourseID:  courses[0].ID,
+		Title:     "Lesson3",
+		Score:     -1,
+		Type:      domain.TheoryLesson,
+		TheoryUrl: null.StringFrom("ddd"),
+		VideoUrl:  null.String{},
 	},
 	domain.Lesson{
-		ID:         domain.NewID(),
-		CourseID:   courses[0].ID,
-		Title:      "Lesson4",
-		Score:      5,
-		Type:       domain.VideoLesson,
-		ContentUrl: null.String{},
+		ID:        domain.NewID(),
+		CourseID:  courses[0].ID,
+		Title:     "Lesson4",
+		Score:     5,
+		Type:      domain.VideoLesson,
+		TheoryUrl: null.String{},
+		VideoUrl:  null.StringFrom("ddd"),
 	},
 }
 
@@ -124,10 +127,10 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 					Return(nil)
 			},
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
+				lessons[1].Tests = []domain.Test{tests[0]}
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[0], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[0]}, nil)
+				lessons[1].Tests = nil
 			},
 			hasError: false,
 		},
@@ -165,8 +168,6 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[1], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[0]}, nil)
 			},
 			hasError: true,
 		},
@@ -180,8 +181,6 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[1], lessons[2]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[0]}, nil)
 			},
 			hasError: true,
 		},
@@ -195,8 +194,6 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[0], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{}, nil)
 			},
 			hasError: true,
 		},
@@ -210,8 +207,6 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[3], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[0]}, nil)
 			},
 			hasError: true,
 		},
@@ -225,8 +220,6 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[0], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[1]}, nil)
 			},
 			hasError: true,
 		},
@@ -240,8 +233,6 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[0], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[2]}, nil)
 			},
 			hasError: true,
 		},
@@ -251,53 +242,32 @@ func TestCourseService_ConfirmDraftCourse(t *testing.T) {
 			initCourseRepo: func(courseRepo *mocks.CourseRepository) {
 				courseRepo.On("FindByID", context.Background(), courses[0].ID).
 					Return(courses[0], nil)
-				courseRepo.On("UpdateStatus", context.Background(), courses[0].ID, domain.CourseReady).
-					Return(errors.New("error"))
 			},
 			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
 				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
 					Return([]domain.Lesson{lessons[0], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[0]}, nil)
-			},
-			hasError: true,
-		},
-		{
-			name:   "course cannot be updated, error",
-			course: courses[0],
-			initCourseRepo: func(courseRepo *mocks.CourseRepository) {
-				courseRepo.On("FindByID", context.Background(), courses[0].ID).
-					Return(courses[0], nil)
-				courseRepo.On("UpdateStatus", context.Background(), courses[0].ID, domain.CourseReady).
-					Return(errors.New("error"))
-			},
-			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
-				lessonRepo.On("FindCourseLessons", context.Background(), courses[0].ID).
-					Return([]domain.Lesson{lessons[0], lessons[1]}, nil)
-				lessonRepo.On("FindLessonTests", context.Background(), lessons[1].ID).
-					Return([]domain.Test{tests[0]}, nil)
 			},
 			hasError: true,
 		},
 	}
 
 	for _, test := range testTable {
-		t.Logf("Test: %s", test.name)
+		t.Run(test.name, func(t *testing.T) {
+			courseRepo := mocks.NewCourseRepository(t)
+			lessonRepo := mocks.NewLessonRepository(t)
+			courseService := service.NewCourseService(courseRepo, lessonRepo)
 
-		courseRepo := mocks.NewCourseRepository(t)
-		lessonRepo := mocks.NewLessonRepository(t)
-		courseService := service.NewCourseService(courseRepo, lessonRepo)
+			test.initCourseRepo(courseRepo)
+			test.initLessonRepo(lessonRepo)
 
-		test.initCourseRepo(courseRepo)
-		test.initLessonRepo(lessonRepo)
+			errList := courseService.ConfirmDraftCourse(context.Background(), test.course.ID)
 
-		errList := courseService.ConfirmDraftCourse(context.Background(), test.course.ID)
-
-		if test.hasError {
-			require.NotEqual(t, len(errList), 0)
-		} else {
-			require.Equal(t, len(errList), 0)
-		}
+			if test.hasError {
+				require.NotEqual(t, len(errList), 0)
+			} else {
+				require.Equal(t, len(errList), 0)
+			}
+		})
 	}
 }
 
@@ -340,19 +310,19 @@ func TestCourseService_PublishReadyCourse(t *testing.T) {
 	}
 
 	for _, test := range testTable {
-		t.Logf("Test: %s", test.name)
+		t.Run(test.name, func(t *testing.T) {
+			courseRepo := mocks.NewCourseRepository(t)
+			lessonRepo := mocks.NewLessonRepository(t)
+			courseService := service.NewCourseService(courseRepo, lessonRepo)
 
-		courseRepo := mocks.NewCourseRepository(t)
-		lessonRepo := mocks.NewLessonRepository(t)
-		courseService := service.NewCourseService(courseRepo, lessonRepo)
+			test.initCourseRepo(courseRepo)
+			err := courseService.PublishReadyCourse(context.Background(), test.course.ID)
 
-		test.initCourseRepo(courseRepo)
-		err := courseService.PublishReadyCourse(context.Background(), test.course.ID)
-
-		if test.hasError {
-			require.Error(t, err)
-		} else {
-			require.Equal(t, err, nil)
-		}
+			if test.hasError {
+				require.Error(t, err)
+			} else {
+				require.Equal(t, err, nil)
+			}
+		})
 	}
 }

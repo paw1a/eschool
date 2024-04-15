@@ -36,14 +36,16 @@ create table public.lesson (
     id uuid primary key,
     title varchar(255) not null,
     type lesson_type not null,
-    content_url text,
+    score int not null,
+    theory_url text,
+    video_url text,
     course_id uuid not null,
     foreign key (course_id) references public.course(id) on delete cascade
 );
 
 create table public.test (
     id uuid primary key,
-    question_url text not null,
+    task_url text not null,
     options text not null,
     answer text not null,
     score int not null,

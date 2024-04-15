@@ -43,22 +43,8 @@ func (c *CourseService) AddCourseTeacher(ctx context.Context, teacherID, courseI
 	return c.repo.AddCourseTeacher(ctx, teacherID, courseID)
 }
 
-func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error {
-	course, err := c.FindByID(ctx, courseID)
-	if err != nil {
-		return []error{err}
-	}
-
-	if course.Status != domain.CourseDraft {
-		return []error{errs.ErrCourseReadyState}
-	}
-
+func (c *CourseService) checkCourseLessons(lessons []domain.Lesson) []error {
 	var errList []error
-	lessons, err := c.lessonRepo.FindCourseLessons(ctx, courseID)
-	if err != nil {
-		return []error{err}
-	}
-
 	var theoryCount, practiceCount int
 	for _, lesson := range lessons {
 		err := lesson.Validate()
@@ -78,6 +64,29 @@ func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.
 
 	if theoryCount == 0 || practiceCount == 0 {
 		errList = append(errList, errs.ErrCourseNotEnoughLessons)
+	}
+
+	return errList
+}
+
+func (c *CourseService) ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error {
+	course, err := c.FindByID(ctx, courseID)
+	if err != nil {
+		return []error{err}
+	}
+
+	if course.Status != domain.CourseDraft {
+		return []error{errs.ErrCourseReadyState}
+	}
+
+	var errList []error
+	lessons, err := c.lessonRepo.FindCourseLessons(ctx, courseID)
+	if err != nil {
+		return []error{err}
+	}
+
+	if checkErrors := c.checkCourseLessons(lessons); checkErrors != nil {
+		errList = append(errList, checkErrors...)
 	}
 
 	if errList == nil {

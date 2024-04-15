@@ -65,20 +65,20 @@ func TestUserService_FindByID(t *testing.T) {
 	}
 
 	for _, test := range testTable {
-		t.Logf("Test: %s", test.name)
+		t.Run(test.name, func(t *testing.T) {
+			userRepo := mocks.NewUserRepository(t)
+			userService := service.NewUserService(userRepo)
 
-		userRepo := mocks.NewUserRepository(t)
-		userService := service.NewUserService(userRepo)
+			test.initRepoMock(userRepo)
 
-		test.initRepoMock(userRepo)
+			user, err := userService.FindByID(context.Background(), test.user.ID)
 
-		user, err := userService.FindByID(context.Background(), test.user.ID)
-
-		if test.hasError {
-			require.Error(t, err)
-		} else {
-			require.Equal(t, test.user.ID, user.ID)
-		}
+			if test.hasError {
+				require.Error(t, err)
+			} else {
+				require.Equal(t, test.user.ID, user.ID)
+			}
+		})
 	}
 }
 
@@ -128,23 +128,23 @@ func TestUserService_FindByCredentials(t *testing.T) {
 	}
 
 	for _, test := range testTable {
-		t.Logf("Test: %s", test.name)
+		t.Run(test.name, func(t *testing.T) {
+			userRepo := mocks.NewUserRepository(t)
+			userService := service.NewUserService(userRepo)
 
-		userRepo := mocks.NewUserRepository(t)
-		userService := service.NewUserService(userRepo)
+			test.initRepoMock(userRepo)
 
-		test.initRepoMock(userRepo)
+			user, err := userService.FindByCredentials(context.Background(), port.UserCredentials{
+				Email:    test.user.Email,
+				Password: test.user.Password,
+			})
 
-		user, err := userService.FindByCredentials(context.Background(), port.UserCredentials{
-			Email:    test.user.Email,
-			Password: test.user.Password,
+			if test.hasError {
+				require.Error(t, err)
+			} else {
+				require.Equal(t, test.user.ID, user.ID)
+			}
 		})
-
-		if test.hasError {
-			require.Error(t, err)
-		} else {
-			require.Equal(t, test.user.ID, user.ID)
-		}
 	}
 }
 
@@ -185,19 +185,19 @@ func TestUserService_FindUserInfo(t *testing.T) {
 	}
 
 	for _, test := range testTable {
-		t.Logf("Test: %s", test.name)
+		t.Run(test.name, func(t *testing.T) {
+			userRepo := mocks.NewUserRepository(t)
+			userService := service.NewUserService(userRepo)
 
-		userRepo := mocks.NewUserRepository(t)
-		userService := service.NewUserService(userRepo)
+			test.initRepoMock(userRepo)
 
-		test.initRepoMock(userRepo)
+			userInfo, err := userService.FindUserInfo(context.Background(), test.user.ID)
 
-		userInfo, err := userService.FindUserInfo(context.Background(), test.user.ID)
-
-		if test.hasError {
-			require.Error(t, err)
-		} else {
-			require.Equal(t, test.expectedInfo, userInfo)
-		}
+			if test.hasError {
+				require.Error(t, err)
+			} else {
+				require.Equal(t, test.expectedInfo, userInfo)
+			}
+		})
 	}
 }

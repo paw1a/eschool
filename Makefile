@@ -28,7 +28,8 @@ mocks:
 		--filename lesson.go --structname LessonRepository
 	mockery --dir internal/core/port --name ICertificateRepository --output internal/adapter/repository/mocks \
 		--filename certificate.go --structname CertificateRepository
-
+	mockery --dir internal/core/port --name IObjectStorage --output internal/adapter/storage/mocks \
+    		--filename storage.go --structname ObjectStorage
 
 clean:
 	rm -rf .bin .data

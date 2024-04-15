@@ -6,11 +6,6 @@ import (
 	"strings"
 )
 
-const (
-	userCreateQueryFmt = ""
-	userUpdateQueryFmt = ""
-)
-
 func entityColumns(entity interface{}) []string {
 	v := reflect.ValueOf(entity)
 	if v.Kind() == reflect.Ptr {

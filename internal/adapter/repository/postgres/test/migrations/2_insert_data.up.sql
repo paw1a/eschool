@@ -62,3 +62,25 @@ insert into course_teacher (teacher_id, course_id)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
 insert into course_teacher (teacher_id, course_id)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', '30e18bc1-4354-4937-9a4d-03cf0b7027cb');
+
+-- insert lessons
+insert into lesson (id, title, type, score, theory_url, video_url, course_id)
+values ('30e18bc1-4352-4937-9a3b-03cf0b7022ca', 'lesson1', 'theory', 10,
+        'url', null, '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
+insert into lesson (id, title, type, score, theory_url, video_url, course_id)
+values ('30e18bc1-4352-4937-9a3b-03cf0b7022cb', 'lesson2', 'video', 10,
+        null, 'url', '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
+insert into lesson (id, title, type, score, theory_url, video_url, course_id)
+values ('30e18bc1-4352-4937-9a3b-03cf0b7022cc', 'lesson3', 'practice', 10,
+        null, null, '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
+
+-- insert tests
+insert into test (id, task_url, options, answer, score, level, lesson_id)
+values ('30e18bc1-4352-4937-9a3b-03cf0b7027ca', 'url', E'opt1\nopt2\nopt3',
+        'opt1', 12, 2, '30e18bc1-4352-4937-9a3b-03cf0b7022cc');
+insert into test (id, task_url, options, answer, score, level, lesson_id)
+values ('30e18bc1-4352-4937-9a3b-03cf0b7027cb', 'url', E'opt1\nopt2',
+        'opt2', 12, 2, '30e18bc1-4352-4937-9a3b-03cf0b7022cc');
+insert into test (id, task_url, options, answer, score, level, lesson_id)
+values ('30e18bc1-4352-4937-9a3b-03cf0b7027cc', 'url', E'opt1',
+        'opt1', 12, 2, '30e18bc1-4352-4937-9a3b-03cf0b7022cc');
