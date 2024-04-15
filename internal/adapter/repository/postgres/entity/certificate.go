@@ -14,7 +14,7 @@ const (
 
 type PgCertificate struct {
 	ID        uuid.UUID `db:"id"`
-	CourseID  uuid.UUID `db:"courseID"`
+	CourseID  uuid.UUID `db:"course_id"`
 	UserID    uuid.UUID `db:"user_id"`
 	Name      string    `db:"name"`
 	CreatedAt time.Time `db:"created_at"`
