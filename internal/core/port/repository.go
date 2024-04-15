@@ -66,10 +66,7 @@ type ICertificateRepository interface {
 }
 
 type IStatisticsRepository interface {
-	FindUserLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
-	FindUserTestStat(ctx context.Context, userID, testID domain.ID) (domain.TestStat, error)
+	FindLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
 	CreateLessonStat(ctx context.Context, stat domain.LessonStat) error
-	CreateTestStat(ctx context.Context, stat domain.TestStat) error
-	UpdateUserLessonStat(ctx context.Context, stat domain.LessonStat) error
-	UpdateUserTestStat(ctx context.Context, stat domain.TestStat) error
+	UpdateLessonStat(ctx context.Context, stat domain.LessonStat) error
 }

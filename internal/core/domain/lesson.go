@@ -37,21 +37,6 @@ type Test struct {
 	Score    int
 }
 
-type LessonStat struct {
-	ID        ID
-	LessonID  ID
-	UserID    ID
-	Score     int
-	TestStats []TestStat
-}
-
-type TestStat struct {
-	ID     ID
-	TestID ID
-	UserID ID
-	Score  int
-}
-
 func (l *Lesson) Validate() error {
 	var errList []error
 	if l.Score <= 0 {

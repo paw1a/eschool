@@ -79,15 +79,11 @@ type ICertificateService interface {
 	CreateCourseCertificate(ctx context.Context, userID, courseID domain.ID) (domain.Certificate, error)
 }
 
-type IStatisticsService interface {
-	FindUserLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
-	FindUserTestStat(ctx context.Context, userID, testID domain.ID) (domain.TestStat, error)
-	CreateUserLessonStat(ctx context.Context, userID, lessonID domain.ID) error
-	CreateUserTestStat(ctx context.Context, userID, testID domain.ID) error
-	UpdateUserLessonStat(ctx context.Context, userID, lessonID domain.ID,
+type IStatService interface {
+	FindLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
+	CreateLessonStat(ctx context.Context, userID, lessonID domain.ID) error
+	UpdateLessonStat(ctx context.Context, userID, lessonID domain.ID,
 		param UpdateLessonStatParam) error
-	UpdateUserTestStat(ctx context.Context, userID, testID domain.ID,
-		param UpdateTestStatParam) error
 }
 
 type IPaymentService interface {
