@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	jwt2 "github.com/paw1a/eschool/internal/adapter/auth/jwt"
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
-	"github.com/paw1a/eschool/pkg/auth"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
@@ -54,7 +54,7 @@ func (h *Handler) userSignIn(context *gin.Context) {
 	}
 
 	userClaims := jwt.MapClaims{"userID": user.ID}
-	authDetails, err := h.tokenProvider.CreateJWTSession(auth.CreateSessionInput{
+	authDetails, err := h.tokenProvider.CreateJWTSession(jwt2.CreateSessionInput{
 		Fingerprint: signInDTO.Fingerprint,
 		Claims:      userClaims,
 	})
@@ -176,7 +176,7 @@ func extractAuthToken(context *gin.Context) (string, error) {
 }
 
 func (h *Handler) refreshToken(context *gin.Context) {
-	var input auth.RefreshInput
+	var input jwt2.RefreshInput
 
 	err := context.BindJSON(&input)
 	if err != nil {
@@ -192,7 +192,7 @@ func (h *Handler) refreshToken(context *gin.Context) {
 
 	input.RefreshToken = refreshCookie
 
-	authDetails, err := h.tokenProvider.Refresh(auth.RefreshInput{
+	authDetails, err := h.tokenProvider.Refresh(jwt2.RefreshInput{
 		RefreshToken: input.RefreshToken,
 		Fingerprint:  input.Fingerprint,
 	})

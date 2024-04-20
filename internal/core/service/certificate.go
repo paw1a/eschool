@@ -39,6 +39,39 @@ func (c *CertificateService) FindUserCertificates(ctx context.Context,
 	return c.repo.FindUserCertificates(ctx, userID)
 }
 
+func (c *CertificateService) calculateLessonsScores(ctx context.Context,
+	userID domain.ID, lessons []domain.Lesson) (int, int, error) {
+	var maxScore, score int
+	for _, lesson := range lessons {
+		lessonStat, err := c.statRepo.FindLessonStat(ctx, userID, lesson.ID)
+		if err != nil {
+			return 0, 0, err
+		}
+
+		switch lesson.Type {
+		case domain.PracticeLesson:
+			var maxLessonMark, lessonMark int
+			for _, test := range lesson.Tests {
+				for _, testStat := range lessonStat.TestStats {
+					if test.ID == testStat.TestID {
+						maxLessonMark += test.Score * test.Level
+						lessonMark += testStat.Score * test.Level
+					}
+				}
+			}
+			maxScore += maxLessonMark + lesson.Score
+			score += lessonMark + lesson.Score
+		case domain.VideoLesson:
+			fallthrough
+		case domain.TheoryLesson:
+			maxScore += lesson.Score
+			score += lessonStat.Score
+		}
+	}
+
+	return score, maxScore, nil
+}
+
 func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 	userID, courseID domain.ID) (domain.Certificate, error) {
 	course, err := c.courseRepo.FindByID(ctx, courseID)
@@ -51,39 +84,12 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 		return domain.Certificate{}, err
 	}
 
-	var maxMark, mark int
-	for _, lesson := range lessons {
-		switch lesson.Type {
-		case domain.PracticeLesson:
-			tests, err := c.lessonRepo.FindLessonTests(ctx, lesson.ID)
-			if err != nil {
-				return domain.Certificate{}, err
-			}
-
-			var maxLessonMark, lessonMark int
-			for _, test := range tests {
-				maxLessonMark += test.Score * test.Level
-				testStat, err := c.statRepo.FindUserTestStat(ctx, userID, test.ID)
-				if err != nil {
-					return domain.Certificate{}, err
-				}
-				lessonMark += testStat.Score * test.Level
-			}
-			maxMark += maxLessonMark + lesson.Score
-			mark += lessonMark + lesson.Score
-		case domain.VideoLesson:
-			fallthrough
-		case domain.TheoryLesson:
-			lessonStat, err := c.statRepo.FindUserLessonStat(ctx, userID, lesson.ID)
-			if err != nil {
-				return domain.Certificate{}, err
-			}
-			maxMark += lesson.Score
-			mark += lessonStat.Score
-		}
+	score, maxScore, err := c.calculateLessonsScores(ctx, userID, lessons)
+	if err != nil {
+		return domain.Certificate{}, err
 	}
 
-	percentage := float64(mark) / float64(maxMark)
+	percentage := float64(score) / float64(maxScore)
 	var grade domain.CertificateGrade
 	if percentage > 0.9 {
 		grade = domain.GoldCertificate
@@ -100,6 +106,6 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 		Name:      fmt.Sprintf("Сертификат о прохождении курса \"%s\"", course.Name),
 		CreatedAt: time.Now(),
 		Grade:     grade,
-		Score:     mark,
+		Score:     score,
 	})
 }

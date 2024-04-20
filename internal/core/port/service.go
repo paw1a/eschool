@@ -96,3 +96,12 @@ type IMediaService interface {
 	SaveLessonTheory(ctx context.Context, lessonID domain.ID, reader io.Reader) (domain.Url, error)
 	SaveTestQuestion(ctx context.Context, testID domain.ID, reader io.Reader) (domain.Url, error)
 }
+
+type IAuthTokenService interface {
+	SignIn(ctx context.Context, param SignInParam) (domain.AuthDetails, error)
+	SignUp(ctx context.Context, param SignUpParam) error
+	LogOut(ctx context.Context, refreshToken domain.Token) error
+	Refresh(ctx context.Context, refreshToken domain.Token, fingerprint string) (domain.AuthDetails, error)
+	Verify(ctx context.Context, accessToken domain.Token) error
+	Payload(ctx context.Context, accessToken domain.Token) (domain.AuthPayload, error)
+}

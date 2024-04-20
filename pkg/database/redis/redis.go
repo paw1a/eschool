@@ -16,7 +16,7 @@ func NewClient(cfg *Config) (*redis.Client, error) {
 
 	_, err := client.Ping().Result()
 	if err != nil {
-		log.Error("failed to ping redis")
+		log.Error("failed to ping storage")
 		return nil, err
 	}
 

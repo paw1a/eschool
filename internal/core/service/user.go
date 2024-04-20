@@ -59,9 +59,15 @@ func (u *UserService) Update(ctx context.Context, userID domain.ID,
 	if param.Surname.Valid {
 		user.Surname = param.Surname.String
 	}
-	user.City = param.City
-	user.Phone = param.Phone
-	user.AvatarUrl = param.AvatarUrl
+	if param.City.Valid {
+		user.City = param.City
+	}
+	if param.Phone.Valid {
+		user.Phone = param.Phone
+	}
+	if param.AvatarUrl.Valid {
+		user.AvatarUrl = param.AvatarUrl
+	}
 
 	return u.repo.Update(ctx, user)
 }

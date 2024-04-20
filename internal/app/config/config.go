@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/paw1a/eschool/pkg/auth"
+	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
 	"github.com/paw1a/eschool/pkg/minio"
@@ -16,7 +16,7 @@ type Config struct {
 		Port string
 	}
 	Postgres postgres.Config
-	JWT      auth.Config
+	JWT      jwt.Config
 	Redis    redis.Config
 	Minio    minio.Config
 }
@@ -58,7 +58,7 @@ func bindEnvConfig() error {
 	bindings["postgres.password"] = "DB_PASSWORD"
 	bindings["postgres.host"] = "DB_HOST"
 	bindings["postgres.port"] = "DB_PORT"
-	bindings["redis.uri"] = "REDIS_URI"
+	bindings["storage.uri"] = "REDIS_URI"
 	bindings["minio.endpoint"] = "MINIO_ENDPOINT"
 	bindings["minio.accessKey"] = "MINIO_ACCESS_KEY"
 	bindings["minio.secretKey"] = "MINIO_SECRET_KEY"

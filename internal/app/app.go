@@ -1,13 +1,13 @@
 package app
 
 import (
+	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
 	delivery "github.com/paw1a/eschool/internal/adapter/delivery/http"
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
 	pgRepo "github.com/paw1a/eschool/internal/adapter/repository/postgres"
 	"github.com/paw1a/eschool/internal/app/config"
 	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/internal/core/service"
-	"github.com/paw1a/eschool/pkg/auth"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
 	"github.com/paw1a/eschool/pkg/minio"
@@ -33,8 +33,8 @@ func Run() {
 			redis.NewClient,
 			minio.NewMinioClient,
 			fx.Annotate(
-				auth.NewTokenProvider,
-				fx.As(new(auth.TokenProvider)),
+				jwt.NewTokenProvider,
+				fx.As(new(jwt.TokenProvider)),
 			),
 			fx.Annotate(
 				pgRepo.NewUserRepo,
