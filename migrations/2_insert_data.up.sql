@@ -1,6 +1,6 @@
 -- insert users
 insert into public.user (id, email, password, name, surname, phone)
-values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', 'paw1a@yandex.ru', '123', 'Pavel', 'Shpakovsliy', '+79992233444');
+values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', 'paw1a@yandex.ru', '123', 'Pavel', 'Shpakovskiy', '+79992233444');
 insert into public.user (id, email, password, name, surname, city)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', 'hanoys@mail.ru', 'qwerty', 'Timur', 'Musin', 'Moscow');
 insert into public.user (id, email, password, name, surname, phone)

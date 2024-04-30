@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 )
 
 func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
@@ -29,7 +29,12 @@ func (h *Handler) getUserAccount(context *gin.Context) {
 		return
 	}
 
-	SuccessResponse(context, userInfo)
+	userInfoDTO := dto.UserInfoDTO{
+		Name:    userInfo.Name,
+		Surname: userInfo.Surname,
+	}
+
+	SuccessResponse(context, userInfoDTO)
 }
 
 func (h *Handler) getAllUsers(context *gin.Context) {
@@ -39,10 +44,20 @@ func (h *Handler) getAllUsers(context *gin.Context) {
 		return
 	}
 
-	usersArray := make([]domain.User, len(users))
+	userDTOs := make([]dto.UserDTO, len(users))
 	if users != nil {
-		usersArray = users
+		for i, user := range users {
+			userDTOs[i] = dto.UserDTO{
+				ID:        user.ID.String(),
+				Name:      user.Name,
+				Surname:   user.Surname,
+				Email:     user.Email,
+				Phone:     user.Phone.String,
+				City:      user.City.String,
+				AvatarUrl: user.AvatarUrl.String,
+			}
+		}
 	}
 
-	SuccessResponse(context, usersArray)
+	SuccessResponse(context, userDTOs)
 }
