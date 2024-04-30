@@ -1,7 +1,4 @@
-# ППО
-
-## Название проекта
-Eschool
+# Eschool
 
 ## Краткое описание идеи проекта
 Сайт для онлайн образования с возможностью создания собственных учебных программ или курсов.
@@ -64,7 +61,7 @@ Eschool
 
 ## Use-Case диаграмма
 
-![Use-case](docs/images/usecase.png)
+![Use-case](docs/images/usecase.svg)
 
 ## ER диаграмма
 
@@ -153,3 +150,21 @@ Eschool
 ## BPMN-диаграмма
 
 ![BPMN](docs/images/bpmn.png)
+
+## Описание технологического стека
+- Язык - Golang
+- Тип UI - Web SPA (фреймворк React с TypeScript)
+- Тип приложения - Web API
+- База данных - PostreSQL
+- Хранилище сессий - Redis
+- Объектное хранилище - S3 MinIO
+- Платежная система - YooMoney
+- Аутентификация - JWT токены
+
+## Верхнеуровневое разбиение на компоненты
+
+![components](docs/images/components.svg)
+
+## UML диаграммы классов
+
+![class](docs/images/class.svg)

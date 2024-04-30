@@ -1,0 +1,121 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    container_name: 'postgres'
+    logging:
+      driver: none
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: eschool
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  migrate:
+    image: migrate/migrate
+    container_name: 'migrate'
+    volumes:
+      - ./migrations:/migrations
+    command: ["-path", "/migrations", "-database",
+              "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable",
+              "up", "2"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+
+  redis:
+    image: redis
+    container_name: 'storage'
+    command: storage-server --save 60 1 --loglevel warning
+    logging:
+      driver: none
+    volumes:
+      - ./.data/storage:/var/lib/storage
+      - ./.data/storage-config:/usr/local/etc/storage/storage.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  minio:
+    image: minio/minio
+    container_name: 'minio'
+    command: minio server /data --console-address :9001
+#    logging:
+#      driver: none
+    volumes:
+      - ./.data/minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env
+    networks:
+      - backend
+
+  app:
+    image: 'app'
+    container_name: 'app'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+  debug:
+    image: 'debug'
+    container_name: 'debug'
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "8080:8080"
+      - "40000:40000"
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: "backend"
+    driver: bridge
