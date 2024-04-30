@@ -43,3 +43,10 @@ var (
 	ErrFileReaderEmpty = errors.New("validation file reader is nil error")
 	ErrSaveFileError   = errors.New("failed to save file to object storage")
 )
+
+var (
+	ErrInvalidTokenSignMethod = errors.New("invalid signing method")
+	ErrInvalidTokenClaims     = errors.New("invalid token claims")
+	ErrInvalidToken           = errors.New("invalid jwt token")
+	ErrInvalidFingerprint     = errors.New("invalid client fingerprint")
+)

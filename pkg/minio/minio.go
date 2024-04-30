@@ -10,14 +10,14 @@ import (
 
 type Config struct {
 	Endpoint   string
-	AccessKey  string
-	SecretKey  string
+	User       string
+	Password   string
 	BucketName string
 }
 
-func NewMinioClient(cfg *Config) (*minio.Client, error) {
+func NewClient(cfg *Config) (*minio.Client, error) {
 	minioClient, err := minio.New(cfg.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(cfg.AccessKey, cfg.SecretKey, ""),
+		Creds:  credentials.NewStaticV4(cfg.User, cfg.Password, ""),
 		Secure: false,
 	})
 	if err != nil {

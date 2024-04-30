@@ -65,7 +65,7 @@ type ICertificateRepository interface {
 	Create(ctx context.Context, cert domain.Certificate) (domain.Certificate, error)
 }
 
-type IStatisticsRepository interface {
+type IStatRepository interface {
 	FindLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
 	CreateLessonStat(ctx context.Context, stat domain.LessonStat) error
 	UpdateLessonStat(ctx context.Context, stat domain.LessonStat) error

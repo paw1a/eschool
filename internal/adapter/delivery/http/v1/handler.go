@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
 	"github.com/paw1a/eschool/internal/app/config"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
@@ -16,23 +15,47 @@ import (
 )
 
 type Handler struct {
-	config        *config.Config
-	tokenProvider jwt.TokenProvider
-	userService   port.IUserService
+	config             *config.Config
+	userService        port.IUserService
+	schoolService      port.ISchoolService
+	lessonService      port.ILessonService
+	reviewService      port.IReviewService
+	courseService      port.ICourseService
+	certificateService port.ICertificateService
+	mediaService       port.IMediaService
+	statService        port.IStatService
+	authService        port.IAuthTokenService
+	paymentService     port.IPaymentService
 }
 
 type HandlerParams struct {
 	fx.In
-	Config        *config.Config
-	TokenProvider jwt.TokenProvider
-	UserService   port.IUserService
+	Config             *config.Config
+	UserService        port.IUserService
+	SchoolService      port.ISchoolService
+	LessonService      port.ILessonService
+	ReviewService      port.IReviewService
+	CourseService      port.ICourseService
+	CertificateService port.ICertificateService
+	MediaService       port.IMediaService
+	StatService        port.IStatService
+	AuthService        port.IAuthTokenService
+	PaymentService     port.IPaymentService
 }
 
 func NewHandler(params HandlerParams) *Handler {
 	return &Handler{
-		config:        params.Config,
-		tokenProvider: params.TokenProvider,
-		userService:   params.UserService,
+		config:             params.Config,
+		userService:        params.UserService,
+		schoolService:      params.SchoolService,
+		lessonService:      params.LessonService,
+		reviewService:      params.ReviewService,
+		courseService:      params.CourseService,
+		certificateService: params.CertificateService,
+		mediaService:       params.MediaService,
+		statService:        params.StatService,
+		authService:        params.AuthService,
+		paymentService:     params.PaymentService,
 	}
 }
 
@@ -69,8 +92,8 @@ func LoggerMiddleware() gin.HandlerFunc {
 	}
 }
 
-func getIdFromRequestContext(context *gin.Context, paramName string) (domain.ID, error) {
-	id, ok := context.Get(paramName)
+func getIdFromRequestContext(context *gin.Context) (domain.ID, error) {
+	id, ok := context.Get("userID")
 	if !ok {
 		return domain.RandomID(), errors.New("not authenticated")
 	}

@@ -29,6 +29,7 @@ func (a *AuthTokenService) SignIn(ctx context.Context, param port.SignInParam) (
 
 func (a *AuthTokenService) SignUp(ctx context.Context, param port.SignUpParam) error {
 	_, err := a.userRepo.Create(ctx, domain.User{
+		ID:        domain.NewID(),
 		Name:      param.Name,
 		Surname:   param.Surname,
 		Email:     param.Email,

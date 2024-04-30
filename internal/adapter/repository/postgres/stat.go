@@ -15,7 +15,7 @@ type PostgresStatRepo struct {
 	db *sqlx.DB
 }
 
-func NewStatisticsRepo(db *sqlx.DB) *PostgresStatRepo {
+func NewStatRepo(db *sqlx.DB) *PostgresStatRepo {
 	return &PostgresStatRepo{
 		db: db,
 	}

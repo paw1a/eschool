@@ -13,11 +13,11 @@ type CertificateService struct {
 	repo       port.ICertificateRepository
 	courseRepo port.ICourseRepository
 	lessonRepo port.ILessonRepository
-	statRepo   port.IStatisticsRepository
+	statRepo   port.IStatRepository
 }
 
 func NewCertificateService(repo port.ICertificateRepository, courseRepo port.ICourseRepository,
-	statRepo port.IStatisticsRepository, lessonRepo port.ILessonRepository) *CertificateService {
+	statRepo port.IStatRepository, lessonRepo port.ILessonRepository) *CertificateService {
 	return &CertificateService{
 		repo:       repo,
 		courseRepo: courseRepo,

@@ -40,13 +40,13 @@ services:
 
   redis:
     image: redis
-    container_name: 'storage'
-    command: storage-server --save 60 1 --loglevel warning
+    container_name: 'redis'
+    command: redis-server --save 60 1 --loglevel warning
     logging:
       driver: none
     volumes:
-      - ./.data/storage:/var/lib/storage
-      - ./.data/storage-config:/usr/local/etc/storage/storage.conf
+      - ./.data/redis:/var/lib/redis
+      - ./.data/redis-config:/usr/local/etc/storage/redis.conf
     ports:
       - "6379:6379"
     networks:
@@ -56,8 +56,8 @@ services:
     image: minio/minio
     container_name: 'minio'
     command: minio server /data --console-address :9001
-#    logging:
-#      driver: none
+    logging:
+      driver: none
     volumes:
       - ./.data/minio:/data
     ports:
@@ -84,8 +84,26 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      minio:
+        condition: service_started
     ports:
       - "8080:8080"
+    networks:
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: 'pgadmin4'
+    logging:
+      driver: none
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - ./.data/pgadmin:/var/lib/pgadmin
     networks:
       - backend
 

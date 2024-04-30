@@ -58,10 +58,10 @@ func bindEnvConfig() error {
 	bindings["postgres.password"] = "DB_PASSWORD"
 	bindings["postgres.host"] = "DB_HOST"
 	bindings["postgres.port"] = "DB_PORT"
-	bindings["storage.uri"] = "REDIS_URI"
+	bindings["redis.uri"] = "REDIS_URI"
 	bindings["minio.endpoint"] = "MINIO_ENDPOINT"
-	bindings["minio.accessKey"] = "MINIO_ACCESS_KEY"
-	bindings["minio.secretKey"] = "MINIO_SECRET_KEY"
+	bindings["minio.user"] = "MINIO_ROOT_USER"
+	bindings["minio.password"] = "MINIO_ROOT_PASSWORD"
 	bindings["minio.bucketName"] = "MINIO_BUCKET_NAME"
 
 	for name, binding := range bindings {
