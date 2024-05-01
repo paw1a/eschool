@@ -25,6 +25,7 @@ const (
 	schoolFindAllQuery            = "SELECT * FROM public.school"
 	schoolFindByIDQuery           = "SELECT * FROM public.school WHERE id = $1"
 	schoolFindUserSchoolsQuery    = "SELECT * FROM public.school WHERE owner_id = $1"
+	schoolFindSchoolCourses       = "SELECT * FROM public.course WHERE school_id = $1"
 	schoolFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
 		"JOIN public.school_teacher st on u.id = st.teacher_id " +
 		"JOIN public.school s on st.school_id = s.id WHERE s.id = $1"
@@ -77,6 +78,23 @@ func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.
 		schools[i] = school.ToDomain()
 	}
 	return schools, nil
+}
+
+func (s *PostgresSchoolRepo) FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error) {
+	var pgCourses []entity.PgCourse
+	if err := s.db.SelectContext(ctx, &pgCourses, schoolFindSchoolCourses, schoolID); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	courses := make([]domain.Course, len(pgCourses))
+	for i, course := range pgCourses {
+		courses[i] = course.ToDomain()
+	}
+	return courses, nil
 }
 
 func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {

@@ -28,6 +28,7 @@ var (
 	ForbiddenError      = errors.New("Forbidden")
 	InternalServerError = errors.New("Internal Server Error")
 	UnmarshalError      = errors.New("JSON Unmarshal Error")
+	PathIdParamError    = errors.New("Invalid ID Query Parameter")
 )
 
 type RestErr interface {
@@ -65,6 +66,10 @@ func ParseError(err error) RestErr {
 		return NewRestError(http.StatusUnauthorized, ErrUnauthorized)
 	case errors.Is(err, UnmarshalError):
 		return NewRestError(http.StatusBadRequest, ErrUnmarshal)
+	case errors.Is(err, ForbiddenError):
+		return NewRestError(http.StatusForbidden, ErrForbidden)
+	case errors.Is(err, PathIdParamError):
+		return NewRestError(http.StatusBadRequest, PathIdParamError.Error())
 	case errors.Is(err, errs.ErrInvalidToken):
 		return NewRestError(http.StatusUnauthorized, errs.ErrInvalidToken.Error())
 	case errors.Is(err, errs.ErrInvalidTokenSignMethod):

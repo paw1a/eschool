@@ -65,6 +65,7 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 	{
 		h.initAuthRoutes(v1)
 		h.initUsersRoutes(v1)
+		h.initCourseRoutes(v1)
 	}
 }
 
@@ -90,6 +91,14 @@ func LoggerMiddleware() gin.HandlerFunc {
 			}
 		}
 	}
+}
+
+func getIdFromPath(c *gin.Context, paramName string) (domain.ID, error) {
+	idString := c.Param(paramName)
+	if idString == "" {
+		return domain.RandomID(), errors.New("empty id param")
+	}
+	return domain.ID(idString), nil
 }
 
 func getIdFromRequestContext(context *gin.Context) (domain.ID, error) {

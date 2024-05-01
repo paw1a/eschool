@@ -3,20 +3,37 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"github.com/paw1a/eschool/internal/core/port"
 )
 
 func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 	users := api.Group("/users")
 	{
-		users.GET("/", h.getAllUsers)
+		users.GET("/", h.findAllUsers)
 		authenticated := users.Group("/", h.verifyToken)
 		{
-			authenticated.GET("/account", h.getUserAccount)
+			authenticated.GET("/account", h.findUserAccount)
+			authenticated.PUT("/account", h.updateUser)
 		}
 	}
 }
 
-func (h *Handler) getUserAccount(context *gin.Context) {
+func (h *Handler) findAllUsers(context *gin.Context) {
+	users, err := h.userService.FindAll(context.Request.Context())
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	userDTOs := make([]dto.UserDTO, len(users))
+	for i, user := range users {
+		userDTOs[i] = dto.NewUserDTO(user)
+	}
+
+	SuccessResponse(context, userDTOs)
+}
+
+func (h *Handler) findUserAccount(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
 		ErrorResponse(context, UnauthorizedError)
@@ -37,27 +54,28 @@ func (h *Handler) getUserAccount(context *gin.Context) {
 	SuccessResponse(context, userInfoDTO)
 }
 
-func (h *Handler) getAllUsers(context *gin.Context) {
-	users, err := h.userService.FindAll(context.Request.Context())
+func (h *Handler) updateUser(context *gin.Context) {
+	userID, err := getIdFromRequestContext(context)
 	if err != nil {
-		ErrorResponse(context, err)
+		ErrorResponse(context, UnauthorizedError)
 		return
 	}
 
-	userDTOs := make([]dto.UserDTO, len(users))
-	if users != nil {
-		for i, user := range users {
-			userDTOs[i] = dto.UserDTO{
-				ID:        user.ID.String(),
-				Name:      user.Name,
-				Surname:   user.Surname,
-				Email:     user.Email,
-				Phone:     user.Phone.String,
-				City:      user.City.String,
-				AvatarUrl: user.AvatarUrl.String,
-			}
-		}
+	var updateUserDTO dto.UpdateUserDTO
+	err = context.BindJSON(&updateUserDTO)
+	if err != nil {
+		ErrorResponse(context, UnmarshalError)
+		return
 	}
 
-	SuccessResponse(context, userDTOs)
+	user, err := h.userService.Update(context.Request.Context(), userID, port.UpdateUserParam{
+		Name:      updateUserDTO.Name,
+		Surname:   updateUserDTO.Surname,
+		Phone:     updateUserDTO.Phone,
+		City:      updateUserDTO.City,
+		AvatarUrl: updateUserDTO.AvatarUrl,
+	})
+
+	userDTO := dto.NewUserDTO(user)
+	SuccessResponse(context, userDTO)
 }
