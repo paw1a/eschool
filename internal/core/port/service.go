@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"io"
+	"net/url"
 )
 
 type IUserService interface {
@@ -92,7 +93,8 @@ type IStatService interface {
 }
 
 type IPaymentService interface {
-	PayCourse(ctx context.Context, userID, courseID domain.ID) error
+	GetCoursePaymentUrl(ctx context.Context, userID, courseID domain.ID) (url.URL, error)
+	ProcessCoursePayment(ctx context.Context, label string, paid int64) error
 }
 
 type IMediaService interface {

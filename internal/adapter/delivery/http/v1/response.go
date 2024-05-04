@@ -52,6 +52,9 @@ var errorStatusMap = map[error]int{
 	errs.ErrFileReaderEmpty:                      http.StatusBadRequest,
 	errs.ErrSaveFileError:                        http.StatusBadRequest,
 	errs.ErrUserIsNotSchoolTeacher:               http.StatusBadRequest,
+	errs.ErrUserIsAlreadyCourseStudent:           http.StatusConflict,
+	errs.ErrInvalidPaymentSum:                    http.StatusBadRequest,
+	errs.ErrDecodePaymentKeyFailed:               http.StatusBadRequest,
 
 	errs.ErrDuplicate:         http.StatusBadRequest,
 	errs.ErrNotExist:          http.StatusNotFound,
