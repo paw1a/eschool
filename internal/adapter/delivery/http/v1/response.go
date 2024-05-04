@@ -1,91 +1,158 @@
 package v1
 
 import (
-	"errors"
+	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
+	"strings"
+	"time"
 )
 
-type success struct {
-	Data interface{} `json:"data"`
+const (
+	ErrBadRequest          = "bad request"
+	ErrNotFound            = "not found"
+	ErrUnauthorized        = "unauthorized"
+	ErrForbidden           = "forbidden"
+	ErrInternalServerError = "internal server error"
+	ErrRequestTimeout      = "request timeout"
+)
+
+var (
+	BadRequestError          = errors.New("bad request")
+	NotFoundError            = errors.New("not Found")
+	UnauthorizedError        = errors.New("unauthorized")
+	ForbiddenError           = errors.New("forbidden")
+	InternalServerError      = errors.New("internal server error")
+	PathIdParamIsEmptyError  = errors.New("empty id query parameter")
+	PathIdParamIsInvalidUUID = errors.New("id query parameter is not uuid")
+)
+
+var errorStatusMap = map[error]int{
+	errs.ErrCourseNotEnoughLessons:               http.StatusBadRequest,
+	errs.ErrCourseLessonInvalidScore:             http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonEmptyTests:       http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonEmptyTestTaskUrl: http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonEmptyTestOptions: http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonInvalidTestScore: http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonInvalidTestLevel: http.StatusBadRequest,
+	errs.ErrCourseTheoryLessonEmptyUrl:           http.StatusBadRequest,
+	errs.ErrCourseVideoLessonEmptyUrl:            http.StatusBadRequest,
+	errs.ErrCourseReadyState:                     http.StatusBadRequest,
+	errs.ErrCoursePublishedState:                 http.StatusBadRequest,
+	errs.ErrCourseInvalidLevel:                   http.StatusBadRequest,
+	errs.ErrCourseInvalidPrice:                   http.StatusBadRequest,
+	errs.ErrCertificateCourseNotPassed:           http.StatusBadRequest,
+	errs.ErrFilenameEmpty:                        http.StatusBadRequest,
+	errs.ErrFilepathEmpty:                        http.StatusBadRequest,
+	errs.ErrFileReaderEmpty:                      http.StatusBadRequest,
+	errs.ErrSaveFileError:                        http.StatusBadRequest,
+	errs.ErrUserIsNotSchoolTeacher:               http.StatusBadRequest,
+
+	errs.ErrDuplicate:         http.StatusBadRequest,
+	errs.ErrNotExist:          http.StatusNotFound,
+	errs.ErrUpdateFailed:      http.StatusInternalServerError,
+	errs.ErrDeleteFailed:      http.StatusInternalServerError,
+	errs.ErrPersistenceFailed: http.StatusInternalServerError,
+	errs.ErrEnumValueError:    http.StatusInternalServerError,
+	errs.ErrTransactionError:  http.StatusInternalServerError,
+
+	errs.ErrNotUniqueEmail:          http.StatusConflict,
+	errs.ErrInvalidCredentials:      http.StatusUnauthorized,
+	errs.ErrAuthSessionIsNotPresent: http.StatusUnauthorized,
+	errs.ErrInvalidTokenSignMethod:  http.StatusUnauthorized,
+	errs.ErrInvalidTokenClaims:      http.StatusUnauthorized,
+	errs.ErrInvalidFingerprint:      http.StatusUnauthorized,
+
+	PathIdParamIsEmptyError:  http.StatusBadRequest,
+	PathIdParamIsInvalidUUID: http.StatusBadRequest,
 }
 
-type failure struct {
-	Code    int    `json:"code" example:"403"`
-	Message string `json:"message" example:"resource is forbidden"`
+type RestErr interface {
+	Status() int
+	Error() string
 }
 
-type notFoundError struct {
-	Code    int    `json:"code" example:"404"`
-	Message string `json:"message" example:"resource not found"`
+type RestError struct {
+	ErrStatus  int       `json:"status,omitempty"`
+	ErrMessage string    `json:"error,omitempty"`
+	Timestamp  time.Time `json:"timestamp,omitempty"`
 }
 
-type badRequestError struct {
-	Code    int    `json:"code" example:"400"`
-	Message string `json:"message" example:"invalid request body"`
+func (e RestError) Error() string {
+	return fmt.Sprintf("status: %d, error: %s", e.ErrStatus, e.ErrMessage)
 }
 
-type internalError struct {
-	Code    int    `json:"code" example:"500"`
-	Message string `json:"message" example:"something went wrong on the server"`
-	Error   error  `json:"-"`
+func (e RestError) Status() int {
+	return e.ErrStatus
 }
 
-type unauthorizedError struct {
-	Code    int    `json:"code" example:"401"`
-	Message string `json:"message" example:"user with id=123 is unauthorized"`
-}
-
-func successResponse(context *gin.Context, data interface{}) {
-	context.JSON(http.StatusOK, success{Data: data})
-}
-
-func createdResponse(context *gin.Context, data interface{}) {
-	context.JSON(http.StatusCreated, success{Data: data})
-}
-
-func internalErrorResponse(context *gin.Context, err error) {
-	response := internalError{
-		Code:    http.StatusInternalServerError,
-		Message: "500 Internal Server Error, contact us to fix it",
-		Error:   err,
+func NewRestError(status int, err string) RestErr {
+	return RestError{
+		ErrStatus:  status,
+		ErrMessage: err,
+		Timestamp:  time.Now().UTC(),
 	}
-	log.Errorf("Something went wrong: %v", response.Error)
-	context.AbortWithStatusJSON(response.Code, response.Error)
 }
 
-func badRequestResponse(context *gin.Context, message string, err error) {
-	response := badRequestError{
-		Code:    http.StatusBadRequest,
-		Message: message,
-	}
-	log.Warnf("User bad request error: %v", err)
-	context.AbortWithStatusJSON(response.Code, message)
-}
-
-func unauthorizedResponse(c *gin.Context, message string) {
-	log.Error(message)
-	c.AbortWithStatusJSON(http.StatusUnauthorized, failure{
-		Code:    http.StatusUnauthorized,
-		Message: message,
-	})
-}
-
-func notFoundOrInternalErrorResponse(context *gin.Context, notFoundMessage string, err error) {
-	if errors.Is(err, mongo.ErrNoDocuments) {
-		log.Warn("Not Found error: ", notFoundMessage)
-		context.AbortWithStatusJSON(http.StatusNotFound, notFoundMessage)
-	} else {
-		internalErrorResponse(context, err)
+func getValidationMessage(err validator.FieldError) string {
+	switch err.Tag() {
+	case "required":
+		return fmt.Sprintf("field '%s' must be not empty", strings.ToLower(err.Field()))
+	case "email":
+		return fmt.Sprintf("invalid email")
+	case "url":
+		return fmt.Sprintf("field '%s' must be URL", strings.ToLower(err.Field()))
+	case "oneof":
+		return fmt.Sprintf("field '%s' must be enum type", err.Field())
+	default:
+		return "json validation error"
 	}
 }
 
-func errorResponse(c *gin.Context, statusCode int, message string) {
-	log.Error(message)
-	c.AbortWithStatusJSON(statusCode, failure{
-		Code:    statusCode,
-		Message: message,
-	})
+func ParseError(err error) RestErr {
+	var validationErrors validator.ValidationErrors
+
+	switch {
+	case errors.Is(err, context.DeadlineExceeded):
+		return NewRestError(http.StatusRequestTimeout, ErrRequestTimeout)
+	case errors.Is(err, UnauthorizedError):
+		return NewRestError(http.StatusUnauthorized, ErrUnauthorized)
+	case errors.Is(err, BadRequestError):
+		return NewRestError(http.StatusBadRequest, ErrBadRequest)
+	case errors.Is(err, ForbiddenError):
+		return NewRestError(http.StatusForbidden, ErrForbidden)
+	case errors.Is(err, errs.ErrNotExist):
+		return NewRestError(http.StatusNotFound, ErrNotFound)
+	case errors.Is(err, errs.ErrInvalidToken):
+		return NewRestError(http.StatusUnauthorized, err.Error())
+	case errors.As(err, &validationErrors):
+		return NewRestError(http.StatusBadRequest, getValidationMessage(validationErrors[0]))
+	default:
+		if code, ok := errorStatusMap[err]; ok {
+			return NewRestError(code, err.Error())
+		}
+		if restErr, ok := err.(*RestError); ok {
+			return restErr
+		}
+		return NewRestError(http.StatusInternalServerError, ErrInternalServerError)
+	}
+}
+
+func ErrorResponse(context *gin.Context, err error) {
+	log.Error(err)
+	restErr := ParseError(err)
+	context.AbortWithStatusJSON(restErr.Status(), restErr)
+}
+
+func SuccessResponse(context *gin.Context, data interface{}) {
+	context.JSON(http.StatusOK, data)
+}
+
+func CreatedResponse(context *gin.Context, data interface{}) {
+	context.JSON(http.StatusCreated, data)
 }

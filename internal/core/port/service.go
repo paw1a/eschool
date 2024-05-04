@@ -21,6 +21,9 @@ type ICourseService interface {
 	FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error)
 	FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error)
 	FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error)
+	FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error)
+	IsCourseStudent(ctx context.Context, studentID, courseID domain.ID) (bool, error)
+	IsCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) (bool, error)
 	AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error
 	AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error
 	ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error
@@ -55,7 +58,9 @@ type ISchoolService interface {
 	FindAll(ctx context.Context) ([]domain.School, error)
 	FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error)
 	FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error)
+	FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error)
 	FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error)
+	IsSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) (bool, error)
 	AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error
 	CreateUserSchool(ctx context.Context, userID domain.ID, param CreateSchoolParam) (domain.School, error)
 	Update(ctx context.Context, schoolID domain.ID, param UpdateSchoolParam) (domain.School, error)

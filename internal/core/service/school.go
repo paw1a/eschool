@@ -24,12 +24,20 @@ func (s *SchoolService) FindByID(ctx context.Context, schoolID domain.ID) (domai
 	return s.repo.FindByID(ctx, schoolID)
 }
 
+func (s *SchoolService) FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error) {
+	return s.repo.FindSchoolCourses(ctx, schoolID)
+}
+
 func (s *SchoolService) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
 	return s.repo.FindUserSchools(ctx, userID)
 }
 
 func (s *SchoolService) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	return s.repo.FindSchoolTeachers(ctx, schoolID)
+}
+
+func (s *SchoolService) IsSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) (bool, error) {
+	return s.repo.IsSchoolTeacher(ctx, schoolID, teacherID)
 }
 
 func (s *SchoolService) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
@@ -41,6 +49,7 @@ func (s *SchoolService) CreateUserSchool(ctx context.Context, userID domain.ID,
 	return s.repo.Create(ctx, domain.School{
 		ID:          domain.NewID(),
 		OwnerID:     userID,
+		Name:        param.Name,
 		Description: param.Description,
 	})
 }
@@ -55,7 +64,7 @@ func (s *SchoolService) Update(ctx context.Context, schoolID domain.ID,
 	if param.Description.Valid {
 		school.Description = param.Description.String
 	}
-	
+
 	return s.repo.Update(ctx, school)
 }
 

@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/errs"
 	"github.com/paw1a/eschool/internal/core/port"
-	"github.com/pkg/errors"
 )
 
 type AuthTokenService struct {
@@ -22,13 +22,19 @@ func NewAuthTokenService(authProvider port.IAuthProvider, userRepo port.IUserRep
 func (a *AuthTokenService) SignIn(ctx context.Context, param port.SignInParam) (domain.AuthDetails, error) {
 	user, err := a.userRepo.FindByCredentials(ctx, param.Email, param.Password)
 	if err != nil {
-		return domain.AuthDetails{}, errors.New("")
+		return domain.AuthDetails{}, errs.ErrInvalidCredentials
 	}
 	return a.authProvider.CreateJWTSession(domain.AuthPayload{UserID: user.ID}, param.Fingerprint)
 }
 
 func (a *AuthTokenService) SignUp(ctx context.Context, param port.SignUpParam) error {
-	_, err := a.userRepo.Create(ctx, domain.User{
+	_, err := a.userRepo.FindByEmail(ctx, param.Email)
+	if err == nil {
+		return errs.ErrNotUniqueEmail
+	}
+
+	_, err = a.userRepo.Create(ctx, domain.User{
+		ID:        domain.NewID(),
 		Name:      param.Name,
 		Surname:   param.Surname,
 		Email:     param.Email,

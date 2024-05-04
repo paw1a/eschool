@@ -3,8 +3,6 @@ package domain
 import (
 	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/core/errs"
-	"github.com/pkg/errors"
-	"strings"
 )
 
 type LessonType int
@@ -38,46 +36,37 @@ type Test struct {
 }
 
 func (l *Lesson) Validate() error {
-	var errList []error
 	if l.Score <= 0 {
-		errList = append(errList, errs.ErrCourseLessonInvalidScore)
+		return errs.ErrCourseLessonInvalidScore
 	}
 	switch l.Type {
 	case PracticeLesson:
 		if len(l.Tests) == 0 {
-			errList = append(errList, errs.ErrCoursePracticeLessonEmptyTests)
+			return errs.ErrCoursePracticeLessonEmptyTests
 		}
 
 		for _, test := range l.Tests {
 			if test.TaskUrl == "" {
-				errList = append(errList, errs.ErrCoursePracticeLessonEmptyTestTaskUrl)
+				return errs.ErrCoursePracticeLessonEmptyTestTaskUrl
 			}
 			if len(test.Options) == 0 {
-				errList = append(errList, errs.ErrCoursePracticeLessonEmptyTestOptions)
+				return errs.ErrCoursePracticeLessonEmptyTestOptions
 			}
 			if test.Level < 0 {
-				errList = append(errList, errs.ErrLessonTestInvalidLevel)
+				return errs.ErrCoursePracticeLessonInvalidTestLevel
 			}
 			if test.Score <= 0 {
-				errList = append(errList, errs.ErrCoursePracticeLessonInvalidTestScore)
+				return errs.ErrCoursePracticeLessonInvalidTestScore
 			}
 		}
 	case TheoryLesson:
 		if !l.TheoryUrl.Valid {
-			errList = append(errList, errs.ErrCourseTheoryLessonEmptyUrl)
+			return errs.ErrCourseTheoryLessonEmptyUrl
 		}
 	case VideoLesson:
 		if !l.VideoUrl.Valid {
-			errList = append(errList, errs.ErrCourseVideoLessonEmptyUrl)
+			return errs.ErrCourseVideoLessonEmptyUrl
 		}
-	}
-
-	if errList != nil {
-		errStrings := make([]string, len(errList))
-		for i := range errList {
-			errStrings[i] = errList[i].Error()
-		}
-		return errors.New(strings.Join(errStrings, "\n"))
 	}
 
 	return nil

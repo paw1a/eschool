@@ -6,25 +6,25 @@ import (
 	"github.com/paw1a/eschool/internal/core/port"
 )
 
-type StatisticsService struct {
-	repo       port.IStatisticsRepository
+type StatService struct {
+	repo       port.IStatRepository
 	lessonRepo port.ILessonRepository
 }
 
-func NewStatisticsService(repo port.IStatisticsRepository,
-	lessonRepo port.ILessonRepository) *StatisticsService {
-	return &StatisticsService{
+func NewStatService(repo port.IStatRepository,
+	lessonRepo port.ILessonRepository) *StatService {
+	return &StatService{
 		repo:       repo,
 		lessonRepo: lessonRepo,
 	}
 }
 
-func (s *StatisticsService) FindLessonStat(ctx context.Context,
+func (s *StatService) FindLessonStat(ctx context.Context,
 	userID, lessonID domain.ID) (domain.LessonStat, error) {
 	return s.repo.FindLessonStat(ctx, userID, lessonID)
 }
 
-func (s *StatisticsService) CreateLessonStat(ctx context.Context,
+func (s *StatService) CreateLessonStat(ctx context.Context,
 	userID, lessonID domain.ID) error {
 	lesson, err := s.lessonRepo.FindByID(ctx, lessonID)
 	if err != nil {
@@ -53,7 +53,7 @@ func (s *StatisticsService) CreateLessonStat(ctx context.Context,
 	})
 }
 
-func (s *StatisticsService) UpdateLessonStat(ctx context.Context, userID, lessonID domain.ID,
+func (s *StatService) UpdateLessonStat(ctx context.Context, userID, lessonID domain.ID,
 	param port.UpdateLessonStatParam) error {
 	lessonStat, err := s.repo.FindLessonStat(ctx, userID, lessonID)
 	if err != nil {

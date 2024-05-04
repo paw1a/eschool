@@ -3,7 +3,7 @@ package redis
 import (
 	"encoding/json"
 	"github.com/go-redis/redis/v7"
-	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
+	"github.com/paw1a/eschool/internal/adapter/auth/port"
 	"time"
 )
 
@@ -15,22 +15,22 @@ func NewSessionStorage(redisClient *redis.Client) *SessionStorage {
 	return &SessionStorage{redisClient: redisClient}
 }
 
-func (s *SessionStorage) Get(refreshToken string) (jwt.AuthSession, error) {
+func (s *SessionStorage) Get(refreshToken string) (port.AuthSession, error) {
 	sessionJson, err := s.redisClient.Get(refreshToken).Bytes()
 	if err != nil {
-		return jwt.AuthSession{}, err
+		return port.AuthSession{}, err
 	}
 
-	var session jwt.AuthSession
+	var session port.AuthSession
 	err = json.Unmarshal(sessionJson, &session)
 	if err != nil {
-		return jwt.AuthSession{}, err
+		return port.AuthSession{}, err
 	}
 
 	return session, nil
 }
 
-func (s *SessionStorage) Put(refreshToken string, session jwt.AuthSession,
+func (s *SessionStorage) Put(refreshToken string, session port.AuthSession,
 	expireTime time.Duration) error {
 	sessionJson, err := json.Marshal(session)
 	if err != nil {
