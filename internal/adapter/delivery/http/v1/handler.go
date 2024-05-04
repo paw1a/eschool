@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/paw1a/eschool/internal/app/config"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
@@ -66,6 +66,7 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 		h.initAuthRoutes(v1)
 		h.initUsersRoutes(v1)
 		h.initCourseRoutes(v1)
+		h.initSchoolRoutes(v1)
 	}
 }
 
@@ -96,7 +97,11 @@ func LoggerMiddleware() gin.HandlerFunc {
 func getIdFromPath(c *gin.Context, paramName string) (domain.ID, error) {
 	idString := c.Param(paramName)
 	if idString == "" {
-		return domain.RandomID(), errors.New("empty id param")
+		return domain.RandomID(), PathIdParamIsEmptyError
+	}
+
+	if _, err := uuid.Parse(idString); err != nil {
+		return domain.RandomID(), PathIdParamIsInvalidUUID
 	}
 	return domain.ID(idString), nil
 }
@@ -104,7 +109,7 @@ func getIdFromPath(c *gin.Context, paramName string) (domain.ID, error) {
 func getIdFromRequestContext(context *gin.Context) (domain.ID, error) {
 	id, ok := context.Get("userID")
 	if !ok {
-		return domain.RandomID(), errors.New("not authenticated")
+		return domain.RandomID(), UnauthorizedError
 	}
 	return domain.ID(id.(string)), nil
 }

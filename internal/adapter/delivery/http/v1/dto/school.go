@@ -6,23 +6,19 @@ import (
 )
 
 type CreateSchoolDTO struct {
-	Name        string
-	Description string
+	Name        string      `json:"name" binding:"required"`
+	Description null.String `json:"description" binding:"required"`
 }
 
 type UpdateSchoolDTO struct {
-	Description null.String
-}
-
-type AddTeacherDTO struct {
-	TeacherID string `json:"teacher_id" binding:"required"`
+	Description null.String `json:"description" binding:"omitempty"`
 }
 
 type SchoolDTO struct {
-	ID          string `json:"id" binding:"required"`
-	OwnerID     string `json:"owner_id" binding:"required"`
-	Name        string `json:"name" binding:"required"`
-	Description string `json:"description" binding:"required"`
+	ID          string `json:"id"`
+	OwnerID     string `json:"owner_id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 func NewSchoolDTO(school domain.School) SchoolDTO {

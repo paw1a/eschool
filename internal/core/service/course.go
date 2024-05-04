@@ -10,12 +10,15 @@ import (
 type CourseService struct {
 	repo       port.ICourseRepository
 	lessonRepo port.ILessonRepository
+	schoolRepo port.ISchoolRepository
 }
 
-func NewCourseService(repo port.ICourseRepository, lessonRepo port.ILessonRepository) *CourseService {
+func NewCourseService(repo port.ICourseRepository, lessonRepo port.ILessonRepository,
+	schoolRepo port.ISchoolRepository) *CourseService {
 	return &CourseService{
 		repo:       repo,
 		lessonRepo: lessonRepo,
+		schoolRepo: schoolRepo,
 	}
 }
 
@@ -35,11 +38,37 @@ func (c *CourseService) FindTeacherCourses(ctx context.Context, teacherID domain
 	return c.repo.FindTeacherCourses(ctx, teacherID)
 }
 
+func (c *CourseService) FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error) {
+	return c.repo.FindCourseTeachers(ctx, courseID)
+}
+
+func (c *CourseService) IsCourseStudent(ctx context.Context, studentID, courseID domain.ID) (bool, error) {
+	return c.repo.IsCourseStudent(ctx, studentID, courseID)
+}
+
+func (c *CourseService) IsCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) (bool, error) {
+	return c.repo.IsCourseTeacher(ctx, teacherID, courseID)
+}
+
 func (c *CourseService) AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error {
 	return c.repo.AddCourseStudent(ctx, studentID, courseID)
 }
 
 func (c *CourseService) AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error {
+	course, err := c.FindByID(ctx, courseID)
+	if err != nil {
+		return err
+	}
+
+	isSchoolTeacher, err := c.schoolRepo.IsSchoolTeacher(ctx, course.SchoolID, teacherID)
+	if err != nil {
+		return err
+	}
+
+	if !isSchoolTeacher {
+		return errs.ErrUserIsNotSchoolTeacher
+	}
+
 	return c.repo.AddCourseTeacher(ctx, teacherID, courseID)
 }
 
@@ -114,6 +143,13 @@ func (c *CourseService) PublishReadyCourse(ctx context.Context, courseID domain.
 
 func (c *CourseService) CreateSchoolCourse(ctx context.Context, schoolID domain.ID,
 	param port.CreateCourseParam) (domain.Course, error) {
+	if param.Price < 0 {
+		return domain.Course{}, errs.ErrCourseInvalidPrice
+	}
+	if param.Level < 1 {
+		return domain.Course{}, errs.ErrCourseInvalidLevel
+	}
+
 	return c.repo.Create(ctx, domain.Course{
 		ID:       domain.NewID(),
 		SchoolID: schoolID,
@@ -133,12 +169,18 @@ func (c *CourseService) Update(ctx context.Context, courseID domain.ID,
 	}
 
 	if param.Price.Valid {
+		if param.Price.Int64 < 0 {
+			return domain.Course{}, errs.ErrCourseInvalidPrice
+		}
 		course.Price = param.Price.Int64
 	}
 	if param.Name.Valid {
 		course.Name = param.Name.String
 	}
 	if param.Level.Valid {
+		if param.Level.Int64 < 1 {
+			return domain.Course{}, errs.ErrCourseInvalidLevel
+		}
 		course.Level = int(param.Level.Int64)
 	}
 	if param.Language.Valid {

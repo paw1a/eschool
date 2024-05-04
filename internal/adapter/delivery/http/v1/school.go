@@ -15,15 +15,19 @@ func (h *Handler) initSchoolRoutes(api *gin.RouterGroup) {
 		authenticated := schools.Group("/", h.verifyToken)
 		{
 			authenticated.POST("/", h.createSchool)
-			authenticated.PUT("/:id", h.updateSchool)
+			authenticated.PUT("/:id", h.verifySchoolOwner, h.updateSchool)
 
 			authenticated.GET("/:id/courses", h.findSchoolCourses)
-			authenticated.POST("/:id/courses", h.createSchoolCourse)
-			authenticated.PUT("/:school_id/courses/:course_id", h.updateSchoolCourse)
-			authenticated.DELETE("/:school_id/courses/:course_id", h.deleteSchoolCourse)
+			authenticated.POST("/:id/courses", h.verifySchoolOwner, h.createSchoolCourse)
+			authenticated.PUT("/:id/courses/:course_id", h.verifySchoolOwner, h.updateSchoolCourse)
+			authenticated.DELETE("/:id/courses/:course_id", h.verifySchoolOwner, h.deleteSchoolCourse)
 
 			authenticated.GET("/:id/teachers", h.findSchoolTeachers)
-			authenticated.POST("/:id/teachers", h.addSchoolTeacher)
+			// https://datatracker.ietf.org/doc/html/rfc2616#section-9.6
+			// If the Request-URI does not point to an existing resource,
+			// and that URI is capable of being defined as a new resource by
+			// the requesting user agent, the origin server can create the resource with that URI.
+			authenticated.PUT("/:id/teachers/:teacher_id", h.verifySchoolOwner, h.addSchoolTeacher)
 		}
 	}
 }
@@ -46,7 +50,7 @@ func (h *Handler) findAllSchools(context *gin.Context) {
 func (h *Handler) findSchoolByID(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -62,9 +66,9 @@ func (h *Handler) findSchoolByID(context *gin.Context) {
 
 func (h *Handler) createSchool(context *gin.Context) {
 	var createSchoolDTO dto.CreateSchoolDTO
-	err := context.BindJSON(&createSchoolDTO)
+	err := context.ShouldBindJSON(&createSchoolDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -77,7 +81,7 @@ func (h *Handler) createSchool(context *gin.Context) {
 	school, err := h.schoolService.CreateUserSchool(context.Request.Context(), userID,
 		port.CreateSchoolParam{
 			Name:        createSchoolDTO.Name,
-			Description: createSchoolDTO.Description,
+			Description: createSchoolDTO.Description.String,
 		})
 	if err != nil {
 		ErrorResponse(context, err)
@@ -85,24 +89,20 @@ func (h *Handler) createSchool(context *gin.Context) {
 	}
 
 	schoolDTO := dto.NewSchoolDTO(school)
-	SuccessResponse(context, schoolDTO)
+	CreatedResponse(context, schoolDTO)
 }
 
 func (h *Handler) updateSchool(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
-		return
-	}
-
-	if !h.checkCurrentUserIsSchoolOwner(context, schoolID) {
+		ErrorResponse(context, err)
 		return
 	}
 
 	var updateSchoolDTO dto.UpdateSchoolDTO
-	err = context.BindJSON(&updateSchoolDTO)
+	err = context.ShouldBindJSON(&updateSchoolDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -122,7 +122,7 @@ func (h *Handler) updateSchool(context *gin.Context) {
 func (h *Handler) findSchoolCourses(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -140,50 +140,25 @@ func (h *Handler) findSchoolCourses(context *gin.Context) {
 	SuccessResponse(context, courseDTOs)
 }
 
-func (h *Handler) checkCurrentUserIsSchoolOwner(context *gin.Context, schoolID domain.ID) bool {
-	userID, err := getIdFromRequestContext(context)
-	if err != nil {
-		ErrorResponse(context, UnauthorizedError)
-		return false
-	}
-
-	school, err := h.schoolService.FindByID(context.Request.Context(), schoolID)
-	if err != nil {
-		ErrorResponse(context, err)
-		return false
-	}
-
-	if school.OwnerID != userID {
-		ErrorResponse(context, ForbiddenError)
-		return false
-	}
-
-	return true
-}
-
 func (h *Handler) createSchoolCourse(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
-		return
-	}
-
-	if !h.checkCurrentUserIsSchoolOwner(context, schoolID) {
+		ErrorResponse(context, err)
 		return
 	}
 
 	var createCourseDTO dto.CreateCourseDTO
-	err = context.BindJSON(&createCourseDTO)
+	err = context.ShouldBindJSON(&createCourseDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
 	course, err := h.courseService.CreateSchoolCourse(context.Request.Context(),
 		schoolID, port.CreateCourseParam{
 			Name:     createCourseDTO.Name,
-			Level:    createCourseDTO.Level,
-			Price:    createCourseDTO.Price,
+			Level:    int(createCourseDTO.Level.Int64),
+			Price:    createCourseDTO.Price.Int64,
 			Language: createCourseDTO.Language,
 		})
 	if err != nil {
@@ -192,30 +167,20 @@ func (h *Handler) createSchoolCourse(context *gin.Context) {
 	}
 
 	courseDTO := dto.NewCourseDTO(course)
-	SuccessResponse(context, courseDTO)
+	CreatedResponse(context, courseDTO)
 }
 
 func (h *Handler) updateSchoolCourse(context *gin.Context) {
-	schoolID, err := getIdFromPath(context, "school_id")
-	if err != nil {
-		ErrorResponse(context, PathIdParamError)
-		return
-	}
-
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
-		return
-	}
-
-	if !h.checkCurrentUserIsSchoolOwner(context, schoolID) {
+		ErrorResponse(context, err)
 		return
 	}
 
 	var updateCourseDTO dto.UpdateCourseDTO
-	err = context.BindJSON(&updateCourseDTO)
+	err = context.ShouldBindJSON(&updateCourseDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -236,19 +201,9 @@ func (h *Handler) updateSchoolCourse(context *gin.Context) {
 }
 
 func (h *Handler) deleteSchoolCourse(context *gin.Context) {
-	schoolID, err := getIdFromPath(context, "school_id")
-	if err != nil {
-		ErrorResponse(context, PathIdParamError)
-		return
-	}
-
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
-		return
-	}
-
-	if !h.checkCurrentUserIsSchoolOwner(context, schoolID) {
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -264,7 +219,7 @@ func (h *Handler) deleteSchoolCourse(context *gin.Context) {
 func (h *Handler) findSchoolTeachers(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -285,27 +240,50 @@ func (h *Handler) findSchoolTeachers(context *gin.Context) {
 func (h *Handler) addSchoolTeacher(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
-		ErrorResponse(context, PathIdParamError)
+		ErrorResponse(context, err)
 		return
 	}
 
-	if !h.checkCurrentUserIsSchoolOwner(context, schoolID) {
-		return
-	}
-
-	var addTeacherDTO dto.AddTeacherDTO
-	err = context.BindJSON(&addTeacherDTO)
+	teacherID, err := getIdFromPath(context, "teacher_id")
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
-	teacherID := domain.ID(addTeacherDTO.TeacherID)
 	err = h.schoolService.AddSchoolTeacher(context.Request.Context(), schoolID, teacherID)
 	if err != nil {
 		ErrorResponse(context, err)
 		return
 	}
 
-	SuccessResponse(context, "successfully added")
+	CreatedResponse(context, "teacher successfully added")
+}
+
+func (h *Handler) verifySchoolOwner(context *gin.Context) {
+	schoolID, err := getIdFromPath(context, "id")
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	if !h.checkCurrentUserIsSchoolOwner(context, schoolID) {
+		ErrorResponse(context, ForbiddenError)
+		return
+	}
+}
+
+func (h *Handler) checkCurrentUserIsSchoolOwner(context *gin.Context, schoolID domain.ID) bool {
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		ErrorResponse(context, UnauthorizedError)
+		return false
+	}
+
+	school, err := h.schoolService.FindByID(context.Request.Context(), schoolID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return false
+	}
+
+	return school.OwnerID == userID
 }

@@ -7,10 +7,10 @@ type CreateReviewDTO struct {
 }
 
 type ReviewDTO struct {
-	ID       string `json:"id" binding:"required"`
-	UserID   string `json:"user_id" binding:"required"`
-	CourseID string `json:"course_id" binding:"required"`
-	Text     string `json:"text" binding:"required"`
+	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
+	CourseID string `json:"course_id"`
+	Text     string `json:"text"`
 }
 
 func NewReviewDTO(review domain.Review) ReviewDTO {

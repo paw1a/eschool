@@ -62,9 +62,9 @@ func (h *Handler) updateUser(context *gin.Context) {
 	}
 
 	var updateUserDTO dto.UpdateUserDTO
-	err = context.BindJSON(&updateUserDTO)
+	err = context.ShouldBindJSON(&updateUserDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 

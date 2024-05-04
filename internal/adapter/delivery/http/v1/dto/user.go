@@ -14,18 +14,18 @@ type UpdateUserDTO struct {
 }
 
 type UserInfoDTO struct {
-	Name    string `json:"name" binding:"required"`
-	Surname string `json:"surname" binding:"required"`
+	Name    string `json:"name"`
+	Surname string `json:"surname"`
 }
 
 type UserDTO struct {
-	ID        string `json:"id" binding:"required"`
-	Name      string `json:"name" binding:"required"`
-	Surname   string `json:"surname" binding:"required"`
-	Email     string `json:"email" binding:"required"`
-	Phone     string `json:"phone" binding:"omitempty"`
-	City      string `json:"city" binding:"omitempty"`
-	AvatarUrl string `json:"avatar_url" binding:"omitempty"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Surname   string `json:"surname"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone"`
+	City      string `json:"city"`
+	AvatarUrl string `json:"avatar_url"`
 }
 
 func NewUserDTO(user domain.User) UserDTO {

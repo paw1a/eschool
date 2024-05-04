@@ -69,7 +69,7 @@ func (p *AuthProvider) RefreshJWTSession(refreshToken domain.Token,
 	fingerprint string) (domain.AuthDetails, error) {
 	session, err := p.sessionStorage.Get(refreshToken.String())
 	if err != nil {
-		return domain.AuthDetails{}, err
+		return domain.AuthDetails{}, errs.ErrAuthSessionIsNotPresent
 	}
 
 	err = p.sessionStorage.Delete(refreshToken.String())

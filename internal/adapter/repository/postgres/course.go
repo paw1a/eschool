@@ -30,11 +30,18 @@ const (
 	courseFindTeacherCoursesQuery = "SELECT c.* FROM public.course c " +
 		"JOIN public.course_teacher ct on c.id = ct.course_id " +
 		"JOIN public.user u on ct.teacher_id = u.id WHERE u.id = $1"
+	courseFindCourseTeachersQuery = "SELECT u.* FROM public.user u " +
+		"JOIN public.course_teacher ct on u.id = ct.teacher_id " +
+		"JOIN public.course c on ct.course_id = c.id WHERE c.id = $1"
+	courseContainsStudentQuery = "SELECT EXISTS (SELECT 1 FROM public.course_student " +
+		"WHERE course_id = $1 AND student_id = $2)"
+	courseContainsTeacherQuery = "SELECT EXISTS (SELECT 1 FROM public.course_teacher " +
+		"WHERE course_id = $1 AND teacher_id = $2)"
 	courseAddCourseStudentQuery = "INSERT INTO public.course_student (student_id, course_id) " +
 		"VALUES ($1, $2)"
 	courseAddCourseTeacherQuery = "INSERT INTO public.course_teacher (teacher_id, course_id) " +
 		"VALUES ($1, $2)"
-	courseDeleteQuery = "DELETE FROM public.user WHERE id = $1"
+	courseDeleteQuery = "DELETE FROM public.course WHERE id = $1"
 )
 
 func (p *PostgresCourseRepo) FindAll(ctx context.Context) ([]domain.Course, error) {
@@ -98,6 +105,41 @@ func (p *PostgresCourseRepo) FindTeacherCourses(ctx context.Context, teacherID d
 		courses[i] = course.ToDomain()
 	}
 	return courses, nil
+}
+
+func (p *PostgresCourseRepo) FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error) {
+	var pgUsers []entity.PgUser
+	if err := p.db.SelectContext(ctx, &pgUsers, courseFindCourseTeachersQuery, courseID); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	teachers := make([]domain.User, len(pgUsers))
+	for i, teacher := range pgUsers {
+		teachers[i] = teacher.ToDomain()
+	}
+	return teachers, nil
+}
+
+func (p *PostgresCourseRepo) IsCourseStudent(ctx context.Context, studentID, courseID domain.ID) (bool, error) {
+	var exists bool
+	err := p.db.GetContext(ctx, &exists, courseContainsStudentQuery, courseID, studentID)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
+}
+
+func (p *PostgresCourseRepo) IsCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) (bool, error) {
+	var exists bool
+	err := p.db.GetContext(ctx, &exists, courseContainsTeacherQuery, courseID, teacherID)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
 }
 
 func (p *PostgresCourseRepo) AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error {

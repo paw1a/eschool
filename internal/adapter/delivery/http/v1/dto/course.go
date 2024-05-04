@@ -12,10 +12,10 @@ const (
 )
 
 type CreateCourseDTO struct {
-	Name     string `json:"name" binding:"required"`
-	Level    int    `json:"level" binding:"required"`
-	Price    int64  `json:"price" binding:"required"`
-	Language string `json:"language" binding:"required"`
+	Name     string   `json:"name" binding:"required"`
+	Level    null.Int `json:"level" binding:"required"`
+	Price    null.Int `json:"price" binding:"required"`
+	Language string   `json:"language" binding:"required"`
 }
 
 type UpdateCourseDTO struct {
@@ -26,13 +26,13 @@ type UpdateCourseDTO struct {
 }
 
 type CourseDTO struct {
-	ID       string `json:"id" binding:"required"`
-	SchoolID string `json:"school_id" binding:"required"`
-	Name     string `json:"name" binding:"required"`
-	Level    int    `json:"level" binding:"required"`
-	Price    int64  `json:"price" binding:"required"`
-	Language string `json:"language" binding:"required"`
-	Status   string `json:"status" binding:"required"`
+	ID       string `json:"id"`
+	SchoolID string `json:"school_id"`
+	Name     string `json:"name"`
+	Level    int    `json:"level"`
+	Price    int64  `json:"price"`
+	Language string `json:"language"`
+	Status   string `json:"status"`
 }
 
 func NewCourseDTO(course domain.Course) CourseDTO {

@@ -22,9 +22,9 @@ func (h *Handler) initAuthRoutes(api *gin.RouterGroup) {
 
 func (h *Handler) userSignIn(context *gin.Context) {
 	var signInDTO dto.SignInDTO
-	err := context.BindJSON(&signInDTO)
+	err := context.ShouldBindJSON(&signInDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -47,9 +47,9 @@ func (h *Handler) userSignIn(context *gin.Context) {
 
 func (h *Handler) userSignUp(context *gin.Context) {
 	var signUpDTO dto.SignUpDTO
-	err := context.BindJSON(&signUpDTO)
+	err := context.ShouldBindJSON(&signUpDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 
@@ -93,9 +93,9 @@ func (h *Handler) userLogout(context *gin.Context) {
 
 func (h *Handler) refreshToken(context *gin.Context) {
 	var refreshDTO dto.RefreshDTO
-	err := context.BindJSON(&refreshDTO)
+	err := context.ShouldBindJSON(&refreshDTO)
 	if err != nil {
-		ErrorResponse(context, UnmarshalError)
+		ErrorResponse(context, err)
 		return
 	}
 

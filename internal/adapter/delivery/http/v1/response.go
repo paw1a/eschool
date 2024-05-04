@@ -4,32 +4,73 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/paw1a/eschool/internal/core/errs"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"strings"
 	"time"
 )
 
 const (
-	ErrBadRequest          = "Bad request"
-	ErrNotFound            = "Not Found"
-	ErrUnauthorized        = "Unauthorized"
-	ErrForbidden           = "Forbidden"
-	ErrInternalServerError = "Internal Server Error"
-	ErrRequestTimeout      = "Request Timeout"
-	ErrUnmarshal           = "JSON Unmarshal Error"
+	ErrBadRequest          = "bad request"
+	ErrNotFound            = "not found"
+	ErrUnauthorized        = "unauthorized"
+	ErrForbidden           = "forbidden"
+	ErrInternalServerError = "internal server error"
+	ErrRequestTimeout      = "request timeout"
 )
 
 var (
-	BadRequestError     = errors.New("Bad request")
-	NotFoundError       = errors.New("Not Found")
-	UnauthorizedError   = errors.New("Unauthorized")
-	ForbiddenError      = errors.New("Forbidden")
-	InternalServerError = errors.New("Internal Server Error")
-	UnmarshalError      = errors.New("JSON Unmarshal Error")
-	PathIdParamError    = errors.New("Invalid ID Query Parameter")
+	BadRequestError          = errors.New("bad request")
+	NotFoundError            = errors.New("not Found")
+	UnauthorizedError        = errors.New("unauthorized")
+	ForbiddenError           = errors.New("forbidden")
+	InternalServerError      = errors.New("internal server error")
+	PathIdParamIsEmptyError  = errors.New("empty id query parameter")
+	PathIdParamIsInvalidUUID = errors.New("id query parameter is not uuid")
 )
+
+var errorStatusMap = map[error]int{
+	errs.ErrCourseNotEnoughLessons:               http.StatusBadRequest,
+	errs.ErrCourseLessonInvalidScore:             http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonEmptyTests:       http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonEmptyTestTaskUrl: http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonEmptyTestOptions: http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonInvalidTestScore: http.StatusBadRequest,
+	errs.ErrCoursePracticeLessonInvalidTestLevel: http.StatusBadRequest,
+	errs.ErrCourseTheoryLessonEmptyUrl:           http.StatusBadRequest,
+	errs.ErrCourseVideoLessonEmptyUrl:            http.StatusBadRequest,
+	errs.ErrCourseReadyState:                     http.StatusBadRequest,
+	errs.ErrCoursePublishedState:                 http.StatusBadRequest,
+	errs.ErrCourseInvalidLevel:                   http.StatusBadRequest,
+	errs.ErrCourseInvalidPrice:                   http.StatusBadRequest,
+	errs.ErrCertificateCourseNotPassed:           http.StatusBadRequest,
+	errs.ErrFilenameEmpty:                        http.StatusBadRequest,
+	errs.ErrFilepathEmpty:                        http.StatusBadRequest,
+	errs.ErrFileReaderEmpty:                      http.StatusBadRequest,
+	errs.ErrSaveFileError:                        http.StatusBadRequest,
+	errs.ErrUserIsNotSchoolTeacher:               http.StatusBadRequest,
+
+	errs.ErrDuplicate:         http.StatusBadRequest,
+	errs.ErrNotExist:          http.StatusNotFound,
+	errs.ErrUpdateFailed:      http.StatusInternalServerError,
+	errs.ErrDeleteFailed:      http.StatusInternalServerError,
+	errs.ErrPersistenceFailed: http.StatusInternalServerError,
+	errs.ErrEnumValueError:    http.StatusInternalServerError,
+	errs.ErrTransactionError:  http.StatusInternalServerError,
+
+	errs.ErrNotUniqueEmail:          http.StatusConflict,
+	errs.ErrInvalidCredentials:      http.StatusUnauthorized,
+	errs.ErrAuthSessionIsNotPresent: http.StatusUnauthorized,
+	errs.ErrInvalidTokenSignMethod:  http.StatusUnauthorized,
+	errs.ErrInvalidTokenClaims:      http.StatusUnauthorized,
+	errs.ErrInvalidFingerprint:      http.StatusUnauthorized,
+
+	PathIdParamIsEmptyError:  http.StatusBadRequest,
+	PathIdParamIsInvalidUUID: http.StatusBadRequest,
+}
 
 type RestErr interface {
 	Status() int
@@ -58,27 +99,43 @@ func NewRestError(status int, err string) RestErr {
 	}
 }
 
+func getValidationMessage(err validator.FieldError) string {
+	switch err.Tag() {
+	case "required":
+		return fmt.Sprintf("field '%s' must be not empty", strings.ToLower(err.Field()))
+	case "email":
+		return fmt.Sprintf("invalid email")
+	case "url":
+		return fmt.Sprintf("field '%s' must be URL", strings.ToLower(err.Field()))
+	case "oneof":
+		return fmt.Sprintf("field '%s' must be enum type", err.Field())
+	default:
+		return "json validation error"
+	}
+}
+
 func ParseError(err error) RestErr {
+	var validationErrors validator.ValidationErrors
+
 	switch {
 	case errors.Is(err, context.DeadlineExceeded):
 		return NewRestError(http.StatusRequestTimeout, ErrRequestTimeout)
 	case errors.Is(err, UnauthorizedError):
 		return NewRestError(http.StatusUnauthorized, ErrUnauthorized)
-	case errors.Is(err, UnmarshalError):
-		return NewRestError(http.StatusBadRequest, ErrUnmarshal)
+	case errors.Is(err, BadRequestError):
+		return NewRestError(http.StatusBadRequest, ErrBadRequest)
 	case errors.Is(err, ForbiddenError):
 		return NewRestError(http.StatusForbidden, ErrForbidden)
-	case errors.Is(err, PathIdParamError):
-		return NewRestError(http.StatusBadRequest, PathIdParamError.Error())
+	case errors.Is(err, errs.ErrNotExist):
+		return NewRestError(http.StatusNotFound, ErrNotFound)
 	case errors.Is(err, errs.ErrInvalidToken):
-		return NewRestError(http.StatusUnauthorized, errs.ErrInvalidToken.Error())
-	case errors.Is(err, errs.ErrInvalidTokenSignMethod):
-		return NewRestError(http.StatusUnauthorized, errs.ErrInvalidTokenSignMethod.Error())
-	case errors.Is(err, errs.ErrInvalidTokenClaims):
-		return NewRestError(http.StatusUnauthorized, errs.ErrInvalidTokenClaims.Error())
-	case errors.Is(err, errs.ErrInvalidFingerprint):
-		return NewRestError(http.StatusUnauthorized, errs.ErrInvalidFingerprint.Error())
+		return NewRestError(http.StatusUnauthorized, err.Error())
+	case errors.As(err, &validationErrors):
+		return NewRestError(http.StatusBadRequest, getValidationMessage(validationErrors[0]))
 	default:
+		if code, ok := errorStatusMap[err]; ok {
+			return NewRestError(code, err.Error())
+		}
 		if restErr, ok := err.(*RestError); ok {
 			return restErr
 		}

@@ -36,6 +36,10 @@ func (s *SchoolService) FindSchoolTeachers(ctx context.Context, schoolID domain.
 	return s.repo.FindSchoolTeachers(ctx, schoolID)
 }
 
+func (s *SchoolService) IsSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) (bool, error) {
+	return s.repo.IsSchoolTeacher(ctx, schoolID, teacherID)
+}
+
 func (s *SchoolService) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
 	return s.repo.AddSchoolTeacher(ctx, schoolID, teacherID)
 }
