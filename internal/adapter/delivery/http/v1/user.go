@@ -14,6 +14,9 @@ func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 		{
 			authenticated.GET("/account", h.findUserAccount)
 			authenticated.PUT("/account", h.updateUser)
+
+			authenticated.GET("/courses", h.findUserCourses)
+			authenticated.GET("/certificates", h.findUserCertificates)
 		}
 	}
 }
@@ -78,4 +81,46 @@ func (h *Handler) updateUser(context *gin.Context) {
 
 	userDTO := dto.NewUserDTO(user)
 	SuccessResponse(context, userDTO)
+}
+
+func (h *Handler) findUserCourses(context *gin.Context) {
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		ErrorResponse(context, UnauthorizedError)
+		return
+	}
+
+	courses, err := h.courseService.FindStudentCourses(context.Request.Context(), userID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	courseDTOs := make([]dto.CourseDTO, len(courses))
+	for i, course := range courses {
+		courseDTOs[i] = dto.NewCourseDTO(course)
+	}
+
+	SuccessResponse(context, courseDTOs)
+}
+
+func (h *Handler) findUserCertificates(context *gin.Context) {
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		ErrorResponse(context, UnauthorizedError)
+		return
+	}
+
+	courses, err := h.courseService.FindStudentCourses(context.Request.Context(), userID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	courseDTOs := make([]dto.CourseDTO, len(courses))
+	for i, course := range courses {
+		courseDTOs[i] = dto.NewCourseDTO(course)
+	}
+
+	SuccessResponse(context, courseDTOs)
 }
