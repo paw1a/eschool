@@ -19,7 +19,10 @@ var (
 )
 
 var (
-	ErrUserIsNotSchoolTeacher = errors.New("user is not a teacher in this school")
+	ErrUserIsNotSchoolTeacher     = errors.New("user is not a teacher in this school")
+	ErrUserIsAlreadyCourseStudent = errors.New("user has already bought this course")
+	ErrInvalidPaymentSum          = errors.New("received invalid payment")
+	ErrDecodePaymentKeyFailed     = errors.New("failed to decode payment payload")
 )
 
 var (

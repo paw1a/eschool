@@ -67,6 +67,7 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 		h.initUsersRoutes(v1)
 		h.initCourseRoutes(v1)
 		h.initSchoolRoutes(v1)
+		h.initPaymentRoutes(v1)
 	}
 }
 

@@ -123,7 +123,7 @@ func Run() {
 				fx.As(new(port.IAuthTokenService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio),
+		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney),
 		fx.Invoke(func(*http.Server) {}),
 	).Run()
 }

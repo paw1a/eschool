@@ -4,3 +4,7 @@ jwt:
 server:
   host: localhost
   port: 8080
+yoomoney:
+  scheme: https
+  host: yoomoney.ru
+  path: /quickpay/confirm

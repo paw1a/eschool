@@ -3,7 +3,9 @@ package service
 import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/errs"
 	"github.com/paw1a/eschool/internal/core/port"
+	"net/url"
 )
 
 type PaymentService struct {
@@ -18,10 +20,37 @@ func NewPaymentService(gateway port.IPaymentGateway, courseRepo port.ICourseRepo
 	}
 }
 
-func (p *PaymentService) PayCourse(ctx context.Context, userID, courseID domain.ID) error {
+func (p *PaymentService) GetCoursePaymentUrl(ctx context.Context, userID, courseID domain.ID) (url.URL, error) {
 	course, err := p.courseRepo.FindByID(ctx, courseID)
+	if err != nil {
+		return url.URL{}, err
+	}
+
+	isStudent, err := p.courseRepo.IsCourseStudent(ctx, userID, courseID)
+	if err != nil {
+		return url.URL{}, err
+	}
+
+	if isStudent {
+		return url.URL{}, errs.ErrUserIsAlreadyCourseStudent
+	}
+
+	return p.gateway.GetPaymentUrl(ctx, domain.PaymentPayload{
+		UserID:   userID,
+		CourseID: courseID,
+		PaySum:   course.Price,
+	})
+}
+
+func (p *PaymentService) ProcessCoursePayment(ctx context.Context, key string, paid int64) error {
+	payload, err := p.gateway.ProcessPayment(ctx, key)
 	if err != nil {
 		return err
 	}
-	return p.gateway.Pay(ctx, courseID.String(), course.Price)
+
+	if paid < payload.PaySum {
+		return errs.ErrInvalidPaymentSum
+	}
+
+	return p.courseRepo.AddCourseStudent(ctx, payload.UserID, payload.CourseID)
 }

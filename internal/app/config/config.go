@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
+	"github.com/paw1a/eschool/internal/adapter/payment/yoomoney"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
 	"github.com/paw1a/eschool/pkg/minio"
@@ -19,6 +20,7 @@ type Config struct {
 	JWT      jwt.Config
 	Redis    redis.Config
 	Minio    minio.Config
+	Yoomoney yoomoney.Config
 }
 
 var instance *Config
@@ -63,6 +65,10 @@ func bindEnvConfig() error {
 	bindings["minio.user"] = "MINIO_ROOT_USER"
 	bindings["minio.password"] = "MINIO_ROOT_PASSWORD"
 	bindings["minio.bucketName"] = "MINIO_BUCKET_NAME"
+	bindings["payment.scheme"] = "PAYMENT_SCHEME"
+	bindings["payment.host"] = "PAYMENT_HOST"
+	bindings["payment.path"] = "PAYMENT_PATH"
+	bindings["payment.wallet"] = "PAYMENT_WALLET"
 
 	for name, binding := range bindings {
 		if err := viper.BindEnv(name, binding); err != nil {
