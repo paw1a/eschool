@@ -51,7 +51,13 @@ func (h *Handler) processCoursePayment(context *gin.Context) {
 		return
 	}
 
-	err = h.paymentService.ProcessCoursePayment(context.Request.Context(), key, paidInt)
+	payload, err := h.paymentService.ProcessCoursePayment(context.Request.Context(), key, paidInt)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	err = h.courseService.AddCourseStudent(context.Request.Context(), payload.UserID, payload.CourseID)
 	if err != nil {
 		ErrorResponse(context, err)
 		return

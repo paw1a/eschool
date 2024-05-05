@@ -42,15 +42,16 @@ func (p *PaymentService) GetCoursePaymentUrl(ctx context.Context, userID, course
 	})
 }
 
-func (p *PaymentService) ProcessCoursePayment(ctx context.Context, key string, paid int64) error {
+func (p *PaymentService) ProcessCoursePayment(ctx context.Context,
+	key string, paid int64) (domain.PaymentPayload, error) {
 	payload, err := p.gateway.ProcessPayment(ctx, key)
 	if err != nil {
-		return err
+		return domain.PaymentPayload{}, err
 	}
 
 	if paid < payload.PaySum {
-		return errs.ErrInvalidPaymentSum
+		return domain.PaymentPayload{}, errs.ErrInvalidPaymentSum
 	}
 
-	return p.courseRepo.AddCourseStudent(ctx, payload.UserID, payload.CourseID)
+	return payload, nil
 }

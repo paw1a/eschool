@@ -16,6 +16,7 @@ func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 			authenticated.PUT("/account", h.updateUser)
 
 			authenticated.GET("/courses", h.findUserCourses)
+			authenticated.PUT("/courses/:course_id", h.addUserFreeCourse)
 			authenticated.GET("/certificates", h.findUserCertificates)
 		}
 	}
@@ -81,6 +82,39 @@ func (h *Handler) updateUser(context *gin.Context) {
 
 	userDTO := dto.NewUserDTO(user)
 	SuccessResponse(context, userDTO)
+}
+
+func (h *Handler) addUserFreeCourse(context *gin.Context) {
+	courseID, err := getIdFromPath(context, "course_id")
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	course, err := h.courseService.FindByID(context.Request.Context(), courseID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	if course.Price > 0 {
+		ErrorResponse(context, ForbiddenError)
+		return
+	}
+
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		ErrorResponse(context, UnauthorizedError)
+		return
+	}
+
+	err = h.courseService.AddCourseStudent(context.Request.Context(), userID, courseID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	SuccessResponse(context, "successfully added free course")
 }
 
 func (h *Handler) findUserCourses(context *gin.Context) {

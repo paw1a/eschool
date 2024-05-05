@@ -36,6 +36,16 @@ type UpdateLessonDTO struct {
 	Tests    []CreateTestDTO `json:"tests" binding:"omitempty"`
 }
 
+type PassLessonDTO struct {
+	LessonID  string        `json:"lesson_id" binding:"required,uuid"`
+	PassTests []PassTestDTO `json:"tests" binding:"omitempty"`
+}
+
+type PassTestDTO struct {
+	TestID string `json:"test_id" binding:"required,uuid"`
+	Answer string `json:"answer" binding:"required"`
+}
+
 type LessonDTO struct {
 	ID       string `json:"id"`
 	CourseID string `json:"course_id"`

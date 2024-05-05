@@ -94,7 +94,7 @@ type IStatService interface {
 
 type IPaymentService interface {
 	GetCoursePaymentUrl(ctx context.Context, userID, courseID domain.ID) (url.URL, error)
-	ProcessCoursePayment(ctx context.Context, label string, paid int64) error
+	ProcessCoursePayment(ctx context.Context, label string, paid int64) (domain.PaymentPayload, error)
 }
 
 type IMediaService interface {

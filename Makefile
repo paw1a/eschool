@@ -5,10 +5,10 @@ build:
 	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/app/main.go
 
 run: build
-	docker compose up postgres redis minio pgadmin app
+	docker-compose up postgres redis minio pgadmin app
 
 debug: build
-	docker compose up postgres redis minio pgadmin debug
+	docker-compose up postgres redis minio pgadmin debug
 
 migrate:
 	# if "error: file does not exist" was occurred,

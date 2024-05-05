@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
@@ -15,6 +16,7 @@ func (h *Handler) initCourseRoutes(api *gin.RouterGroup) {
 		authenticated := courses.Group("/", h.verifyToken)
 		{
 			authenticated.GET("/:id/lessons", h.verifyCourseReadAccess, h.findCourseLessons)
+			authenticated.GET("/:id/lessons/:lesson_id", h.verifyCourseReadAccess, h.findLessonByID)
 			authenticated.POST("/:id/lessons", h.verifyCourseWriteAccess, h.createCourseLesson)
 			authenticated.PUT("/:id/lessons/:lesson_id", h.verifyCourseWriteAccess, h.updateCourseLesson)
 			authenticated.DELETE("/:id/lessons/:lesson_id", h.verifyCourseWriteAccess, h.deleteCourseLesson)
@@ -24,6 +26,9 @@ func (h *Handler) initCourseRoutes(api *gin.RouterGroup) {
 
 			authenticated.GET("/:id/reviews", h.findCourseReviews)
 			authenticated.POST("/:id/reviews", h.addCourseReview)
+
+			authenticated.GET("/:id/lessons/:lesson_id/stat", h.verifyCourseReadAccess, h.findLessonStat)
+			authenticated.POST("/:id/lessons/:lesson_id/stat", h.verifyCourseReadAccess, h.passCourseLesson)
 		}
 	}
 }
@@ -58,6 +63,23 @@ func (h *Handler) findCourseByID(context *gin.Context) {
 
 	courseDTO := dto.NewCourseDTO(course)
 	SuccessResponse(context, courseDTO)
+}
+
+func (h *Handler) findLessonByID(context *gin.Context) {
+	lessonID, err := getIdFromPath(context, "lesson_id")
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	lesson, err := h.lessonService.FindByID(context.Request.Context(), lessonID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	lessonDTO := dto.NewLessonDTO(lesson)
+	SuccessResponse(context, lessonDTO)
 }
 
 func (h *Handler) findCourseTeachers(context *gin.Context) {
@@ -349,6 +371,102 @@ func (h *Handler) findCourseReviews(context *gin.Context) {
 	}
 
 	SuccessResponse(context, reviewDTOs)
+}
+
+func (h *Handler) findLessonStat(context *gin.Context) {
+	lessonID, err := getIdFromPath(context, "lesson_id")
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		ErrorResponse(context, UnauthorizedError)
+		return
+	}
+
+	stat, err := h.statService.FindLessonStat(context.Request.Context(), userID, lessonID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	statDTO := dto.NewLessonStatDTO(stat)
+	SuccessResponse(context, statDTO)
+}
+
+func (h *Handler) passCourseLesson(context *gin.Context) {
+	lessonID, err := getIdFromPath(context, "lesson_id")
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		ErrorResponse(context, UnauthorizedError)
+		return
+	}
+
+	var passLessonDTO dto.PassLessonDTO
+	err = context.ShouldBindJSON(&passLessonDTO)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	lesson, err := h.lessonService.FindByID(context, lessonID)
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	switch lesson.Type {
+	case domain.TheoryLesson:
+		fallthrough
+	case domain.VideoLesson:
+		err = h.statService.UpdateLessonStat(context.Request.Context(), userID,
+			lessonID, port.UpdateLessonStatParam{
+				Score:     null.IntFrom(int64(lesson.Score)),
+				TestStats: nil,
+			})
+	case domain.PracticeLesson:
+		if len(passLessonDTO.PassTests) == 0 {
+			ErrorResponse(context, BadRequestError)
+			return
+		}
+
+		testStats := make([]port.UpdateTestStatParam, len(passLessonDTO.PassTests))
+		for i, passTest := range passLessonDTO.PassTests {
+			for j, test := range lesson.Tests {
+				if passTest.TestID == test.ID.String() {
+					var newScore int
+					if passTest.Answer == test.Answer {
+						newScore = lesson.Tests[j].Score
+					}
+
+					testStats[i] = port.UpdateTestStatParam{
+						TestID: test.ID,
+						Score:  newScore,
+					}
+				}
+			}
+		}
+
+		err = h.statService.UpdateLessonStat(context.Request.Context(), userID,
+			lessonID, port.UpdateLessonStatParam{
+				Score:     null.IntFrom(int64(lesson.Score)),
+				TestStats: testStats,
+			})
+	}
+
+	if err != nil {
+		ErrorResponse(context, err)
+		return
+	}
+
+	SuccessResponse(context, "successfully passed lesson")
 }
 
 func (h *Handler) verifyCourseWriteAccess(context *gin.Context) {

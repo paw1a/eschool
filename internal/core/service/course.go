@@ -11,14 +11,16 @@ type CourseService struct {
 	repo       port.ICourseRepository
 	lessonRepo port.ILessonRepository
 	schoolRepo port.ISchoolRepository
+	statRepo   port.IStatRepository
 }
 
 func NewCourseService(repo port.ICourseRepository, lessonRepo port.ILessonRepository,
-	schoolRepo port.ISchoolRepository) *CourseService {
+	schoolRepo port.ISchoolRepository, statRepo port.IStatRepository) *CourseService {
 	return &CourseService{
 		repo:       repo,
 		lessonRepo: lessonRepo,
 		schoolRepo: schoolRepo,
+		statRepo:   statRepo,
 	}
 }
 
@@ -51,6 +53,34 @@ func (c *CourseService) IsCourseTeacher(ctx context.Context, teacherID, courseID
 }
 
 func (c *CourseService) AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error {
+	lessons, err := c.lessonRepo.FindCourseLessons(ctx, courseID)
+	if err != nil {
+		return err
+	}
+
+	for _, lesson := range lessons {
+		testStats := make([]domain.TestStat, len(lesson.Tests))
+		for i, test := range lesson.Tests {
+			testStats[i] = domain.TestStat{
+				ID:     domain.NewID(),
+				TestID: test.ID,
+				UserID: studentID,
+				Score:  0,
+			}
+		}
+
+		err = c.statRepo.CreateLessonStat(ctx, domain.LessonStat{
+			ID:        domain.NewID(),
+			LessonID:  lesson.ID,
+			UserID:    studentID,
+			Score:     0,
+			TestStats: testStats,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	return c.repo.AddCourseStudent(ctx, studentID, courseID)
 }
 

@@ -53,7 +53,7 @@ values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', '30e18bc1-4354-4937-9a3b-03cf0b7
 
 -- insert student courses
 insert into course_student (student_id, course_id)
-values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
+values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
 insert into course_student (student_id, course_id)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', '30e18bc1-4354-4937-9a4d-03cf0b7027cb');
 
