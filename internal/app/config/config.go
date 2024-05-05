@@ -65,10 +65,10 @@ func bindEnvConfig() error {
 	bindings["minio.user"] = "MINIO_ROOT_USER"
 	bindings["minio.password"] = "MINIO_ROOT_PASSWORD"
 	bindings["minio.bucketName"] = "MINIO_BUCKET_NAME"
-	bindings["payment.scheme"] = "PAYMENT_SCHEME"
-	bindings["payment.host"] = "PAYMENT_HOST"
-	bindings["payment.path"] = "PAYMENT_PATH"
-	bindings["payment.wallet"] = "PAYMENT_WALLET"
+	bindings["yoomoney.scheme"] = "PAYMENT_SCHEME"
+	bindings["yoomoney.host"] = "PAYMENT_HOST"
+	bindings["yoomoney.path"] = "PAYMENT_PATH"
+	bindings["yoomoney.wallet"] = "PAYMENT_WALLET"
 
 	for name, binding := range bindings {
 		if err := viper.BindEnv(name, binding); err != nil {

@@ -3,12 +3,13 @@ package yoomoney
 import (
 	"context"
 	"encoding/base64"
-	"fmt"
+	"encoding/binary"
+	"github.com/google/uuid"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/errs"
 	"net/url"
+	"slices"
 	"strconv"
-	"strings"
 )
 
 type Config struct {
@@ -29,14 +30,21 @@ func NewPaymentGateway(config *Config) *PaymentYookassaGateway {
 }
 
 func (g *PaymentYookassaGateway) GetPaymentUrl(ctx context.Context, payload domain.PaymentPayload) (url.URL, error) {
-	data := fmt.Sprintf("%s;%s;%d", payload.UserID, payload.CourseID, payload.PaySum)
-	dataEncrypted := base64.StdEncoding.EncodeToString([]byte(data))
+	userUUID, _ := uuid.Parse(payload.UserID.String())
+	userUUIDBytes, _ := userUUID.MarshalBinary()
+	courseUUID, _ := uuid.Parse(payload.CourseID.String())
+	courseUUIDBytes, _ := courseUUID.MarshalBinary()
 
+	paySumBytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(paySumBytes, uint64(payload.PaySum))
+
+	dataBytes := slices.Concat(userUUIDBytes, courseUUIDBytes, paySumBytes)
+	encodedData := base64.StdEncoding.EncodeToString(dataBytes)
 	formParams := url.Values{
 		"sum":           {strconv.FormatInt(payload.PaySum, 10)},
 		"receiver":      {g.config.Wallet},
 		"quickpay-form": {"donate"},
-		"label":         {dataEncrypted},
+		"label":         {encodedData},
 	}
 
 	return url.URL{
@@ -48,24 +56,30 @@ func (g *PaymentYookassaGateway) GetPaymentUrl(ctx context.Context, payload doma
 }
 
 func (g *PaymentYookassaGateway) ProcessPayment(ctx context.Context, key string) (domain.PaymentPayload, error) {
-	data, err := base64.StdEncoding.DecodeString(key)
+	dataBytes, err := base64.StdEncoding.DecodeString(key)
 	if err != nil {
 		return domain.PaymentPayload{}, errs.ErrDecodePaymentKeyFailed
 	}
 
-	dataSplit := strings.Split(string(data), ";")
-	if len(dataSplit) != 3 {
+	var userID, courseID uuid.UUID
+	err = userID.UnmarshalBinary(dataBytes[:16])
+	if err != nil {
 		return domain.PaymentPayload{}, errs.ErrDecodePaymentKeyFailed
 	}
 
-	paySum, err := strconv.ParseInt(dataSplit[2], 10, 64)
+	err = courseID.UnmarshalBinary(dataBytes[16:32])
+	if err != nil {
+		return domain.PaymentPayload{}, errs.ErrDecodePaymentKeyFailed
+	}
+
+	paySum := binary.LittleEndian.Uint64(dataBytes[32:])
 	if err != nil {
 		return domain.PaymentPayload{}, errs.ErrDecodePaymentKeyFailed
 	}
 
 	return domain.PaymentPayload{
-		UserID:   domain.ID(dataSplit[0]),
-		CourseID: domain.ID(dataSplit[1]),
-		PaySum:   paySum,
+		UserID:   domain.ID(userID.String()),
+		CourseID: domain.ID(courseID.String()),
+		PaySum:   int64(paySum),
 	}, nil
 }
