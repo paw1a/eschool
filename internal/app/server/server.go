@@ -1,11 +1,11 @@
-package app
+package server
 
 import (
 	"context"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	delivery "github.com/paw1a/eschool/internal/adapter/delivery/http"
+	"github.com/paw1a/eschool/internal/adapter/delivery/web"
 	"github.com/paw1a/eschool/internal/app/config"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggo/files"
@@ -31,7 +31,7 @@ func NewGinRouter() *gin.Engine {
 type ServerParams struct {
 	fx.In
 	Cfg     *config.Config
-	Handler *delivery.Handler
+	Handler *web.Handler
 	Router  *gin.Engine
 }
 

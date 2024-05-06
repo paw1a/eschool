@@ -3,7 +3,7 @@ package v1
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"github.com/paw1a/eschool/internal/adapter/delivery/web/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
 	"net/http"

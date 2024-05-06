@@ -71,6 +71,8 @@ services:
   app:
     image: 'app'
     container_name: 'app'
+    logging:
+      driver: none
     build:
       context: .
       dockerfile: Dockerfile

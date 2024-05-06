@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"github.com/paw1a/eschool/internal/adapter/delivery/web/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
 )
@@ -275,7 +275,6 @@ func (h *Handler) verifySchoolOwner(context *gin.Context) {
 func (h *Handler) checkCurrentUserIsSchoolOwner(context *gin.Context, schoolID domain.ID) bool {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
-		ErrorResponse(context, UnauthorizedError)
 		return false
 	}
 

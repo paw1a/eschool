@@ -3,7 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/guregu/null"
-	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
+	"github.com/paw1a/eschool/internal/adapter/delivery/web/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
 )
@@ -500,7 +500,6 @@ func (h *Handler) verifyCourseReadAccess(context *gin.Context) {
 func (h *Handler) checkCurrentUserIsCourseStudent(context *gin.Context, courseID domain.ID) bool {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
-		ErrorResponse(context, UnauthorizedError)
 		return false
 	}
 
@@ -516,7 +515,6 @@ func (h *Handler) checkCurrentUserIsCourseStudent(context *gin.Context, courseID
 func (h *Handler) checkCurrentUserIsCourseTeacher(context *gin.Context, courseID domain.ID) bool {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
-		ErrorResponse(context, UnauthorizedError)
 		return false
 	}
 
