@@ -33,7 +33,7 @@ func (m *MinioObjectStorage) SaveFile(ctx context.Context, file domain.File) (do
 		return "", errors.Wrap(errs.ErrSaveFileError, err.Error())
 	}
 	fileUrl := url.URL{
-		Scheme: "web",
+		Scheme: "http",
 		Host:   m.minioConfig.Endpoint,
 		Path:   filepath.Join(m.minioConfig.BucketName, minioFilename),
 	}

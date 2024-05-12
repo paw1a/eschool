@@ -67,6 +67,7 @@ type IReviewRepository interface {
 type ICertificateRepository interface {
 	FindAll(ctx context.Context) ([]domain.Certificate, error)
 	FindByID(ctx context.Context, certID domain.ID) (domain.Certificate, error)
+	FindUserCourseCertificate(ctx context.Context, courseID, userID domain.ID) (domain.Certificate, error)
 	FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error)
 	Create(ctx context.Context, cert domain.Certificate) (domain.Certificate, error)
 }

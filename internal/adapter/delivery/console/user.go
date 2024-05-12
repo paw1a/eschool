@@ -24,6 +24,24 @@ import (
 //	}
 //}
 
+func (h *Handler) GetAllUsers(c *Console) {
+	users, err := h.userService.FindAll(context.Background())
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	if len(users) == 0 {
+		fmt.Println("no users")
+		return
+	}
+
+	for _, user := range users {
+		dto.PrintUserDTO(dto.NewUserDTO(user))
+		fmt.Println()
+	}
+}
+
 func (h *Handler) GetUserAccount(c *Console) {
 	err := h.verifyAuth(c)
 	if err != nil {
@@ -32,14 +50,15 @@ func (h *Handler) GetUserAccount(c *Console) {
 	}
 	userID := *c.UserID
 
-	userInfo, err := h.userService.FindUserInfo(context.Background(), userID)
+	user, err := h.userService.FindByID(context.Background(), userID)
 	if err != nil {
 		ErrorResponse(err)
 		return
 	}
 
-	fmt.Printf("Name: %s\n", userInfo.Name)
-	fmt.Printf("Surname: %s\n", userInfo.Surname)
+	fmt.Printf("ID: %s\n", user.ID)
+	fmt.Printf("Name: %s\n", user.Name)
+	fmt.Printf("Surname: %s\n", user.Surname)
 }
 
 func (h *Handler) UpdateUser(c *Console) {

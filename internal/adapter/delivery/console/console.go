@@ -27,16 +27,36 @@ const (
 	signIn
 	signUp
 	logout
-
+	getAllUsers
 	getUserAccount
 	updateUserAccount
 	findUserCourses
 	addUserFreeCourse
 
 	findAllCourses
+	createSchoolCourse
+	updateSchoolCourse
+	deleteSchoolCourse
 	findCourseLessons
+	createCourseLesson
 	findCourseTeachers
 	addCourseTeacher
+
+	findAllSchools
+	createSchool
+	updateSchool
+	findSchoolCourses
+	findSchoolTeachers
+	addSchoolTeacher
+
+	passCourseLesson
+	findLessonStat
+
+	findCourseReviews
+	addCourseReview
+
+	getCourseCertificate
+	createCourseCertificate
 )
 
 func NewConsole(lc fx.Lifecycle, cfg *config.Config, handler *Handler) *Console {
@@ -69,15 +89,36 @@ func (c *Console) InitRoutes() {
 		signUp: c.Handler.UserSignUp,
 		logout: c.Handler.UserLogout,
 
+		getAllUsers:       c.Handler.GetAllUsers,
 		getUserAccount:    c.Handler.GetUserAccount,
 		updateUserAccount: c.Handler.UpdateUser,
 		findUserCourses:   c.Handler.FindUserCourses,
 		addUserFreeCourse: c.Handler.AddUserFreeCourse,
 
 		findAllCourses:     c.Handler.FindAllCourses,
+		createSchoolCourse: c.Handler.CreateSchoolCourse,
+		updateSchoolCourse: c.Handler.UpdateSchoolCourse,
+		deleteSchoolCourse: c.Handler.DeleteSchoolCourse,
 		findCourseLessons:  c.Handler.FindCourseLessons,
+		createCourseLesson: c.Handler.CreateCourseLesson,
 		findCourseTeachers: c.Handler.FindCourseTeachers,
 		addCourseTeacher:   c.Handler.AddCourseTeacher,
+
+		findAllSchools:     c.Handler.FindAllSchools,
+		createSchool:       c.Handler.CreateSchool,
+		updateSchool:       c.Handler.UpdateSchool,
+		findSchoolCourses:  c.Handler.FindSchoolCourses,
+		findSchoolTeachers: c.Handler.FindSchoolTeachers,
+		addSchoolTeacher:   c.Handler.AddSchoolTeacher,
+
+		passCourseLesson: c.Handler.PassCourseLesson,
+		findLessonStat:   c.Handler.FindLessonStat,
+
+		findCourseReviews: c.Handler.FindCourseReviews,
+		addCourseReview:   c.Handler.AddCourseReview,
+
+		getCourseCertificate:    c.Handler.GetCourseCertificate,
+		createCourseCertificate: c.Handler.CreateCourseCertificate,
 	}
 }
 
@@ -113,13 +154,35 @@ func (c *Console) PrintMenu() {
 	fmt.Println("2  Sign In")
 	fmt.Println("3  Sign Up")
 	fmt.Println("4  Logout")
-	fmt.Println("5  Get user account")
-	fmt.Println("6  Update user account")
-	fmt.Println("7  Get user purchased courses")
-	fmt.Println("8  Add free course to user library")
-	fmt.Println("9  Get all courses")
-	fmt.Println("10 Get course lessons")
-	fmt.Println("11 Get course teachers")
-	fmt.Println("12 Add course teacher")
+	fmt.Println("5  Get all users")
+	fmt.Println("6  Get user account")
+	fmt.Println("7  Update user account")
+	fmt.Println("8  Get user purchased courses")
+	fmt.Println("9  Add free course to user library")
+
+	fmt.Println("10  Get all courses")
+	fmt.Println("11 Create course")
+	fmt.Println("12 Update course")
+	fmt.Println("13 Delete course")
+	fmt.Println("14 Get course lessons")
+	fmt.Println("15 Create course lesson")
+	fmt.Println("16 Get course teachers")
+	fmt.Println("17 Add course teacher")
+
+	fmt.Println("18 Get all schools")
+	fmt.Println("19 Create school")
+	fmt.Println("20 Update school")
+	fmt.Println("21 Get school courses")
+	fmt.Println("22 Get school teachers")
+	fmt.Println("23 Add school teacher")
+
+	fmt.Println("24 Pass course lesson")
+	fmt.Println("25 Get lesson progress")
+
+	fmt.Println("26 Find course reviews")
+	fmt.Println("27 Add course review")
+
+	fmt.Println("28 Get course certificate")
+	fmt.Println("29 Generate course certificate")
 	fmt.Println("--------------------------------")
 }

@@ -29,6 +29,9 @@ func (h *Handler) initCourseRoutes(api *gin.RouterGroup) {
 
 			authenticated.GET("/:id/lessons/:lesson_id/stat", h.verifyCourseReadAccess, h.findLessonStat)
 			authenticated.POST("/:id/lessons/:lesson_id/stat", h.verifyCourseReadAccess, h.passCourseLesson)
+
+			authenticated.GET("/:id/certificate")
+			authenticated.POST("/:id/certificate")
 		}
 	}
 }

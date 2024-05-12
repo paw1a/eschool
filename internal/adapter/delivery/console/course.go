@@ -1,11 +1,17 @@
 package console
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/adapter/delivery/console/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
+	"io"
+	"net/http"
+	"os"
+	"strings"
 )
 
 //func (h *Handler) initCourseRoutes(api *gin.RouterGroup) {
@@ -70,8 +76,14 @@ func (h *Handler) FindCourseByID(c *Console) {
 }
 
 func (h *Handler) FindLessonByID(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+
 	var lessonID domain.ID
-	err := dto.InputID(&lessonID, "lesson")
+	err = dto.InputID(&lessonID, "lesson")
 	if err != nil {
 		ErrorResponse(err)
 		return
@@ -118,8 +130,14 @@ func (h *Handler) FindCourseTeachers(c *Console) {
 }
 
 func (h *Handler) AddCourseTeacher(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+
 	var courseID domain.ID
-	err := dto.InputID(&courseID, "course")
+	err = dto.InputID(&courseID, "course")
 	if err != nil {
 		ErrorResponse(err)
 		return
@@ -153,8 +171,14 @@ func (h *Handler) AddCourseTeacher(c *Console) {
 }
 
 func (h *Handler) FindCourseLessons(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+
 	var courseID domain.ID
-	err := dto.InputID(&courseID, "course")
+	err = dto.InputID(&courseID, "course")
 	if err != nil {
 		ErrorResponse(err)
 		return
@@ -182,11 +206,22 @@ func (h *Handler) FindCourseLessons(c *Console) {
 	}
 }
 
-func (h *Handler) createCourseLesson(c *Console) {
+func (h *Handler) CreateCourseLesson(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+
 	var courseID domain.ID
-	err := dto.InputID(&courseID, "course")
+	err = dto.InputID(&courseID, "course")
 	if err != nil {
 		ErrorResponse(err)
+		return
+	}
+
+	if !h.verifyCourseWriteAccess(c, courseID) {
+		ErrorResponse(ForbiddenError)
 		return
 	}
 
@@ -350,163 +385,230 @@ func (h *Handler) createCourseLesson(c *Console) {
 //
 //		SuccessResponse(context, "lesson successfully deleted")
 //	}
-//
-//	func (h *Handler) addCourseReview(c *Console) {
-//		userID, err := getIdFromRequestContext(context)
-//		if err != nil {
-//			ErrorResponse(context, UnauthorizedError)
-//			return
-//		}
-//
-//		courseID, err := getIdFromPath(context, "id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		var createReviewDTO dto.CreateReviewDTO
-//		err = context.ShouldBindJSON(&createReviewDTO)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		review, err := h.reviewService.CreateCourseReview(context, courseID, userID,
-//			port.CreateReviewParam{Text: createReviewDTO.Text})
-//
-//		reviewDTO := dto.NewReviewDTO(review)
-//		SuccessResponse(context, reviewDTO)
-//	}
-//
-//	func (h *Handler) findCourseReviews(c *Console) {
-//		courseID, err := getIdFromPath(context, "id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		reviews, err := h.reviewService.FindCourseReviews(context.Request.Context(), courseID)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		reviewDTOs := make([]dto.ReviewDTO, len(reviews))
-//		for i, review := range reviews {
-//			reviewDTOs[i] = dto.NewReviewDTO(review)
-//		}
-//
-//		SuccessResponse(context, reviewDTOs)
-//	}
-//
-//	func (h *Handler) findLessonStat(c *Console) {
-//		lessonID, err := getIdFromPath(context, "lesson_id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		userID, err := getIdFromRequestContext(context)
-//		if err != nil {
-//			ErrorResponse(context, UnauthorizedError)
-//			return
-//		}
-//
-//		stat, err := h.statService.FindLessonStat(context.Request.Context(), userID, lessonID)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		statDTO := dto.NewLessonStatDTO(stat)
-//		SuccessResponse(context, statDTO)
-//	}
-//
-//	func (h *Handler) passCourseLesson(c *Console) {
-//		lessonID, err := getIdFromPath(context, "lesson_id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		userID, err := getIdFromRequestContext(context)
-//		if err != nil {
-//			ErrorResponse(context, UnauthorizedError)
-//			return
-//		}
-//
-//		var passLessonDTO dto.PassLessonDTO
-//		err = context.ShouldBindJSON(&passLessonDTO)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		lesson, err := h.lessonService.FindByID(context, lessonID)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		switch lesson.Type {
-//		case domain.TheoryLesson:
-//			fallthrough
-//		case domain.VideoLesson:
-//			err = h.statService.UpdateLessonStat(context.Request.Context(), userID,
-//				lessonID, port.UpdateLessonStatParam{
-//					Score:     null.IntFrom(int64(lesson.Score)),
-//					TestStats: nil,
-//				})
-//		case domain.PracticeLesson:
-//			if len(passLessonDTO.PassTests) == 0 {
-//				ErrorResponse(context, BadRequestError)
-//				return
-//			}
-//
-//			testStats := make([]port.UpdateTestStatParam, len(passLessonDTO.PassTests))
-//			for i, passTest := range passLessonDTO.PassTests {
-//				for j, test := range lesson.Tests {
-//					if passTest.TestID == test.ID.String() {
-//						var newScore int
-//						if passTest.Answer == test.Answer {
-//							newScore = lesson.Tests[j].Score
-//						}
-//
-//						testStats[i] = port.UpdateTestStatParam{
-//							TestID: test.ID,
-//							Score:  newScore,
-//						}
-//					}
-//				}
-//			}
-//
-//			err = h.statService.UpdateLessonStat(context.Request.Context(), userID,
-//				lessonID, port.UpdateLessonStatParam{
-//					Score:     null.IntFrom(int64(lesson.Score)),
-//					TestStats: testStats,
-//				})
-//		}
-//
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		SuccessResponse(context, "successfully passed lesson")
-//	}
-//
-//	func (h *Handler) verifyCourseWriteAccess(context *gin.Context) {
-//		courseID, err := getIdFromPath(context, "id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		if !h.checkCurrentUserIsCourseTeacher(context, courseID) {
-//			ErrorResponse(context, ForbiddenError)
-//			return
-//		}
-//	}
+func (h *Handler) AddCourseReview(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+	userID := *c.UserID
+
+	var courseID domain.ID
+	err = dto.InputID(&courseID, "course")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	var createReviewDTO dto.CreateReviewDTO
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Review text: ")
+	text, _ := reader.ReadString('\n')
+	text = strings.TrimSpace(text)
+	createReviewDTO.Text = text
+
+	review, err := h.reviewService.CreateCourseReview(context.Background(), courseID, userID,
+		port.CreateReviewParam{Text: createReviewDTO.Text})
+
+	reviewDTO := dto.NewReviewDTO(review)
+	dto.PrintReviewDTO(reviewDTO)
+}
+
+func (h *Handler) FindCourseReviews(c *Console) {
+	var courseID domain.ID
+	err := dto.InputID(&courseID, "course")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	reviews, err := h.reviewService.FindCourseReviews(context.Background(), courseID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	if len(reviews) == 0 {
+		fmt.Println("no reviews")
+		return
+	}
+
+	for _, review := range reviews {
+		dto.PrintReviewDTO(dto.NewReviewDTO(review))
+		fmt.Println()
+	}
+}
+
+func (h *Handler) FindLessonStat(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+	userID := *c.UserID
+
+	var lessonID domain.ID
+	err = dto.InputID(&lessonID, "lesson")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	stat, err := h.statService.FindLessonStat(context.Background(), userID, lessonID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	statDTO := dto.NewLessonStatDTO(stat)
+	dto.PrintLessonStatDTO(statDTO)
+}
+
+func (h *Handler) PassCourseLesson(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+	userID := *c.UserID
+
+	var lessonID domain.ID
+	err = dto.InputID(&lessonID, "lesson")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	lesson, err := h.lessonService.FindByID(context.Background(), lessonID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	switch lesson.Type {
+	case domain.TheoryLesson:
+		fallthrough
+	case domain.VideoLesson:
+		err = h.statService.UpdateLessonStat(context.Background(), userID,
+			lessonID, port.UpdateLessonStatParam{
+				Score:     null.IntFrom(int64(lesson.Score)),
+				TestStats: nil,
+			})
+	case domain.PracticeLesson:
+		testStats := make([]port.UpdateTestStatParam, len(lesson.Tests))
+		for i, test := range lesson.Tests {
+			fmt.Printf("Test #%d\n", i+1)
+			response, err := http.Get(test.TaskUrl)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			defer response.Body.Close()
+			_, err = io.Copy(os.Stdout, response.Body)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println()
+			fmt.Println("Available answers:")
+			for _, option := range test.Options {
+				fmt.Println(option)
+			}
+
+			fmt.Print("Choose correct answer: ")
+			reader := bufio.NewReader(os.Stdin)
+			answer, _ := reader.ReadString('\n')
+			answer = strings.TrimSpace(answer)
+			fmt.Println()
+
+			var newScore int
+			if answer == test.Answer {
+				newScore = lesson.Tests[i].Score
+			}
+
+			testStats[i] = port.UpdateTestStatParam{
+				TestID: test.ID,
+				Score:  newScore,
+			}
+		}
+
+		err = h.statService.UpdateLessonStat(context.Background(), userID,
+			lessonID, port.UpdateLessonStatParam{
+				Score:     null.IntFrom(int64(lesson.Score)),
+				TestStats: testStats,
+			})
+	}
+
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	fmt.Println("successfully passed lesson")
+}
+
+func (h *Handler) GetCourseCertificate(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+	userID := *c.UserID
+
+	var courseID domain.ID
+	err = dto.InputID(&courseID, "course")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	certificate, err := h.certificateService.FindCourseCertificate(context.Background(),
+		courseID, userID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	certificateDTO := dto.NewCertificateDTO(certificate)
+	dto.PrintCertificateDTO(certificateDTO)
+}
+
+func (h *Handler) CreateCourseCertificate(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+	userID := *c.UserID
+
+	var courseID domain.ID
+	err = dto.InputID(&courseID, "course")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	certificate, err := h.certificateService.FindCourseCertificate(context.Background(),
+		courseID, userID)
+	if err == nil {
+		fmt.Println("Certificate for this course is already exists")
+		return
+	}
+
+	certificate, err = h.certificateService.CreateCourseCertificate(context.Background(),
+		userID, courseID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	certificateDTO := dto.NewCertificateDTO(certificate)
+	dto.PrintCertificateDTO(certificateDTO)
+}
+
+func (h *Handler) verifyCourseWriteAccess(c *Console, courseID domain.ID) bool {
+	return h.checkCurrentUserIsCourseTeacher(c, courseID)
+}
 
 func (h *Handler) verifyCourseReadAccess(c *Console, courseID domain.ID) bool {
 	return h.checkCurrentUserIsCourseOwner(c, courseID) ||

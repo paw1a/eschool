@@ -1,10 +1,13 @@
 package dto
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/pkg/errors"
+	"os"
+	"strings"
 )
 
 const (
@@ -23,8 +26,13 @@ type CreateLessonDTO struct {
 }
 
 func InputCreateLessonDTO(d *CreateLessonDTO) error {
+	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Title: ")
-	fmt.Scanln(&d.Title)
+	d.Title, _ = reader.ReadString('\n')
+	d.Title = strings.TrimSpace(d.Title)
+	if d.Title == "" {
+		return errors.New("empty lesson title")
+	}
 
 	var score int64
 	fmt.Print("Score: ")
@@ -37,8 +45,8 @@ func InputCreateLessonDTO(d *CreateLessonDTO) error {
 	switch d.Type {
 	case LessonDTOTheory:
 		fmt.Print("Theory Markdown: ")
-		var theory string
-		fmt.Scanln(&theory)
+		theory, _ := reader.ReadString('\n')
+		theory = strings.TrimSpace(theory)
 		d.Theory = null.StringFrom(theory)
 	case LessonDTOVideo:
 		fmt.Print("Video URL: ")
@@ -75,7 +83,10 @@ type CreateTestDTO struct {
 
 func InputCreateTestDTO(d *CreateTestDTO) error {
 	fmt.Print("Task Markdown: ")
-	fmt.Scanln(&d.Task)
+	reader := bufio.NewReader(os.Stdin)
+	task, _ := reader.ReadString('\n')
+	task = strings.TrimSpace(task)
+	d.Task = task
 
 	var count int
 	fmt.Print("Test options count: ")
@@ -86,13 +97,15 @@ func InputCreateTestDTO(d *CreateTestDTO) error {
 
 	options := make([]string, count)
 	for i := 0; i < count; i++ {
-		fmt.Printf("Option %d: ", i)
-		fmt.Scanln(&options[i])
+		fmt.Printf("Option %d: ", i+1)
+		options[i], _ = reader.ReadString('\n')
+		options[i] = strings.TrimSpace(options[i])
 	}
 	d.Options = options
 
 	fmt.Print("Answer: ")
-	fmt.Scanln(&d.Answer)
+	d.Answer, _ = reader.ReadString('\n')
+	d.Answer = strings.TrimSpace(d.Answer)
 
 	var level int64
 	fmt.Print("Level: ")

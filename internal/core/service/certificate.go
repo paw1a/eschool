@@ -39,6 +39,11 @@ func (c *CertificateService) FindUserCertificates(ctx context.Context,
 	return c.repo.FindUserCertificates(ctx, userID)
 }
 
+func (c *CertificateService) FindCourseCertificate(ctx context.Context,
+	courseID, userID domain.ID) (domain.Certificate, error) {
+	return c.repo.FindUserCourseCertificate(ctx, courseID, userID)
+}
+
 func (c *CertificateService) calculateLessonsScores(ctx context.Context,
 	userID domain.ID, lessons []domain.Lesson) (int, int, error) {
 	var maxScore, score int
@@ -103,7 +108,9 @@ func (c *CertificateService) CreateCourseCertificate(ctx context.Context,
 
 	return c.repo.Create(ctx, domain.Certificate{
 		ID:        domain.NewID(),
-		Name:      fmt.Sprintf("Сертификат о прохождении курса \"%s\"", course.Name),
+		UserID:    userID,
+		CourseID:  courseID,
+		Name:      fmt.Sprintf("Course \"%s\" certificate", course.Name),
 		CreatedAt: time.Now(),
 		Grade:     grade,
 		Score:     score,

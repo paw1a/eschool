@@ -68,10 +68,10 @@ values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', '30e18bc1-4354-4937-9a4d-03cf0b7
 -- insert lessons
 insert into lesson (id, title, type, score, theory_url, video_url, course_id)
 values ('30e18bc1-4352-4937-9a3b-03cf0b7022ca', 'lesson1', 'theory', 10,
-        'web://theory.md', null, '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
+        'http://theory.md', null, '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
 insert into lesson (id, title, type, score, theory_url, video_url, course_id)
 values ('30e18bc1-4352-4937-9a3b-03cf0b7022cb', 'lesson2', 'video', 10,
-        null, 'web://video.mp4', '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
+        null, 'http://video.mp4', '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
 insert into lesson (id, title, type, score, theory_url, video_url, course_id)
 values ('30e18bc1-4352-4937-9a3b-03cf0b7022cc', 'lesson3', 'practice', 10,
         null, null, '30e18bc1-4354-4937-9a4d-03cf0b7027ca');
