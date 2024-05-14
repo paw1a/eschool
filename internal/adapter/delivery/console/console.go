@@ -160,7 +160,7 @@ func (c *Console) PrintMenu() {
 	fmt.Println("8  Get user purchased courses")
 	fmt.Println("9  Add free course to user library")
 
-	fmt.Println("10  Get all courses")
+	fmt.Println("10 Get all courses")
 	fmt.Println("11 Create course")
 	fmt.Println("12 Update course")
 	fmt.Println("13 Delete course")

@@ -73,6 +73,12 @@ func (h *Handler) CreateSchool(c *Console) {
 		return
 	}
 
+	err = h.schoolService.AddSchoolTeacher(context.Background(), school.ID, userID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
 	schoolDTO := dto.NewSchoolDTO(school)
 	dto.PrintSchoolDTO(schoolDTO)
 }
@@ -144,6 +150,7 @@ func (h *Handler) CreateSchoolCourse(c *Console) {
 		ErrorResponse(UnauthorizedError)
 		return
 	}
+	userID := *c.UserID
 
 	var schoolID domain.ID
 	err = dto.InputID(&schoolID, "school")
@@ -171,6 +178,12 @@ func (h *Handler) CreateSchoolCourse(c *Console) {
 			Price:    createCourseDTO.Price.Int64,
 			Language: createCourseDTO.Language,
 		})
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	err = h.courseService.AddCourseTeacher(context.Background(), userID, course.ID)
 	if err != nil {
 		ErrorResponse(err)
 		return

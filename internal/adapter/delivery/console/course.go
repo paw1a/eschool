@@ -454,6 +454,17 @@ func (h *Handler) FindLessonStat(c *Console) {
 		return
 	}
 
+	lesson, err := h.lessonService.FindByID(context.Background(), lessonID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	if !h.verifyCourseReadAccess(c, lesson.CourseID) {
+		fmt.Println("you are not a student of this course")
+		return
+	}
+
 	stat, err := h.statService.FindLessonStat(context.Background(), userID, lessonID)
 	if err != nil {
 		ErrorResponse(err)
@@ -482,6 +493,11 @@ func (h *Handler) PassCourseLesson(c *Console) {
 	lesson, err := h.lessonService.FindByID(context.Background(), lessonID)
 	if err != nil {
 		ErrorResponse(err)
+		return
+	}
+
+	if !h.verifyCourseReadAccess(c, lesson.CourseID) {
+		fmt.Println("you are not a student of this course")
 		return
 	}
 
