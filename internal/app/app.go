@@ -1,19 +1,18 @@
 package app
 
 import (
-	sessionStorage "github.com/paw1a/eschool/internal/adapter/auth/adapter/storage/redis"
-	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
-	authPort "github.com/paw1a/eschool/internal/adapter/auth/port"
-	"github.com/paw1a/eschool/internal/adapter/delivery/console"
-	"github.com/paw1a/eschool/internal/adapter/delivery/web"
-	"github.com/paw1a/eschool/internal/adapter/delivery/web/v1"
-	"github.com/paw1a/eschool/internal/adapter/payment/yoomoney"
-	repository "github.com/paw1a/eschool/internal/adapter/repository/postgres"
-	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
+	sessionStorage "github.com/paw1a/eschool-auth/adapter/storage/redis"
+	"github.com/paw1a/eschool-auth/jwt"
+	authPort "github.com/paw1a/eschool-auth/port"
+	"github.com/paw1a/eschool-core/port"
+	"github.com/paw1a/eschool-core/service"
+	"github.com/paw1a/eschool-delivery/console"
+	v1 "github.com/paw1a/eschool-delivery/http/v1"
+	"github.com/paw1a/eschool-payment/yoomoney"
+	repository "github.com/paw1a/eschool-repository/postgres"
+	storage "github.com/paw1a/eschool-storage/minio"
 	"github.com/paw1a/eschool/internal/app/config"
 	"github.com/paw1a/eschool/internal/app/server"
-	"github.com/paw1a/eschool/internal/core/port"
-	"github.com/paw1a/eschool/internal/core/service"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
 	"github.com/paw1a/eschool/pkg/minio"
@@ -33,7 +32,6 @@ func RunWeb() {
 		fx.Provide(
 			server.NewServer,
 			server.NewGinRouter,
-			web.NewHandler,
 			v1.NewHandler,
 			postgres.NewPostgresDB,
 			redis.NewClient,
@@ -125,7 +123,7 @@ func RunWeb() {
 				fx.As(new(port.IAuthTokenService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney),
+		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney, &cfg.Web),
 		fx.Invoke(func(*http.Server) {}),
 	).Run()
 }

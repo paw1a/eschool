@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
-	"github.com/paw1a/eschool/internal/adapter/payment/yoomoney"
+	"github.com/paw1a/eschool-auth/jwt"
+	v1 "github.com/paw1a/eschool-delivery/http/v1"
+	"github.com/paw1a/eschool-payment/yoomoney"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
 	"github.com/paw1a/eschool/pkg/minio"
@@ -12,10 +13,7 @@ import (
 )
 
 type Config struct {
-	Server struct {
-		Host string
-		Port string
-	}
+	Web      v1.Config
 	Postgres postgres.Config
 	JWT      jwt.Config
 	Redis    redis.Config
@@ -52,8 +50,8 @@ func GetConfig() *Config {
 
 func bindEnvConfig() error {
 	bindings := make(map[string]string)
-	bindings["server.host"] = "HOST"
-	bindings["server.port"] = "PORT"
+	bindings["web.host"] = "HOST"
+	bindings["web.port"] = "PORT"
 	bindings["jwt.secret"] = "JWT_SECRET"
 	bindings["postgres.database"] = "DB_NAME"
 	bindings["postgres.user"] = "DB_USER"

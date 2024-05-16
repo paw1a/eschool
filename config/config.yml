@@ -1,7 +1,7 @@
 jwt:
   accessTokenTime: 60 # minutes
   refreshTokenTime: 86400 # minutes, (86400 == 60 days)
-server:
+web:
   host: localhost
   port: 8080
 yoomoney:
