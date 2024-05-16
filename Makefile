@@ -41,6 +41,8 @@ mocks:
 		--filename certificate.go --structname CertificateRepository
 	mockery --dir internal/core/port --name IObjectStorage --output internal/adapter/storage/mocks \
     		--filename storage.go --structname ObjectStorage
+	mockery --dir internal/core/port --name IStatRepository --output internal/adapter/repository/mocks \
+    		--filename stat.go --structname StatRepository
 
 clean:
 	rm -rf .bin .data
