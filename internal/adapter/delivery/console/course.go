@@ -170,6 +170,40 @@ func (h *Handler) AddCourseTeacher(c *Console) {
 	fmt.Println("successfully added teacher")
 }
 
+func (h *Handler) PublishCourse(c *Console) {
+	err := h.verifyAuth(c)
+	if err != nil {
+		ErrorResponse(UnauthorizedError)
+		return
+	}
+
+	var courseID domain.ID
+	err = dto.InputID(&courseID, "course")
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	if !h.verifyCourseWriteAccess(c, courseID) {
+		fmt.Println("you are not a course teacher")
+		return
+	}
+
+	errList := h.courseService.ConfirmDraftCourse(context.Background(), courseID)
+	if errList != nil {
+		ErrorResponse(errList[0])
+		return
+	}
+
+	err = h.courseService.PublishReadyCourse(context.Background(), courseID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	fmt.Println("course successfully published")
+}
+
 func (h *Handler) FindCourseLessons(c *Console) {
 	err := h.verifyAuth(c)
 	if err != nil {
@@ -291,100 +325,6 @@ func (h *Handler) CreateCourseLesson(c *Console) {
 	dto.PrintLessonDTO(lessonDTO)
 }
 
-//	func (h *Handler) updateCourseLesson(c *Console) {
-//		lessonID, err := getIdFromPath(context, "lesson_id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		var updateLessonDTO dto.UpdateLessonDTO
-//		err = context.ShouldBindJSON(&updateLessonDTO)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		lesson, err := h.lessonService.FindByID(context.Request.Context(), lessonID)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		var updatedLesson domain.Lesson
-//		switch lesson.Type {
-//		case domain.TheoryLesson:
-//			if !updateLessonDTO.Theory.Valid {
-//				ErrorResponse(context, BadRequestError)
-//				return
-//			}
-//			updatedLesson, err = h.lessonService.UpdateTheoryLesson(context.Request.Context(),
-//				lessonID, port.UpdateTheoryParam{
-//					Title:  updateLessonDTO.Title,
-//					Score:  updateLessonDTO.Score,
-//					Theory: updateLessonDTO.Theory,
-//				})
-//		case domain.VideoLesson:
-//			if !updateLessonDTO.VideoUrl.Valid {
-//				ErrorResponse(context, BadRequestError)
-//				return
-//			}
-//			updatedLesson, err = h.lessonService.UpdateVideoLesson(context.Request.Context(),
-//				lessonID, port.UpdateVideoParam{
-//					Title:    updateLessonDTO.Title,
-//					Score:    updateLessonDTO.Score,
-//					VideoUrl: updateLessonDTO.VideoUrl,
-//				})
-//		case domain.PracticeLesson:
-//			if updateLessonDTO.Tests == nil {
-//				ErrorResponse(context, BadRequestError)
-//				return
-//			}
-//
-//			tests := make([]port.UpdateTestParam, len(updateLessonDTO.Tests))
-//			for i, test := range updateLessonDTO.Tests {
-//				tests[i] = port.UpdateTestParam{
-//					Task:    test.Task,
-//					Options: test.Options,
-//					Answer:  test.Answer,
-//					Level:   int(test.Level.Int64),
-//					Score:   int(test.Score.Int64),
-//				}
-//			}
-//			updatedLesson, err = h.lessonService.UpdatePracticeLesson(context.Request.Context(),
-//				lessonID, port.UpdatePracticeParam{
-//					Title: updateLessonDTO.Title,
-//					Score: updateLessonDTO.Score,
-//					Tests: tests,
-//				})
-//		default:
-//			ErrorResponse(context, BadRequestError)
-//			return
-//		}
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		lessonDTO := dto.NewLessonDTO(updatedLesson)
-//		CreatedResponse(context, lessonDTO)
-//	}
-//
-//	func (h *Handler) deleteCourseLesson(c *Console) {
-//		lessonID, err := getIdFromPath(context, "lesson_id")
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		err = h.lessonService.Delete(context.Request.Context(), lessonID)
-//		if err != nil {
-//			ErrorResponse(context, err)
-//			return
-//		}
-//
-//		SuccessResponse(context, "lesson successfully deleted")
-//	}
 func (h *Handler) AddCourseReview(c *Console) {
 	err := h.verifyAuth(c)
 	if err != nil {
@@ -498,6 +438,17 @@ func (h *Handler) PassCourseLesson(c *Console) {
 
 	if !h.verifyCourseReadAccess(c, lesson.CourseID) {
 		fmt.Println("you are not a student of this course")
+		return
+	}
+
+	course, err := h.courseService.FindByID(context.Background(), lesson.CourseID)
+	if err != nil {
+		ErrorResponse(err)
+		return
+	}
+
+	if course.Status != domain.CoursePublished {
+		fmt.Println("course is not published yet")
 		return
 	}
 

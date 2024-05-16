@@ -41,6 +41,7 @@ const (
 	createCourseLesson
 	findCourseTeachers
 	addCourseTeacher
+	publishCourse
 
 	findAllSchools
 	createSchool
@@ -103,6 +104,7 @@ func (c *Console) InitRoutes() {
 		createCourseLesson: c.Handler.CreateCourseLesson,
 		findCourseTeachers: c.Handler.FindCourseTeachers,
 		addCourseTeacher:   c.Handler.AddCourseTeacher,
+		publishCourse:      c.Handler.PublishCourse,
 
 		findAllSchools:     c.Handler.FindAllSchools,
 		createSchool:       c.Handler.CreateSchool,
@@ -168,21 +170,22 @@ func (c *Console) PrintMenu() {
 	fmt.Println("15 Create course lesson")
 	fmt.Println("16 Get course teachers")
 	fmt.Println("17 Add course teacher")
+	fmt.Println("18 Publish course")
 
-	fmt.Println("18 Get all schools")
-	fmt.Println("19 Create school")
-	fmt.Println("20 Update school")
-	fmt.Println("21 Get school courses")
-	fmt.Println("22 Get school teachers")
-	fmt.Println("23 Add school teacher")
+	fmt.Println("19 Get all schools")
+	fmt.Println("20 Create school")
+	fmt.Println("21 Update school")
+	fmt.Println("22 Get school courses")
+	fmt.Println("23 Get school teachers")
+	fmt.Println("24 Add school teacher")
 
-	fmt.Println("24 Pass course lesson")
-	fmt.Println("25 Get lesson progress")
+	fmt.Println("25 Pass course lesson")
+	fmt.Println("26 Get lesson progress")
 
-	fmt.Println("26 Find course reviews")
-	fmt.Println("27 Add course review")
+	fmt.Println("27 Find course reviews")
+	fmt.Println("28 Add course review")
 
-	fmt.Println("28 Get course certificate")
-	fmt.Println("29 Generate course certificate")
+	fmt.Println("29 Get course certificate")
+	fmt.Println("30 Generate course certificate")
 	fmt.Println("--------------------------------")
 }
