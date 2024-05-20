@@ -8,3 +8,7 @@ yoomoney:
   scheme: https
   host: yoomoney.ru
   path: /quickpay/confirm
+logging:
+  path: logs
+  filename: logs.json
+  level: info # debug, info, warn, error, fatal

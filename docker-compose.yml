@@ -71,14 +71,15 @@ services:
   app:
     image: 'app'
     container_name: 'app'
-#    logging:
-#      driver: none
+    logging:
+      driver: none
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - ./.bin/:/app/
       - ./config/:/app/config/
+      - ./logs/:/app/logs
     env_file:
       - .env
     depends_on:

@@ -235,8 +235,14 @@ github.com/otiai10/mint v1.3.0/go.mod h1:F5AjcsTsWUqX+Na9fpHb52P8pcRX2CI6A3ctIT9
 github.com/otiai10/mint v1.3.3/go.mod h1:/yxELlJQ0ufhjUwhshSj+wFjZ78CnZ48/1wtmBH1OTc=
 github.com/paw1a/eschool-auth v0.0.0-20240516125026-65e7830f1875 h1:t+QaKjgfj5pfRLMMBnFUk31MxtP9urCwDzqO2S61dNc=
 github.com/paw1a/eschool-auth v0.0.0-20240516125026-65e7830f1875/go.mod h1:UpAfrF63gMLs9stZhCD64JTdAvyjYOXge9igqaPkg4A=
+github.com/paw1a/eschool-console v0.0.0-20240519141552-74a377535d13 h1:z5xkKjJJL8GUgtYqQxrU3ZtNQBPZ6VOgQXW8BTb3sRQ=
+github.com/paw1a/eschool-console v0.0.0-20240519141552-74a377535d13/go.mod h1:MPrf7hzCOkZdPuZH8EE5oYiDqqiHJB2nuQQHq2NveDg=
+github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1 h1:Mtn6/afLe1Z7CjsT8862vnR/hslx2Rteceo5BExKatg=
+github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1/go.mod h1:MPrf7hzCOkZdPuZH8EE5oYiDqqiHJB2nuQQHq2NveDg=
 github.com/paw1a/eschool-core v0.0.0-20240516124202-db1b1bb8e38d h1:ylOaH/gHXi8rHeaT1rwxl3tWMTwo9jvK5cVC6MTGcXI=
 github.com/paw1a/eschool-core v0.0.0-20240516124202-db1b1bb8e38d/go.mod h1:UwtoWthOFowJlEIsy/FiNewUj9W0ouQ+q0yvJ31TAC0=
+github.com/paw1a/eschool-core v0.0.0-20240520164214-0b086e190a1f h1:X3s4xyRLxYxqCyyqFVoJnwoRcox0G3CZz93SCHIkvi8=
+github.com/paw1a/eschool-core v0.0.0-20240520164214-0b086e190a1f/go.mod h1:ful0XOY0nuwTgPf/llZei06o2pvzDO/NaO7EqbJQips=
 github.com/paw1a/eschool-delivery v0.0.0-20240516164617-2d8e4af09252 h1:y/Bua6Xu1EiposUYUcH+/rJt7KMavhEZjptuYA3+NXQ=
 github.com/paw1a/eschool-delivery v0.0.0-20240516164617-2d8e4af09252/go.mod h1:aUn8t6jLHe+m30GR8rjlSqFZca8f9EJK4tJufeFCi2E=
 github.com/paw1a/eschool-delivery v0.0.0-20240516165333-c0d1095e1966 h1:nXWTtd3HLN03WgOOWL24FNFScxWKtwgnZ9vFKe85M8Y=
@@ -249,6 +255,8 @@ github.com/paw1a/eschool-repository v0.0.0-20240516132712-40dd22f86793 h1:x1R4Lp
 github.com/paw1a/eschool-repository v0.0.0-20240516132712-40dd22f86793/go.mod h1:IaeUl4joew8Y+Ps7BkdAVTU8Q6JwyjpR1BrbmttJKSk=
 github.com/paw1a/eschool-storage v0.0.0-20240516135234-1bd7af75d120 h1:vbTVkmReG9WzbYlWKxzC45QIgr1wg/5/ArEcu/JGHMY=
 github.com/paw1a/eschool-storage v0.0.0-20240516135234-1bd7af75d120/go.mod h1:MeIQELGgdhHItdBIOLSZnCsw15OW4pioA8M6/jDMLxk=
+github.com/paw1a/eschool-web v0.0.0-20240519141142-a257246d4c68 h1:/ug6xEPr55GlwQsIht8zDA5gDT+iyz0FWZqtnaST/QY=
+github.com/paw1a/eschool-web v0.0.0-20240519141142-a257246d4c68/go.mod h1:LS08y6wK/nIbEOBwBq7Q2iYmCiOeFkr+D9iofIIPeCk=
 github.com/pelletier/go-toml/v2 v2.2.2 h1:aYUidT7k73Pcl9nb2gScu7NSrKCSHIDE89b3+6Wq+LM=
 github.com/pelletier/go-toml/v2 v2.2.2/go.mod h1:1t835xjRzz80PqgE6HHgN2JOsmgYu/h4qDAS4n929Rs=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

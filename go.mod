@@ -10,8 +10,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/minio/minio-go/v7 v7.0.70
 	github.com/paw1a/eschool-auth v0.0.0-20240516125026-65e7830f1875
-	github.com/paw1a/eschool-core v0.0.0-20240516124202-db1b1bb8e38d
-	github.com/paw1a/eschool-delivery v0.0.0-20240516171156-c626ec2c1155
+	github.com/paw1a/eschool-core v0.0.0-20240520164214-0b086e190a1f
 	github.com/paw1a/eschool-payment v0.0.0-20240516140318-a30beecafe19
 	github.com/paw1a/eschool-repository v0.0.0-20240516132712-40dd22f86793
 	github.com/paw1a/eschool-storage v0.0.0-20240516135234-1bd7af75d120
@@ -67,6 +66,8 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1 // indirect
+	github.com/paw1a/eschool-web v0.0.0-20240519141142-a257246d4c68 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect

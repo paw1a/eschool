@@ -2,17 +2,19 @@ package config
 
 import (
 	"github.com/paw1a/eschool-auth/jwt"
-	v1 "github.com/paw1a/eschool-delivery/http/v1"
 	"github.com/paw1a/eschool-payment/yoomoney"
+	v1 "github.com/paw1a/eschool-web/http/v1"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
+	"github.com/paw1a/eschool/pkg/logging"
 	"github.com/paw1a/eschool/pkg/minio"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"log"
 	"sync"
 )
 
 type Config struct {
+	Logging  logging.Config
 	Web      v1.Config
 	Postgres postgres.Config
 	JWT      jwt.Config
@@ -35,7 +37,7 @@ func GetConfig() *Config {
 			log.Fatalf("error reading config file: %v", err)
 		}
 
-		log.Infof("read config file: config/config.yml")
+		log.Println("read config file: config/config.yml")
 		if err := viper.ReadInConfig(); err != nil {
 			log.Fatalf("error reading config file: %v", err)
 		}

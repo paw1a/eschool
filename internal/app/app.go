@@ -4,29 +4,35 @@ import (
 	sessionStorage "github.com/paw1a/eschool-auth/adapter/storage/redis"
 	"github.com/paw1a/eschool-auth/jwt"
 	authPort "github.com/paw1a/eschool-auth/port"
+	"github.com/paw1a/eschool-console/console"
 	"github.com/paw1a/eschool-core/port"
 	"github.com/paw1a/eschool-core/service"
-	"github.com/paw1a/eschool-delivery/console"
-	v1 "github.com/paw1a/eschool-delivery/http/v1"
 	"github.com/paw1a/eschool-payment/yoomoney"
 	repository "github.com/paw1a/eschool-repository/postgres"
 	storage "github.com/paw1a/eschool-storage/minio"
+	v1 "github.com/paw1a/eschool-web/http/v1"
 	"github.com/paw1a/eschool/internal/app/config"
 	"github.com/paw1a/eschool/internal/app/server"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
+	"github.com/paw1a/eschool/pkg/logging"
 	"github.com/paw1a/eschool/pkg/minio"
-	log "github.com/sirupsen/logrus"
 	"go.uber.org/fx"
+	"log"
 	"net/http"
 )
 
 func RunWeb() {
-	log.Info("application startup")
-	log.Info("logger initialized")
-
 	cfg := config.GetConfig()
-	log.Info("config created")
+	log.Println("config is loaded")
+
+	logger, err := logging.NewLogger(&cfg.Logging)
+	if err != nil {
+		log.Fatalf("failed to create logger: %v", err)
+	}
+
+	logger.Info("logger initialized")
+	logger.Info("application startup")
 
 	fx.New(
 		fx.Provide(
@@ -123,17 +129,24 @@ func RunWeb() {
 				fx.As(new(port.IAuthTokenService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney, &cfg.Web),
+		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT,
+			&cfg.Minio, &cfg.Yoomoney, &cfg.Web, logger),
 		fx.Invoke(func(*http.Server) {}),
+		fx.NopLogger,
 	).Run()
 }
 
 func RunConsole() {
-	log.Info("application startup")
-	log.Info("logger initialized")
-
 	cfg := config.GetConfig()
-	log.Info("config created")
+	log.Println("config is loaded")
+
+	logger, err := logging.NewLogger(&cfg.Logging)
+	if err != nil {
+		log.Fatalf("failed to create logger: %v", err)
+	}
+
+	logger.Info("logger initialized")
+	logger.Info("application startup")
 
 	fx.New(
 		fx.Provide(
@@ -229,7 +242,8 @@ func RunConsole() {
 				fx.As(new(port.IAuthTokenService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney),
+		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney, logger),
 		fx.Invoke(func(*console.Console) {}),
+		fx.NopLogger,
 	).Run()
 }

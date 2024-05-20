@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	v1 "github.com/paw1a/eschool-delivery/http/v1"
+	v1 "github.com/paw1a/eschool-web/http/v1"
 	"github.com/paw1a/eschool/internal/app/config"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
@@ -33,6 +33,7 @@ type ServerParams struct {
 	Cfg     *config.Config
 	Handler *v1.Handler
 	Router  *gin.Engine
+	Logger  *zap.Logger
 }
 
 func NewServer(lc fx.Lifecycle, params ServerParams) *http.Server {
@@ -45,8 +46,8 @@ func NewServer(lc fx.Lifecycle, params ServerParams) *http.Server {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				log.Infof("server started on port %s", params.Cfg.Web.Port)
-				log.Fatal(server.ListenAndServe())
+				params.Logger.Info(fmt.Sprintf("server started on port %s", params.Cfg.Web.Port))
+				params.Logger.Fatal("server shutdown", zap.Error(server.ListenAndServe()))
 			}()
 			return nil
 		},
