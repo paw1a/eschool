@@ -3,11 +3,11 @@ package config
 import (
 	"github.com/paw1a/eschool-auth/jwt"
 	"github.com/paw1a/eschool-payment/yoomoney"
+	storage "github.com/paw1a/eschool-storage/minio"
 	v1 "github.com/paw1a/eschool-web/http/v1"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
 	"github.com/paw1a/eschool/pkg/logging"
-	"github.com/paw1a/eschool/pkg/minio"
 	"github.com/spf13/viper"
 	"log"
 	"sync"
@@ -19,7 +19,7 @@ type Config struct {
 	Postgres postgres.Config
 	JWT      jwt.Config
 	Redis    redis.Config
-	Minio    minio.Config
+	Minio    storage.Config
 	Yoomoney yoomoney.Config
 }
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"time"
 )
 
@@ -22,7 +22,7 @@ const (
 	maxConnLifetime = 3 * time.Minute
 )
 
-func NewPostgresDB(cfg *Config) (*sqlx.DB, error) {
+func NewPostgresDB(cfg *Config, logger *zap.Logger) (*sqlx.DB, error) {
 	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s",
 		cfg.Host,
 		cfg.Port,
@@ -33,7 +33,7 @@ func NewPostgresDB(cfg *Config) (*sqlx.DB, error) {
 
 	db, err := sqlx.Connect("pgx", connectionString)
 	if err != nil {
-		log.Errorf("failed to connect postgres db: %s", connectionString)
+		logger.Fatal("failed to connect postgres db: %s", zap.String("conn string", connectionString))
 		return nil, err
 	}
 
@@ -43,7 +43,7 @@ func NewPostgresDB(cfg *Config) (*sqlx.DB, error) {
 
 	err = db.Ping()
 	if err != nil {
-		log.Errorf("failed to ping postgres db: %s", connectionString)
+		logger.Fatal("failed to ping postgres db: %s", zap.String("conn string", connectionString))
 		return nil, err
 	}
 

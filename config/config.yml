@@ -11,4 +11,4 @@ yoomoney:
 logging:
   path: logs
   filename: logs.json
-  level: info # debug, info, warn, error, fatal
+  level: error # debug, info, warn, error, fatal

@@ -10,16 +10,19 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/minio/minio-go/v7 v7.0.70
 	github.com/paw1a/eschool-auth v0.0.0-20240516125026-65e7830f1875
+	github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1
 	github.com/paw1a/eschool-core v0.0.0-20240520164214-0b086e190a1f
 	github.com/paw1a/eschool-payment v0.0.0-20240516140318-a30beecafe19
-	github.com/paw1a/eschool-repository v0.0.0-20240516132712-40dd22f86793
-	github.com/paw1a/eschool-storage v0.0.0-20240516135234-1bd7af75d120
+	github.com/paw1a/eschool-repository v0.0.0-20240521175400-121abee2feb0
+	github.com/paw1a/eschool-storage v0.0.0-20240521175421-5e025b3a47cd
+	github.com/paw1a/eschool-web v0.0.0-20240519141142-a257246d4c68
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.18.2
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.0
 	go.uber.org/fx v1.21.1
+	go.uber.org/zap v1.27.0
 )
 
 require (
@@ -66,8 +69,6 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1 // indirect
-	github.com/paw1a/eschool-web v0.0.0-20240519141142-a257246d4c68 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
@@ -83,7 +84,6 @@ require (
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	go.uber.org/dig v1.17.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
