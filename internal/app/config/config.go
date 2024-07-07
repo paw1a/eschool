@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/paw1a/eschool-auth/jwt"
 	v1 "github.com/paw1a/eschool-web/http/v1"
+	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
 	"github.com/paw1a/eschool/internal/adapter/payment/yoomoney"
 	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
 	"github.com/paw1a/eschool/pkg/database/postgres"

@@ -1,11 +1,11 @@
 package app
 
 import (
-	sessionStorage "github.com/paw1a/eschool-auth/adapter/storage/redis"
-	"github.com/paw1a/eschool-auth/jwt"
-	authPort "github.com/paw1a/eschool-auth/port"
 	"github.com/paw1a/eschool-console/console"
 	v1 "github.com/paw1a/eschool-web/http/v1"
+	sessionStorage "github.com/paw1a/eschool/internal/adapter/auth/adapter/storage/redis"
+	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
+	authPort "github.com/paw1a/eschool/internal/adapter/auth/port"
 	"github.com/paw1a/eschool/internal/adapter/payment/yoomoney"
 	repository "github.com/paw1a/eschool/internal/adapter/repository/postgres"
 	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
