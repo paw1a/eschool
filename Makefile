@@ -1,19 +1,30 @@
 include .env
 export
 
-build:
-	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/app/main.go
+build_web:
+	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/web/main.go
 
-run: build
-	docker-compose up postgres redis minio app
+run_web: build_web
+	docker-compose up postgres redis minio pgadmin app
 
-debug: build
-	docker-compose up postgres redis minio debug
+debug_web: build_web
+	docker-compose up postgres redis minio pgadmin debug
+
+console: run_console
+
+build_console:
+	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/console/main.go
+
+run_console: build_console
+	docker-compose up postgres redis minio pgadmin app
+
+debug_console: build_console
+	docker-compose up postgres redis minio pgadmin debug
 
 migrate:
 	# if "error: file does not exist" was occurred,
     # it means that data is up to date
-	docker-compose up migrate
+	docker compose up migrate
 
 mocks:
 	mockery --dir internal/core/port --name IUserRepository --output internal/adapter/repository/mocks \
@@ -30,8 +41,10 @@ mocks:
 		--filename certificate.go --structname CertificateRepository
 	mockery --dir internal/core/port --name IObjectStorage --output internal/adapter/storage/mocks \
     		--filename storage.go --structname ObjectStorage
+	mockery --dir internal/core/port --name IStatRepository --output internal/adapter/repository/mocks \
+    		--filename stat.go --structname StatRepository
 
 clean:
-	rm -rf .bin .data
+	rm -rf .bin .data logs
 
-.DEFAULT_GOAL := run
+.DEFAULT_GOAL := run_web

@@ -154,6 +154,36 @@ func (_m *CourseRepository) FindByID(ctx context.Context, courseID domain.ID) (d
 	return r0, r1
 }
 
+// FindCourseTeachers provides a mock function with given fields: ctx, courseID
+func (_m *CourseRepository) FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error) {
+	ret := _m.Called(ctx, courseID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindCourseTeachers")
+	}
+
+	var r0 []domain.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID) ([]domain.User, error)); ok {
+		return rf(ctx, courseID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID) []domain.User); ok {
+		r0 = rf(ctx, courseID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.User)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.ID) error); ok {
+		r1 = rf(ctx, courseID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindStudentCourses provides a mock function with given fields: ctx, studentID
 func (_m *CourseRepository) FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error) {
 	ret := _m.Called(ctx, studentID)
@@ -207,6 +237,62 @@ func (_m *CourseRepository) FindTeacherCourses(ctx context.Context, teacherID do
 
 	if rf, ok := ret.Get(1).(func(context.Context, domain.ID) error); ok {
 		r1 = rf(ctx, teacherID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// IsCourseStudent provides a mock function with given fields: ctx, studentID, courseID
+func (_m *CourseRepository) IsCourseStudent(ctx context.Context, studentID domain.ID, courseID domain.ID) (bool, error) {
+	ret := _m.Called(ctx, studentID, courseID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IsCourseStudent")
+	}
+
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) (bool, error)); ok {
+		return rf(ctx, studentID, courseID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) bool); ok {
+		r0 = rf(ctx, studentID, courseID)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.ID, domain.ID) error); ok {
+		r1 = rf(ctx, studentID, courseID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// IsCourseTeacher provides a mock function with given fields: ctx, teacherID, courseID
+func (_m *CourseRepository) IsCourseTeacher(ctx context.Context, teacherID domain.ID, courseID domain.ID) (bool, error) {
+	ret := _m.Called(ctx, teacherID, courseID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IsCourseTeacher")
+	}
+
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) (bool, error)); ok {
+		return rf(ctx, teacherID, courseID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) bool); ok {
+		r0 = rf(ctx, teacherID, courseID)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.ID, domain.ID) error); ok {
+		r1 = rf(ctx, teacherID, courseID)
 	} else {
 		r1 = ret.Error(1)
 	}

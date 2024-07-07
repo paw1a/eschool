@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	minio2 "github.com/paw1a/eschool/pkg/minio"
+	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
 	"github.com/testcontainers/testcontainers-go"
 	testminio "github.com/testcontainers/testcontainers-go/modules/minio"
 )
 
 var (
-	minioConfig = minio2.Config{
-		AccessKey:  "key",
-		SecretKey:  "secretKey",
+	minioConfig = storage.Config{
+		User:       "username",
+		Password:   "password",
 		BucketName: "test",
 	}
 )
@@ -21,8 +21,8 @@ var (
 func newMinioContainer(ctx context.Context) (*testminio.MinioContainer, error) {
 	minioContainer, err := testminio.RunContainer(ctx,
 		testcontainers.WithImage("docker.io/minio/minio"),
-		testminio.WithUsername(minioConfig.AccessKey),
-		testminio.WithPassword(minioConfig.SecretKey),
+		testminio.WithUsername(minioConfig.User),
+		testminio.WithPassword(minioConfig.Password),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to start minio container: %s", err)
@@ -32,7 +32,7 @@ func newMinioContainer(ctx context.Context) (*testminio.MinioContainer, error) {
 
 func newMinioClient(url string) (*minio.Client, error) {
 	minioClient, err := minio.New(url, &minio.Options{
-		Creds:  credentials.NewStaticV4(minioConfig.AccessKey, minioConfig.SecretKey, ""),
+		Creds:  credentials.NewStaticV4(minioConfig.User, minioConfig.Password, ""),
 		Secure: false,
 	})
 	if err != nil {

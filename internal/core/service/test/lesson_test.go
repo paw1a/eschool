@@ -2,13 +2,14 @@ package service
 
 import (
 	"context"
-	"github.com/paw1a/eschool/internal/adapter/repository/mocks"
-	storageMocks "github.com/paw1a/eschool/internal/adapter/storage/mocks"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/internal/core/service"
+	repositoryMocks "github.com/paw1a/eschool/internal/core/service/mocks/repository"
+	storageMocks "github.com/paw1a/eschool/internal/core/service/mocks/storage"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
 	"testing"
 )
 
@@ -47,7 +48,7 @@ var testParams = []port.CreateTestParam{
 func TestLessonService_CreatePracticeLesson(t *testing.T) {
 	testTable := []struct {
 		name           string
-		initLessonRepo func(userRepo *mocks.LessonRepository)
+		initLessonRepo func(userRepo *repositoryMocks.LessonRepository)
 		initStorage    func(storage *storageMocks.ObjectStorage)
 		param          port.CreatePracticeParam
 		hasError       bool
@@ -59,7 +60,7 @@ func TestLessonService_CreatePracticeLesson(t *testing.T) {
 				Score: 120,
 				Tests: []port.CreateTestParam{testParams[0]},
 			},
-			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
+			initLessonRepo: func(lessonRepo *repositoryMocks.LessonRepository) {
 				lessonRepo.On("Create", context.Background(), mock.AnythingOfType("domain.Lesson")).
 					Return(domain.Lesson{}, nil)
 			},
@@ -76,7 +77,7 @@ func TestLessonService_CreatePracticeLesson(t *testing.T) {
 				Score: 120,
 				Tests: []port.CreateTestParam{testParams[1]},
 			},
-			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
+			initLessonRepo: func(lessonRepo *repositoryMocks.LessonRepository) {
 			},
 			initStorage: func(storage *storageMocks.ObjectStorage) {
 			},
@@ -89,7 +90,7 @@ func TestLessonService_CreatePracticeLesson(t *testing.T) {
 				Score: 120,
 				Tests: []port.CreateTestParam{testParams[2]},
 			},
-			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
+			initLessonRepo: func(lessonRepo *repositoryMocks.LessonRepository) {
 			},
 			initStorage: func(storage *storageMocks.ObjectStorage) {
 
@@ -103,7 +104,7 @@ func TestLessonService_CreatePracticeLesson(t *testing.T) {
 				Score: 120,
 				Tests: []port.CreateTestParam{testParams[3]},
 			},
-			initLessonRepo: func(lessonRepo *mocks.LessonRepository) {
+			initLessonRepo: func(lessonRepo *repositoryMocks.LessonRepository) {
 			},
 			initStorage: func(storage *storageMocks.ObjectStorage) {
 
@@ -114,9 +115,9 @@ func TestLessonService_CreatePracticeLesson(t *testing.T) {
 
 	for _, test := range testTable {
 		t.Run(test.name, func(t *testing.T) {
-			lessonRepo := mocks.NewLessonRepository(t)
+			lessonRepo := repositoryMocks.NewLessonRepository(t)
 			objectStorage := storageMocks.NewObjectStorage(t)
-			lessonService := service.NewLessonService(lessonRepo, objectStorage)
+			lessonService := service.NewLessonService(lessonRepo, objectStorage, zap.NewNop())
 			test.initLessonRepo(lessonRepo)
 			test.initStorage(objectStorage)
 			_, err := lessonService.CreatePracticeLesson(context.Background(), courseID, test.param)

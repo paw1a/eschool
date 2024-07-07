@@ -1,51 +1,85 @@
 package v1
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
-	"github.com/paw1a/eschool/internal/app/config"
+	"github.com/google/uuid"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
-	log "github.com/sirupsen/logrus"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"math"
 	"net/http"
 	"time"
 )
 
+type Config struct {
+	Host string
+	Port string
+}
+
 type Handler struct {
-	config        *config.Config
-	tokenProvider jwt.TokenProvider
-	userService   port.IUserService
+	config             *Config
+	logger             *zap.Logger
+	userService        port.IUserService
+	schoolService      port.ISchoolService
+	lessonService      port.ILessonService
+	reviewService      port.IReviewService
+	courseService      port.ICourseService
+	certificateService port.ICertificateService
+	mediaService       port.IMediaService
+	statService        port.IStatService
+	authService        port.IAuthTokenService
+	paymentService     port.IPaymentService
 }
 
 type HandlerParams struct {
 	fx.In
-	Config        *config.Config
-	TokenProvider jwt.TokenProvider
-	UserService   port.IUserService
+	Config             *Config
+	Logger             *zap.Logger
+	UserService        port.IUserService
+	SchoolService      port.ISchoolService
+	LessonService      port.ILessonService
+	ReviewService      port.IReviewService
+	CourseService      port.ICourseService
+	CertificateService port.ICertificateService
+	MediaService       port.IMediaService
+	StatService        port.IStatService
+	AuthService        port.IAuthTokenService
+	PaymentService     port.IPaymentService
 }
 
-func NewHandler(params HandlerParams) *Handler {
-	return &Handler{
-		config:        params.Config,
-		tokenProvider: params.TokenProvider,
-		userService:   params.UserService,
+func NewHandler(params HandlerParams, router *gin.Engine) *Handler {
+	handler := &Handler{
+		config:             params.Config,
+		logger:             params.Logger,
+		userService:        params.UserService,
+		schoolService:      params.SchoolService,
+		lessonService:      params.LessonService,
+		reviewService:      params.ReviewService,
+		courseService:      params.CourseService,
+		certificateService: params.CertificateService,
+		mediaService:       params.MediaService,
+		statService:        params.StatService,
+		authService:        params.AuthService,
+		paymentService:     params.PaymentService,
 	}
-}
 
-func (h *Handler) Init(api *gin.RouterGroup) {
+	api := router.Group("/api")
 	v1 := api.Group("/v1")
-	v1.Use(LoggerMiddleware())
+	v1.Use(LoggerMiddleware(params.Logger))
 	{
-		h.initAuthRoutes(v1)
-		h.initUsersRoutes(v1)
+		handler.initAuthRoutes(v1)
+		handler.initUsersRoutes(v1)
+		handler.initCourseRoutes(v1)
+		handler.initSchoolRoutes(v1)
+		handler.initPaymentRoutes(v1)
 	}
+
+	return handler
 }
 
-func LoggerMiddleware() gin.HandlerFunc {
+func LoggerMiddleware(logger *zap.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.Request.URL.Path
 		start := time.Now()
@@ -55,24 +89,36 @@ func LoggerMiddleware() gin.HandlerFunc {
 		statusCode := c.Writer.Status()
 
 		if len(c.Errors) > 0 {
-			log.Error(c.Errors.ByType(gin.ErrorTypePrivate).String())
+			logger.Error(c.Errors.ByType(gin.ErrorTypePrivate).String())
 		} else {
 			msg := fmt.Sprintf("[%s %d] %s (%dms)", c.Request.Method, statusCode, path, latency)
 			if statusCode >= http.StatusInternalServerError {
-				log.Error(msg)
+				logger.Error(msg)
 			} else if statusCode >= http.StatusBadRequest {
-				log.Warn(msg)
+				logger.Warn(msg)
 			} else {
-				log.Info(msg)
+				logger.Info(msg)
 			}
 		}
 	}
 }
 
-func getIdFromRequestContext(context *gin.Context, paramName string) (domain.ID, error) {
-	id, ok := context.Get(paramName)
+func getIdFromPath(c *gin.Context, paramName string) (domain.ID, error) {
+	idString := c.Param(paramName)
+	if idString == "" {
+		return domain.RandomID(), PathIdParamIsEmptyError
+	}
+
+	if _, err := uuid.Parse(idString); err != nil {
+		return domain.RandomID(), PathIdParamIsInvalidUUID
+	}
+	return domain.ID(idString), nil
+}
+
+func getIdFromRequestContext(context *gin.Context) (domain.ID, error) {
+	id, ok := context.Get("userID")
 	if !ok {
-		return domain.RandomID(), errors.New("not authenticated")
+		return domain.RandomID(), UnauthorizedError
 	}
 	return domain.ID(id.(string)), nil
 }

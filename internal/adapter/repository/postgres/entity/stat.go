@@ -6,17 +6,17 @@ import (
 )
 
 type PgLessonStat struct {
-	ID       uuid.UUID
-	LessonID uuid.UUID
-	UserID   uuid.UUID
-	Score    int
+	ID       uuid.UUID `db:"id"`
+	LessonID uuid.UUID `db:"lesson_id"`
+	UserID   uuid.UUID `db:"user_id"`
+	Score    int       `db:"score"`
 }
 
 type PgTestStat struct {
-	ID     uuid.UUID
-	TestID uuid.UUID
-	UserID uuid.UUID
-	Score  int
+	ID     uuid.UUID `db:"id"`
+	TestID uuid.UUID `db:"test_id"`
+	UserID uuid.UUID `db:"user_id"`
+	Score  int       `db:"score"`
 }
 
 func (s *PgLessonStat) ToDomain() domain.LessonStat {

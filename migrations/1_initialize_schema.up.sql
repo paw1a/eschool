@@ -30,25 +30,27 @@ create table public.course (
     foreign key (school_id) references public.school(id) on delete cascade
 );
 
-create type lesson_type as enum ('theory', 'practice', 'video');
+create type lesson_type as enum ('theory', 'video', 'practice');
 
 create table public.lesson (
     id uuid primary key,
     title varchar(255) not null,
     type lesson_type not null,
-    content_url text,
+    score int not null,
+    theory_url text,
+    video_url text,
     course_id uuid not null,
     foreign key (course_id) references public.course(id) on delete cascade
 );
 
 create table public.test (
     id uuid primary key,
-    question_url text not null,
+    task_url text not null,
     options text not null,
     answer text not null,
     score int not null,
     level int not null,
-    lesson_id uuid,
+    lesson_id uuid not null,
     foreign key (lesson_id) references public.lesson(id) on delete cascade
 );
 
@@ -70,9 +72,9 @@ create table public.certificate (
     grade certificate_grade not null,
     created_at timestamp not null,
     user_id uuid not null,
-    course_id uuid not null,
+    course_id uuid,
     foreign key (user_id) references public.user(id) on delete cascade,
-    foreign key (course_id) references public.course(id)
+    foreign key (course_id) references public.course(id) on delete set null
 );
 
 create table lesson_stat (

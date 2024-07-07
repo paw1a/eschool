@@ -25,6 +25,7 @@ func NewUserRepo(db *sqlx.DB) *PostgresUserRepo {
 const (
 	userFindAllQuery           = "SELECT * FROM public.user"
 	userFindByIDQuery          = "SELECT * FROM public.user WHERE id = $1"
+	userFindByEmailQuery       = "SELECT * FROM public.user WHERE email = $1"
 	userFindByCredentialsQuery = "SELECT * FROM public.user WHERE email = $1 AND password = $2"
 	userFindUserInfoQuery      = "SELECT name, surname FROM public.user WHERE id = $1"
 	userDeleteQuery            = "DELETE FROM public.user WHERE id = $1"
@@ -50,6 +51,18 @@ func (u *PostgresUserRepo) FindAll(ctx context.Context) ([]domain.User, error) {
 func (u *PostgresUserRepo) FindByID(ctx context.Context, userID domain.ID) (domain.User, error) {
 	var pgUser entity.PgUser
 	if err := u.db.GetContext(ctx, &pgUser, userFindByIDQuery, userID); err != nil {
+		if err == sql.ErrNoRows {
+			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return domain.User{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+	return pgUser.ToDomain(), nil
+}
+
+func (u *PostgresUserRepo) FindByEmail(ctx context.Context, email string) (domain.User, error) {
+	var pgUser entity.PgUser
+	if err := u.db.GetContext(ctx, &pgUser, userFindByEmailQuery, email); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {

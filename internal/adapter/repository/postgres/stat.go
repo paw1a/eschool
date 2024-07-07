@@ -15,19 +15,16 @@ type PostgresStatRepo struct {
 	db *sqlx.DB
 }
 
-func NewStatisticsRepo(db *sqlx.DB) *PostgresStatRepo {
+func NewStatRepo(db *sqlx.DB) *PostgresStatRepo {
 	return &PostgresStatRepo{
 		db: db,
 	}
 }
 
 const (
-	statFindByUserLessonQuery   = "SELECT * FROM public.lesson_stat WHERE user_id = $1 AND lesson_id = $2"
-	statFindByUserTestQuery     = "SELECT * FROM public.test_stat WHERE user_id = $1 AND test_id = $2"
-	statFindLessonTestsQuery    = "SELECT * FROM public.test WHERE lesson_id = $1"
-	statFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
-		"JOIN public.school_teacher st on u.id = st.teacher_id " +
-		"JOIN public.school s on st.school_id = s.id WHERE s.id = $1"
+	statFindByUserLessonQuery = "SELECT * FROM public.lesson_stat WHERE user_id = $1 AND lesson_id = $2"
+	statFindByUserTestQuery   = "SELECT * FROM public.test_stat WHERE user_id = $1 AND test_id = $2"
+	statFindLessonTestsQuery  = "SELECT * FROM public.test WHERE lesson_id = $1"
 )
 
 func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
@@ -110,6 +107,12 @@ func (p *PostgresStatRepo) CreateLessonStat(ctx context.Context, stat domain.Les
 			}
 		}
 	}
+
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		return errors.Wrap(errs.ErrTransactionError, err.Error())
+	}
+
 	return nil
 }
 
@@ -135,6 +138,11 @@ func (p *PostgresStatRepo) UpdateLessonStat(ctx context.Context, stat domain.Les
 			tx.Rollback()
 			return errors.Wrap(errs.ErrUpdateFailed, err.Error())
 		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		return errors.Wrap(errs.ErrTransactionError, err.Error())
 	}
 
 	return nil

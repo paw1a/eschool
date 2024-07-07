@@ -2,23 +2,25 @@ package config
 
 import (
 	"github.com/paw1a/eschool/internal/adapter/auth/jwt"
+	v1 "github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
+	"github.com/paw1a/eschool/internal/adapter/payment/yoomoney"
+	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
 	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/paw1a/eschool/pkg/database/redis"
-	"github.com/paw1a/eschool/pkg/minio"
-	log "github.com/sirupsen/logrus"
+	"github.com/paw1a/eschool/pkg/logging"
 	"github.com/spf13/viper"
+	"log"
 	"sync"
 )
 
 type Config struct {
-	Server struct {
-		Host string
-		Port string
-	}
+	Logging  logging.Config
+	Web      v1.Config
 	Postgres postgres.Config
 	JWT      jwt.Config
 	Redis    redis.Config
-	Minio    minio.Config
+	Minio    storage.Config
+	Yoomoney yoomoney.Config
 }
 
 var instance *Config
@@ -35,7 +37,7 @@ func GetConfig() *Config {
 			log.Fatalf("error reading config file: %v", err)
 		}
 
-		log.Infof("read config file: config/config.yml")
+		log.Println("read config file: config/config.yml")
 		if err := viper.ReadInConfig(); err != nil {
 			log.Fatalf("error reading config file: %v", err)
 		}
@@ -50,19 +52,23 @@ func GetConfig() *Config {
 
 func bindEnvConfig() error {
 	bindings := make(map[string]string)
-	bindings["server.host"] = "HOST"
-	bindings["server.port"] = "PORT"
+	bindings["web.host"] = "HOST"
+	bindings["web.port"] = "PORT"
 	bindings["jwt.secret"] = "JWT_SECRET"
 	bindings["postgres.database"] = "DB_NAME"
 	bindings["postgres.user"] = "DB_USER"
 	bindings["postgres.password"] = "DB_PASSWORD"
 	bindings["postgres.host"] = "DB_HOST"
 	bindings["postgres.port"] = "DB_PORT"
-	bindings["storage.uri"] = "REDIS_URI"
+	bindings["redis.uri"] = "REDIS_URI"
 	bindings["minio.endpoint"] = "MINIO_ENDPOINT"
-	bindings["minio.accessKey"] = "MINIO_ACCESS_KEY"
-	bindings["minio.secretKey"] = "MINIO_SECRET_KEY"
+	bindings["minio.user"] = "MINIO_ROOT_USER"
+	bindings["minio.password"] = "MINIO_ROOT_PASSWORD"
 	bindings["minio.bucketName"] = "MINIO_BUCKET_NAME"
+	bindings["yoomoney.scheme"] = "PAYMENT_SCHEME"
+	bindings["yoomoney.host"] = "PAYMENT_HOST"
+	bindings["yoomoney.path"] = "PAYMENT_PATH"
+	bindings["yoomoney.wallet"] = "PAYMENT_WALLET"
 
 	for name, binding := range bindings {
 		if err := viper.BindEnv(name, binding); err != nil {

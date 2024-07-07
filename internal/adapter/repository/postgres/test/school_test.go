@@ -154,6 +154,34 @@ func TestSchoolRepository(t *testing.T) {
 		}
 	})
 
+	t.Run("test check is school teacher", func(t *testing.T) {
+		t.Cleanup(func() {
+			err = container.Restore(ctx)
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
+
+		db, err := newPostgresDB(url)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer db.Close()
+
+		repo := repository.NewSchoolRepo(db)
+		ok, err := repo.IsSchoolTeacher(ctx, schools[0].ID, teachers[0].ID)
+		if err != nil {
+			t.Errorf("failed to find school teacher: %v", err)
+		}
+		require.Equal(t, ok, true)
+
+		ok, err = repo.IsSchoolTeacher(ctx, schools[0].ID, newTeacherID)
+		if err != nil {
+			t.Errorf("failed to find school teacher: %v", err)
+		}
+		require.Equal(t, ok, false)
+	})
+
 	t.Run("test add school teacher", func(t *testing.T) {
 		t.Cleanup(func() {
 			err = container.Restore(ctx)

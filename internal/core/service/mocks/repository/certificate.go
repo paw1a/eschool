@@ -130,6 +130,34 @@ func (_m *CertificateRepository) FindUserCertificates(ctx context.Context, userI
 	return r0, r1
 }
 
+// FindUserCourseCertificate provides a mock function with given fields: ctx, courseID, userID
+func (_m *CertificateRepository) FindUserCourseCertificate(ctx context.Context, courseID domain.ID, userID domain.ID) (domain.Certificate, error) {
+	ret := _m.Called(ctx, courseID, userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindUserCourseCertificate")
+	}
+
+	var r0 domain.Certificate
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) (domain.Certificate, error)); ok {
+		return rf(ctx, courseID, userID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) domain.Certificate); ok {
+		r0 = rf(ctx, courseID, userID)
+	} else {
+		r0 = ret.Get(0).(domain.Certificate)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.ID, domain.ID) error); ok {
+		r1 = rf(ctx, courseID, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewCertificateRepository creates a new instance of CertificateRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewCertificateRepository(t interface {

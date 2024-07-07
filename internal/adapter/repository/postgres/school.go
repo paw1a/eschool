@@ -25,9 +25,12 @@ const (
 	schoolFindAllQuery            = "SELECT * FROM public.school"
 	schoolFindByIDQuery           = "SELECT * FROM public.school WHERE id = $1"
 	schoolFindUserSchoolsQuery    = "SELECT * FROM public.school WHERE owner_id = $1"
+	schoolFindSchoolCoursesQuery  = "SELECT * FROM public.course WHERE school_id = $1"
 	schoolFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
 		"JOIN public.school_teacher st on u.id = st.teacher_id " +
 		"JOIN public.school s on st.school_id = s.id WHERE s.id = $1"
+	schoolContainsTeacherQuery = "SELECT EXISTS (SELECT 1 FROM public.school_teacher " +
+		"WHERE school_id = $1 AND teacher_id = $2)"
 	schoolAddTeacherQuery = "INSERT INTO public.school_teacher (teacher_id, school_id) " +
 		"VALUES ($1, $2)"
 	schoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
@@ -79,6 +82,23 @@ func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.
 	return schools, nil
 }
 
+func (s *PostgresSchoolRepo) FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error) {
+	var pgCourses []entity.PgCourse
+	if err := s.db.SelectContext(ctx, &pgCourses, schoolFindSchoolCoursesQuery, schoolID); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return nil, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+
+	courses := make([]domain.Course, len(pgCourses))
+	for i, course := range pgCourses {
+		courses[i] = course.ToDomain()
+	}
+	return courses, nil
+}
+
 func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
 	if err := s.db.SelectContext(ctx, &pgUsers, schoolFindSchoolTeachersQuery, schoolID); err != nil {
@@ -94,6 +114,15 @@ func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID do
 		teachers[i] = teacher.ToDomain()
 	}
 	return teachers, nil
+}
+
+func (s *PostgresSchoolRepo) IsSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) (bool, error) {
+	var exists bool
+	err := s.db.GetContext(ctx, &exists, schoolContainsTeacherQuery, schoolID, teacherID)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
 }
 
 func (s *PostgresSchoolRepo) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {

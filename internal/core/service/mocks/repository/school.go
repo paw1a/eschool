@@ -136,6 +136,36 @@ func (_m *SchoolRepository) FindByID(ctx context.Context, schoolID domain.ID) (d
 	return r0, r1
 }
 
+// FindSchoolCourses provides a mock function with given fields: ctx, schoolID
+func (_m *SchoolRepository) FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error) {
+	ret := _m.Called(ctx, schoolID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindSchoolCourses")
+	}
+
+	var r0 []domain.Course
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID) ([]domain.Course, error)); ok {
+		return rf(ctx, schoolID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID) []domain.Course); ok {
+		r0 = rf(ctx, schoolID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.Course)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.ID) error); ok {
+		r1 = rf(ctx, schoolID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindSchoolTeachers provides a mock function with given fields: ctx, schoolID
 func (_m *SchoolRepository) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	ret := _m.Called(ctx, schoolID)
@@ -189,6 +219,34 @@ func (_m *SchoolRepository) FindUserSchools(ctx context.Context, userID domain.I
 
 	if rf, ok := ret.Get(1).(func(context.Context, domain.ID) error); ok {
 		r1 = rf(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// IsSchoolTeacher provides a mock function with given fields: ctx, schoolID, teacherID
+func (_m *SchoolRepository) IsSchoolTeacher(ctx context.Context, schoolID domain.ID, teacherID domain.ID) (bool, error) {
+	ret := _m.Called(ctx, schoolID, teacherID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IsSchoolTeacher")
+	}
+
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) (bool, error)); ok {
+		return rf(ctx, schoolID, teacherID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, domain.ID, domain.ID) bool); ok {
+		r0 = rf(ctx, schoolID, teacherID)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, domain.ID, domain.ID) error); ok {
+		r1 = rf(ctx, schoolID, teacherID)
 	} else {
 		r1 = ret.Error(1)
 	}

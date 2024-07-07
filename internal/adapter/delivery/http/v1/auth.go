@@ -2,14 +2,10 @@ package v1
 
 import (
 	"errors"
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	jwt2 "github.com/paw1a/eschool/internal/adapter/auth/jwt"
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -24,74 +20,40 @@ func (h *Handler) initAuthRoutes(api *gin.RouterGroup) {
 	}
 }
 
-// UserSignIn godoc
-// @Summary  User sign-in
-// @Tags     user-auth
-// @Accept   json
-// @Produce  json
-// @Param    user  body      dto.SignInDTO  true  "user credentials"
-// @Success  200   {object}  auth.AuthDetails
-// @Failure  400   {object}  failure
-// @Failure  401   {object}  failure
-// @Failure  404   {object}  failure
-// @Failure  500   {object}  failure
-// @Router   /users/auth/sign-in [post]
 func (h *Handler) userSignIn(context *gin.Context) {
 	var signInDTO dto.SignInDTO
-	err := context.BindJSON(&signInDTO)
+	err := context.ShouldBindJSON(&signInDTO)
 	if err != nil {
-		badRequestResponse(context, "invalid sign in credentials", err)
+		h.errorResponse(context, err)
 		return
 	}
 
-	user, err := h.userService.FindByCredentials(context, port.UserCredentials{
-		Email:    signInDTO.Email,
-		Password: signInDTO.Password,
-	})
-	if err != nil {
-		internalErrorResponse(context, err)
-		return
-	}
-
-	userClaims := jwt.MapClaims{"userID": user.ID}
-	authDetails, err := h.tokenProvider.CreateJWTSession(jwt2.CreateSessionInput{
+	authDetails, err := h.authService.SignIn(context, port.SignInParam{
+		Email:       signInDTO.Email,
+		Password:    signInDTO.Password,
 		Fingerprint: signInDTO.Fingerprint,
-		Claims:      userClaims,
 	})
-
 	if err != nil {
-		internalErrorResponse(context, err)
+		h.errorResponse(context, err)
 		return
 	}
 
 	context.SetSameSite(http.SameSiteLaxMode)
-	context.SetCookie("refreshToken", authDetails.RefreshToken,
-		int(h.config.JWT.RefreshTokenTime), "/", h.config.Server.Host, false, false)
+	context.SetCookie("refreshToken", authDetails.RefreshToken.String(),
+		86400, "/", h.config.Host, false, false)
 
-	successResponse(context, authDetails.AccessToken)
+	h.successResponse(context, authDetails.AccessToken.String())
 }
 
-// UserSignUp godoc
-// @Summary  User sign-up
-// @Tags     user-auth
-// @Accept   json
-// @Produce  json
-// @Param    user  body      dto.SignUpDTO  true  "user data"
-// @Success  200   {object}  domain.UserInfo
-// @Failure  400   {object}  failure
-// @Failure  401   {object}  failure
-// @Failure  404   {object}  failure
-// @Failure  500   {object}  failure
-// @Router   /users/auth/sign-up [post]
 func (h *Handler) userSignUp(context *gin.Context) {
 	var signUpDTO dto.SignUpDTO
-	err := context.BindJSON(&signUpDTO)
+	err := context.ShouldBindJSON(&signUpDTO)
 	if err != nil {
-		badRequestResponse(context, "invalid sign up data", err)
+		h.errorResponse(context, err)
 		return
 	}
 
-	user, err := h.userService.Create(context, port.CreateUserParam{
+	err = h.authService.SignUp(context, port.SignUpParam{
 		Name:      signUpDTO.Name,
 		Surname:   signUpDTO.Surname,
 		Email:     signUpDTO.Email,
@@ -101,58 +63,76 @@ func (h *Handler) userSignUp(context *gin.Context) {
 		AvatarUrl: signUpDTO.AvatarUrl,
 	})
 	if err != nil {
-		internalErrorResponse(context, err)
+		h.errorResponse(context, err)
 		return
 	}
 
-	createdResponse(context, dto.UserInfo{
-		Name:    user.Name,
-		Surname: user.Surname,
-	})
+	h.createdResponse(context, "successfully signed up")
 }
 
-// UserRefresh godoc
-// @Summary  User refresh token
-// @Tags     user-auth
-// @Accept   json
-// @Produce  json
-// @Param    refreshInput  body      auth.RefreshInput  true  "user refresh data"
-// @Success  200           {object}  auth.AuthDetails
-// @Failure  400           {object}  failure
-// @Failure  401           {object}  failure
-// @Failure  404           {object}  failure
-// @Failure  500           {object}  failure
-// @Router   /users/auth/refresh [post]
 func (h *Handler) userRefresh(context *gin.Context) {
 	h.refreshToken(context)
 }
 
-// UserLogout godoc
-// @Summary  User logout
-// @Tags     user-auth
-// @Accept   json
-// @Produce  json
-// @Failure  400           {object}  failure
-// @Failure  401           {object}  failure
-// @Failure  404           {object}  failure
-// @Failure  500           {object}  failure
-// @Router   /users/auth/logout [post]
 func (h *Handler) userLogout(context *gin.Context) {
 	refreshCookie, err := context.Cookie("refreshToken")
 	if err != nil {
-		unauthorizedResponse(context, "you are already logout")
+		h.errorResponse(context, UnauthorizedError)
 		return
 	}
 
-	err = h.tokenProvider.DeleteJWTSession(refreshCookie)
+	err = h.authService.LogOut(context, domain.Token(refreshCookie))
 	if err != nil {
-		internalErrorResponse(context, err)
+		h.errorResponse(context, err)
+	}
+
+	context.SetCookie("refreshToken", "", -1, "/", h.config.Host, false, false)
+
+	h.successResponse(context, "successfully logged out")
+}
+
+func (h *Handler) refreshToken(context *gin.Context) {
+	var refreshDTO dto.RefreshDTO
+	err := context.ShouldBindJSON(&refreshDTO)
+	if err != nil {
+		h.errorResponse(context, err)
 		return
 	}
 
-	context.SetCookie("refreshToken", "", -1, "/", h.config.Server.Host, false, false)
+	refreshCookie, err := context.Cookie("refreshToken")
+	if err != nil {
+		h.errorResponse(context, UnauthorizedError)
+		return
+	}
 
-	successResponse(context, nil)
+	authDetails, err := h.authService.Refresh(context, domain.Token(refreshCookie),
+		refreshDTO.Fingerprint)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	context.SetSameSite(http.SameSiteLaxMode)
+	context.SetCookie("refreshToken", authDetails.RefreshToken.String(),
+		86400, "/", h.config.Host, false, false)
+
+	h.successResponse(context, authDetails.AccessToken.String())
+}
+
+func (h *Handler) verifyToken(context *gin.Context) {
+	tokenString, err := extractAuthToken(context)
+	if err != nil {
+		h.errorResponse(context, UnauthorizedError)
+		return
+	}
+
+	payload, err := h.authService.Payload(context, domain.Token(tokenString))
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	context.Set("userID", payload.UserID.String())
 }
 
 func extractAuthToken(context *gin.Context) (string, error) {
@@ -170,82 +150,20 @@ func extractAuthToken(context *gin.Context) (string, error) {
 		return "", errors.New("token is empty")
 	}
 
-	log.Printf("token = %s", headerParts[1])
-
 	return headerParts[1], nil
 }
 
-func (h *Handler) refreshToken(context *gin.Context) {
-	var input jwt2.RefreshInput
-
-	err := context.BindJSON(&input)
-	if err != nil {
-		badRequestResponse(context, "can't parse request body", err)
-		return
-	}
-
-	refreshCookie, err := context.Cookie("refreshToken")
-	if err != nil {
-		badRequestResponse(context, "refresh cookie not found", err)
-		return
-	}
-
-	input.RefreshToken = refreshCookie
-
-	authDetails, err := h.tokenProvider.Refresh(jwt2.RefreshInput{
-		RefreshToken: input.RefreshToken,
-		Fingerprint:  input.Fingerprint,
-	})
-
-	if err != nil {
-		unauthorizedResponse(context, err.Error())
-		return
-	}
-
-	context.SetSameSite(http.SameSiteLaxMode)
-	context.SetCookie("refreshToken", authDetails.RefreshToken,
-		int(h.config.JWT.RefreshTokenTime), "/", h.config.Server.Host, false, false)
-
-	successResponse(context, authDetails.AccessToken)
-}
-
-func (h *Handler) verifyToken(context *gin.Context) {
-	tokenString, err := extractAuthToken(context)
-	if err != nil {
-		unauthorizedResponse(context, err.Error())
-		return
-	}
-
-	tokenClaims, err := h.tokenProvider.VerifyToken(tokenString)
-	if err != nil {
-		unauthorizedResponse(context, err.Error())
-		return
-	}
-
-	id, ok := tokenClaims["userID"]
-	if !ok {
-		errorResponse(context, http.StatusForbidden, "this endpoint is forbidden")
-		return
-	}
-
-	context.Set("userID", id)
-}
-
-func (h *Handler) extractIdFromAuthHeader(context *gin.Context, idName string) (domain.ID, error) {
+func (h *Handler) extractIdFromAuthHeader(context *gin.Context) (domain.ID, error) {
 	tokenString, err := extractAuthToken(context)
 	if err != nil {
 		return domain.RandomID(), err
 	}
 
-	tokenClaims, err := h.tokenProvider.VerifyToken(tokenString)
+	payload, err := h.authService.Payload(context, domain.Token(tokenString))
 	if err != nil {
+		h.errorResponse(context, err)
 		return domain.RandomID(), err
 	}
 
-	id, ok := tokenClaims[idName]
-	if !ok {
-		return domain.RandomID(), fmt.Errorf("failed to extract %s from auth header", idName)
-	}
-
-	return id.(domain.ID), nil
+	return payload.UserID, nil
 }

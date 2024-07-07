@@ -1,11 +1,11 @@
 package jwt
 
 import (
-	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/paw1a/eschool/internal/adapter/auth/port"
 	"github.com/paw1a/eschool/internal/core/domain"
+	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/pkg/errors"
 	"github.com/twinj/uuid"
 	"time"
 )
@@ -14,13 +14,6 @@ type Config struct {
 	Secret           string
 	AccessTokenTime  int64
 	RefreshTokenTime int64
-}
-
-type AuthSession struct {
-	RefreshToken string
-	RefreshExp   int64
-	Fingerprint  string
-	Payload      domain.AuthPayload
 }
 
 type AuthProvider struct {
@@ -54,7 +47,7 @@ func (p *AuthProvider) CreateJWTSession(payload domain.AuthPayload,
 	refreshExpTime := time.Minute * time.Duration(p.cfg.RefreshTokenTime)
 	refreshExp := time.Now().Add(refreshExpTime).Unix()
 
-	session := AuthSession{
+	session := port.AuthSession{
 		RefreshToken: refreshToken,
 		RefreshExp:   refreshExp,
 		Fingerprint:  fingerprint,
@@ -76,7 +69,7 @@ func (p *AuthProvider) RefreshJWTSession(refreshToken domain.Token,
 	fingerprint string) (domain.AuthDetails, error) {
 	session, err := p.sessionStorage.Get(refreshToken.String())
 	if err != nil {
-		return domain.AuthDetails{}, err
+		return domain.AuthDetails{}, errs.ErrAuthSessionIsNotPresent
 	}
 
 	err = p.sessionStorage.Delete(refreshToken.String())
@@ -85,7 +78,7 @@ func (p *AuthProvider) RefreshJWTSession(refreshToken domain.Token,
 	}
 
 	if session.Fingerprint != fingerprint {
-		return domain.AuthDetails{}, errors.New("invalid client fingerprint")
+		return domain.AuthDetails{}, errs.ErrInvalidFingerprint
 	}
 
 	return p.CreateJWTSession(session.Payload, fingerprint)
@@ -98,12 +91,12 @@ func (p *AuthProvider) DeleteJWTSession(refreshToken domain.Token) error {
 func (p *AuthProvider) VerifyJWTToken(accessToken domain.Token) (domain.AuthPayload, error) {
 	token, err := jwt.Parse(accessToken.String(), func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, errs.ErrInvalidTokenSignMethod
 		}
 		return []byte(p.cfg.Secret), nil
 	})
 	if err != nil {
-		return domain.AuthPayload{}, err
+		return domain.AuthPayload{}, errors.Wrap(errs.ErrInvalidToken, err.Error())
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
@@ -114,5 +107,5 @@ func (p *AuthProvider) VerifyJWTToken(accessToken domain.Token) (domain.AuthPayl
 		return payload, nil
 	}
 
-	return domain.AuthPayload{}, errors.New("token or claims are invalid")
+	return domain.AuthPayload{}, errs.ErrInvalidTokenClaims
 }

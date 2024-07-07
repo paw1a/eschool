@@ -1,7 +1,12 @@
 package port
 
-import "context"
+import (
+	"context"
+	"github.com/paw1a/eschool/internal/core/domain"
+	"net/url"
+)
 
 type IPaymentGateway interface {
-	Pay(ctx context.Context, key string, price int64) error
+	GetPaymentUrl(ctx context.Context, payload domain.PaymentPayload) (url.URL, error)
+	ProcessPayment(ctx context.Context, key string) (domain.PaymentPayload, error)
 }

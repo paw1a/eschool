@@ -22,9 +22,10 @@ func NewCertificateRepo(db *sqlx.DB) *PostgresCertificateRepo {
 }
 
 const (
-	certificateFindAllQuery              = "SELECT * FROM public.certificate"
-	certificateFindByIDQuery             = "SELECT * FROM public.certificate WHERE id = $1"
-	certificateFindUserCertificatesQuery = "SELECT * FROM public.certificate WHERE user_id = $1"
+	certificateFindAllQuery               = "SELECT * FROM public.certificate"
+	certificateFindByIDQuery              = "SELECT * FROM public.certificate WHERE id = $1"
+	certificateFindByCourseAndUserIDQuery = "SELECT * FROM public.certificate WHERE course_id = $1 AND user_id = $2"
+	certificateFindUserCertificatesQuery  = "SELECT * FROM public.certificate WHERE user_id = $1"
 )
 
 func (p *PostgresCertificateRepo) FindAll(ctx context.Context) ([]domain.Certificate, error) {
@@ -44,7 +45,8 @@ func (p *PostgresCertificateRepo) FindAll(ctx context.Context) ([]domain.Certifi
 	return certificates, nil
 }
 
-func (p *PostgresCertificateRepo) FindByID(ctx context.Context, certID domain.ID) (domain.Certificate, error) {
+func (p *PostgresCertificateRepo) FindByID(ctx context.Context,
+	certID domain.ID) (domain.Certificate, error) {
 	var pgCertificate entity.PgCertificate
 	if err := p.db.GetContext(ctx, &pgCertificate, certificateFindByIDQuery, certID); err != nil {
 		if err == sql.ErrNoRows {
@@ -56,7 +58,8 @@ func (p *PostgresCertificateRepo) FindByID(ctx context.Context, certID domain.ID
 	return pgCertificate.ToDomain(), nil
 }
 
-func (p *PostgresCertificateRepo) FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error) {
+func (p *PostgresCertificateRepo) FindUserCertificates(ctx context.Context,
+	userID domain.ID) ([]domain.Certificate, error) {
 	var pgCertificates []entity.PgCertificate
 	if err := p.db.SelectContext(ctx, &pgCertificates, certificateFindUserCertificatesQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
@@ -73,7 +76,22 @@ func (p *PostgresCertificateRepo) FindUserCertificates(ctx context.Context, user
 	return certificates, nil
 }
 
-func (p *PostgresCertificateRepo) Create(ctx context.Context, cert domain.Certificate) (domain.Certificate, error) {
+func (p *PostgresCertificateRepo) FindUserCourseCertificate(ctx context.Context,
+	courseID, userID domain.ID) (domain.Certificate, error) {
+	var pgCertificate entity.PgCertificate
+	if err := p.db.GetContext(ctx, &pgCertificate, certificateFindByCourseAndUserIDQuery,
+		courseID, userID); err != nil {
+		if err == sql.ErrNoRows {
+			return domain.Certificate{}, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return domain.Certificate{}, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
+	}
+	return pgCertificate.ToDomain(), nil
+}
+
+func (p *PostgresCertificateRepo) Create(ctx context.Context,
+	cert domain.Certificate) (domain.Certificate, error) {
 	var pgCertificate = entity.NewPgCertificate(cert)
 	queryString := entity.InsertQueryString(pgCertificate, "certificate")
 	_, err := p.db.NamedExecContext(ctx, queryString, pgCertificate)

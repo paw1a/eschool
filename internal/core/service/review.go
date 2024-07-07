@@ -4,15 +4,18 @@ import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
+	"go.uber.org/zap"
 )
 
 type ReviewService struct {
-	repo port.IReviewRepository
+	repo   port.IReviewRepository
+	logger *zap.Logger
 }
 
-func NewReviewService(repo port.IReviewRepository) *ReviewService {
+func NewReviewService(repo port.IReviewRepository, logger *zap.Logger) *ReviewService {
 	return &ReviewService{
-		repo: repo,
+		repo:   repo,
+		logger: logger,
 	}
 }
 

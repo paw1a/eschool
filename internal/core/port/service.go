@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"io"
+	"net/url"
 )
 
 type IUserService interface {
@@ -21,6 +22,9 @@ type ICourseService interface {
 	FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error)
 	FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error)
 	FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error)
+	FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error)
+	IsCourseStudent(ctx context.Context, studentID, courseID domain.ID) (bool, error)
+	IsCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) (bool, error)
 	AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error
 	AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error
 	ConfirmDraftCourse(ctx context.Context, courseID domain.ID) []error
@@ -55,7 +59,9 @@ type ISchoolService interface {
 	FindAll(ctx context.Context) ([]domain.School, error)
 	FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error)
 	FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error)
+	FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error)
 	FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error)
+	IsSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) (bool, error)
 	AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error
 	CreateUserSchool(ctx context.Context, userID domain.ID, param CreateSchoolParam) (domain.School, error)
 	Update(ctx context.Context, schoolID domain.ID, param UpdateSchoolParam) (domain.School, error)
@@ -75,6 +81,7 @@ type IReviewService interface {
 type ICertificateService interface {
 	FindAll(ctx context.Context) ([]domain.Certificate, error)
 	FindByID(ctx context.Context, certificateID domain.ID) (domain.Certificate, error)
+	FindCourseCertificate(ctx context.Context, courseID, userID domain.ID) (domain.Certificate, error)
 	FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error)
 	CreateCourseCertificate(ctx context.Context, userID, courseID domain.ID) (domain.Certificate, error)
 }
@@ -87,7 +94,8 @@ type IStatService interface {
 }
 
 type IPaymentService interface {
-	PayCourse(ctx context.Context, userID, courseID domain.ID) error
+	GetCoursePaymentUrl(ctx context.Context, userID, courseID domain.ID) (url.URL, error)
+	ProcessCoursePayment(ctx context.Context, label string, paid int64) (domain.PaymentPayload, error)
 }
 
 type IMediaService interface {
