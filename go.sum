@@ -305,10 +305,6 @@ github.com/otiai10/curr v0.0.0-20150429015615-9b4961190c95/go.mod h1:9qAhocn7zKJ
 github.com/otiai10/curr v1.0.0/go.mod h1:LskTG5wDwr8Rs+nNQ+1LlxRjAtTZZjtJW4rMXl6j4vs=
 github.com/otiai10/mint v1.3.0/go.mod h1:F5AjcsTsWUqX+Na9fpHb52P8pcRX2CI6A3ctIT91xUo=
 github.com/otiai10/mint v1.3.3/go.mod h1:/yxELlJQ0ufhjUwhshSj+wFjZ78CnZ48/1wtmBH1OTc=
-github.com/paw1a/eschool/internal/adapter/auth v0.0.0-20240516125026-65e7830f1875 h1:t+QaKjgfj5pfRLMMBnFUk31MxtP9urCwDzqO2S61dNc=
-github.com/paw1a/eschool/internal/adapter/auth v0.0.0-20240516125026-65e7830f1875/go.mod h1:UpAfrF63gMLs9stZhCD64JTdAvyjYOXge9igqaPkg4A=
-github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1 h1:Mtn6/afLe1Z7CjsT8862vnR/hslx2Rteceo5BExKatg=
-github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1/go.mod h1:MPrf7hzCOkZdPuZH8EE5oYiDqqiHJB2nuQQHq2NveDg=
 github.com/paw1a/eschool-core v0.0.0-20240516124202-db1b1bb8e38d h1:ylOaH/gHXi8rHeaT1rwxl3tWMTwo9jvK5cVC6MTGcXI=
 github.com/paw1a/eschool-core v0.0.0-20240516124202-db1b1bb8e38d/go.mod h1:UwtoWthOFowJlEIsy/FiNewUj9W0ouQ+q0yvJ31TAC0=
 github.com/paw1a/eschool-web v0.0.0-20240528183605-b5991964797c h1:sJ8/RCZxWxw7LQbJ9tuIeCp/uixgvapQX/aPoLOLPZg=
