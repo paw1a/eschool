@@ -15,7 +15,6 @@ require (
 	github.com/minio/minio-go/v7 v7.0.70
 	github.com/paw1a/eschool-auth v0.0.0-20240516125026-65e7830f1875
 	github.com/paw1a/eschool-console v0.0.0-20240519142508-6bd40e5d07b1
-	github.com/paw1a/eschool-payment v0.0.0-20240516140318-a30beecafe19
 	github.com/paw1a/eschool-web v0.0.0-20240528183605-b5991964797c
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	storage "github.com/paw1a/eschool-storage/minio"
+	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
