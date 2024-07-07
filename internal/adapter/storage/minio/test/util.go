@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	minio2 "github.com/paw1a/eschool/pkg/minio"
+	storage "github.com/paw1a/eschool/internal/adapter/storage/minio"
 	"github.com/testcontainers/testcontainers-go"
 	testminio "github.com/testcontainers/testcontainers-go/modules/minio"
 )
 
 var (
-	minioConfig = minio2.Config{
+	minioConfig = storage.Config{
 		User:       "username",
 		Password:   "password",
 		BucketName: "test",

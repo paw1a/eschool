@@ -5,31 +5,52 @@ import (
 	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
+	"go.uber.org/zap"
 	"strings"
 )
 
 type LessonService struct {
 	repo    port.ILessonRepository
 	storage port.IObjectStorage
+	logger  *zap.Logger
 }
 
-func NewLessonService(repo port.ILessonRepository, storage port.IObjectStorage) *LessonService {
+func NewLessonService(repo port.ILessonRepository, storage port.IObjectStorage,
+	logger *zap.Logger) *LessonService {
 	return &LessonService{
 		repo:    repo,
 		storage: storage,
+		logger:  logger,
 	}
 }
 
 func (l *LessonService) FindAll(ctx context.Context) ([]domain.Lesson, error) {
-	return l.repo.FindAll(ctx)
+	lessons, err := l.repo.FindAll(ctx)
+	if err != nil {
+		l.logger.Error("failed to find all lessons", zap.Error(err))
+		return nil, err
+	}
+	return lessons, nil
 }
 
 func (l *LessonService) FindByID(ctx context.Context, lessonID domain.ID) (domain.Lesson, error) {
-	return l.repo.FindByID(ctx, lessonID)
+	lesson, err := l.repo.FindByID(ctx, lessonID)
+	if err != nil {
+		l.logger.Error("failed to find lesson by id", zap.Error(err),
+			zap.String("lessonID", lessonID.String()))
+		return domain.Lesson{}, err
+	}
+	return lesson, nil
 }
 
 func (l *LessonService) FindCourseLessons(ctx context.Context, courseID domain.ID) ([]domain.Lesson, error) {
-	return l.repo.FindCourseLessons(ctx, courseID)
+	lessons, err := l.repo.FindCourseLessons(ctx, courseID)
+	if err != nil {
+		l.logger.Error("failed to find course lessons", zap.Error(err),
+			zap.String("courseID", courseID.String()))
+		return nil, err
+	}
+	return lessons, nil
 }
 
 func (l *LessonService) CreateTheoryLesson(ctx context.Context, courseID domain.ID,
@@ -41,6 +62,8 @@ func (l *LessonService) CreateTheoryLesson(ctx context.Context, courseID domain.
 		Reader: strings.NewReader(param.Theory),
 	})
 	if err != nil {
+		l.logger.Error("failed to create theory lesson", zap.Error(err),
+			zap.String("courseID", courseID.String()))
 		return domain.Lesson{}, err
 	}
 
@@ -53,10 +76,21 @@ func (l *LessonService) CreateTheoryLesson(ctx context.Context, courseID domain.
 		TheoryUrl: null.StringFrom(url.String()),
 	}
 	if err := lesson.Validate(); err != nil {
+		l.logger.Error("failed to validate theory lesson", zap.Error(err),
+			zap.String("courseID", courseID.String()))
 		return domain.Lesson{}, err
 	}
 
-	return l.repo.Create(ctx, lesson)
+	lesson, err = l.repo.Create(ctx, lesson)
+	if err != nil {
+		l.logger.Error("failed to create theory lesson", zap.Error(err),
+			zap.String("courseID", courseID.String()))
+		return domain.Lesson{}, err
+	}
+
+	l.logger.Info("theory lesson is successfully created",
+		zap.String("lessonID", lessonID.String()), zap.String("courseID", courseID.String()))
+	return lesson, nil
 }
 
 func (l *LessonService) CreateVideoLesson(ctx context.Context, courseID domain.ID,
@@ -74,7 +108,16 @@ func (l *LessonService) CreateVideoLesson(ctx context.Context, courseID domain.I
 		return domain.Lesson{}, err
 	}
 
-	return l.repo.Create(ctx, lesson)
+	lesson, err := l.repo.Create(ctx, lesson)
+	if err != nil {
+		l.logger.Error("failed to create video lesson", zap.Error(err),
+			zap.String("courseID", courseID.String()))
+		return domain.Lesson{}, err
+	}
+
+	l.logger.Info("video lesson is successfully created",
+		zap.String("lessonID", lessonID.String()), zap.String("courseID", courseID.String()))
+	return lesson, nil
 }
 
 func (l *LessonService) CreatePracticeLesson(ctx context.Context, courseID domain.ID,
@@ -103,6 +146,8 @@ func (l *LessonService) CreatePracticeLesson(ctx context.Context, courseID domai
 		Tests:    tests,
 	}
 	if err := lesson.Validate(); err != nil {
+		l.logger.Error("failed to validate practice lesson", zap.Error(err),
+			zap.String("courseID", courseID.String()))
 		return domain.Lesson{}, err
 	}
 
@@ -113,12 +158,23 @@ func (l *LessonService) CreatePracticeLesson(ctx context.Context, courseID domai
 			Reader: strings.NewReader(param.Tests[i].Task),
 		})
 		if err != nil {
+			l.logger.Error("failed to create practice lesson", zap.Error(err),
+				zap.String("courseID", courseID.String()))
 			return domain.Lesson{}, err
 		}
 		tests[i].TaskUrl = url.String()
 	}
 
-	return l.repo.Create(ctx, lesson)
+	lesson, err := l.repo.Create(ctx, lesson)
+	if err != nil {
+		l.logger.Error("failed to create practice lesson", zap.Error(err),
+			zap.String("courseID", courseID.String()))
+		return domain.Lesson{}, err
+	}
+
+	l.logger.Info("practice lesson is successfully created",
+		zap.String("lessonID", lessonID.String()), zap.String("courseID", courseID.String()))
+	return lesson, nil
 }
 
 func (l *LessonService) UpdateTheoryLesson(ctx context.Context, lessonID domain.ID,
@@ -217,5 +273,14 @@ func (l *LessonService) UpdatePracticeLesson(ctx context.Context, lessonID domai
 }
 
 func (l *LessonService) Delete(ctx context.Context, lessonID domain.ID) error {
-	return l.repo.Delete(ctx, lessonID)
+	err := l.repo.Delete(ctx, lessonID)
+	if err != nil {
+		l.logger.Error("failed to delete lesson", zap.Error(err),
+			zap.String("lessonID", lessonID.String()))
+		return err
+	}
+
+	l.logger.Info("lesson is successfully deleted",
+		zap.String("lessonID", lessonID.String()))
+	return nil
 }

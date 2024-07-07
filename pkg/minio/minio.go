@@ -5,22 +5,18 @@ import (
 	"fmt"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	storage "github.com/paw1a/eschool-storage/minio"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
-type Config struct {
-	Endpoint   string
-	User       string
-	Password   string
-	BucketName string
-}
-
-func NewClient(cfg *Config) (*minio.Client, error) {
+func NewClient(cfg *storage.Config, logger *zap.Logger) (*minio.Client, error) {
 	minioClient, err := minio.New(cfg.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(cfg.User, cfg.Password, ""),
 		Secure: false,
 	})
 	if err != nil {
+		logger.Fatal("failed to create minio connection", zap.String("conn string", cfg.Endpoint))
 		return nil, errors.Wrap(err, "failed to create minio client")
 	}
 
@@ -29,6 +25,7 @@ func NewClient(cfg *Config) (*minio.Client, error) {
 	if err != nil {
 		exists, errBucketExists := minioClient.BucketExists(ctx, cfg.BucketName)
 		if errBucketExists != nil || !exists {
+			logger.Fatal("failed to create minio bucket", zap.String("conn string", cfg.Endpoint))
 			return nil, errors.Wrap(errBucketExists, "failed to make minio bucket")
 		}
 	}
@@ -42,6 +39,7 @@ func NewClient(cfg *Config) (*minio.Client, error) {
 		]}`, cfg.BucketName)
 	err = minioClient.SetBucketPolicy(ctx, cfg.BucketName, policy)
 	if err != nil {
+		logger.Fatal("failed to set minio bucket policy", zap.String("conn string", cfg.Endpoint))
 		return nil, errors.Wrap(err, "failed to set bucket public policy")
 	}
 

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/paw1a/eschool/internal/adapter/delivery/web"
+	v1 "github.com/paw1a/eschool-web/http/v1"
 	"github.com/paw1a/eschool/internal/app/config"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
@@ -31,22 +31,23 @@ func NewGinRouter() *gin.Engine {
 type ServerParams struct {
 	fx.In
 	Cfg     *config.Config
-	Handler *web.Handler
+	Handler *v1.Handler
 	Router  *gin.Engine
+	Logger  *zap.Logger
 }
 
 func NewServer(lc fx.Lifecycle, params ServerParams) *http.Server {
 	server := &http.Server{
 		Handler:      params.Router,
-		Addr:         fmt.Sprintf(":%s", params.Cfg.Server.Port),
+		Addr:         fmt.Sprintf(":%s", params.Cfg.Web.Port),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				log.Infof("server started on port %s", params.Cfg.Server.Port)
-				log.Fatal(server.ListenAndServe())
+				params.Logger.Info(fmt.Sprintf("server started on port %s", params.Cfg.Web.Port))
+				params.Logger.Fatal("server shutdown", zap.Error(server.ListenAndServe()))
 			}()
 			return nil
 		},

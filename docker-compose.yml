@@ -79,6 +79,7 @@ services:
     volumes:
       - ./.bin/:/app/
       - ./config/:/app/config/
+      - ./logs/:/app/logs
     env_file:
       - .env
     depends_on:

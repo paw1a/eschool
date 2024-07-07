@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"github.com/guregu/null"
-	"github.com/paw1a/eschool/internal/adapter/repository/mocks"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/internal/core/service"
+	mocks "github.com/paw1a/eschool/internal/core/service/mocks/repository"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
 	"testing"
 )
 
@@ -67,7 +68,7 @@ func TestUserService_FindByID(t *testing.T) {
 	for _, test := range testTable {
 		t.Run(test.name, func(t *testing.T) {
 			userRepo := mocks.NewUserRepository(t)
-			userService := service.NewUserService(userRepo)
+			userService := service.NewUserService(userRepo, zap.NewNop())
 
 			test.initRepoMock(userRepo)
 
@@ -130,7 +131,7 @@ func TestUserService_FindByCredentials(t *testing.T) {
 	for _, test := range testTable {
 		t.Run(test.name, func(t *testing.T) {
 			userRepo := mocks.NewUserRepository(t)
-			userService := service.NewUserService(userRepo)
+			userService := service.NewUserService(userRepo, zap.NewNop())
 
 			test.initRepoMock(userRepo)
 
@@ -187,7 +188,7 @@ func TestUserService_FindUserInfo(t *testing.T) {
 	for _, test := range testTable {
 		t.Run(test.name, func(t *testing.T) {
 			userRepo := mocks.NewUserRepository(t)
-			userService := service.NewUserService(userRepo)
+			userService := service.NewUserService(userRepo, zap.NewNop())
 
 			test.initRepoMock(userRepo)
 

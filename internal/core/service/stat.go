@@ -4,18 +4,21 @@ import (
 	"context"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
+	"go.uber.org/zap"
 )
 
 type StatService struct {
 	repo       port.IStatRepository
 	lessonRepo port.ILessonRepository
+	logger     *zap.Logger
 }
 
 func NewStatService(repo port.IStatRepository,
-	lessonRepo port.ILessonRepository) *StatService {
+	lessonRepo port.ILessonRepository, logger *zap.Logger) *StatService {
 	return &StatService{
 		repo:       repo,
 		lessonRepo: lessonRepo,
+		logger:     logger,
 	}
 }
 

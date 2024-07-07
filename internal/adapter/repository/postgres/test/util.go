@@ -8,34 +8,25 @@ import (
 	_ "github.com/golang-migrate/migrate/source/file"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
-	"github.com/paw1a/eschool/pkg/database/postgres"
-	"github.com/testcontainers/testcontainers-go"
 	testpg "github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 	"path/filepath"
 	"runtime"
 	"time"
 )
 
-var (
-	postgresConfig = postgres.Config{
-		Database: "eschool",
-		User:     "postgres",
-		Password: "password",
-	}
-)
-
 func newPostgresContainer(ctx context.Context) (*testpg.PostgresContainer, error) {
-	container, err := testpg.RunContainer(
+	container, err := testpg.Run(
 		ctx,
-		testpg.WithDatabase(postgresConfig.Database),
-		testpg.WithUsername(postgresConfig.User),
-		testpg.WithPassword(postgresConfig.Password),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(5*time.Second)),
+		"docker.io/postgres:16-alpine",
+		testpg.WithDatabase("eschool"),
+		testpg.WithUsername("name1"),
+		testpg.WithPassword("pass1"),
+		testpg.WithSQLDriver("pgx"),
+		testpg.BasicWaitStrategies(),
 	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to start postgres container: %w", err)
+	}
 
 	_, path, _, ok := runtime.Caller(0)
 	if !ok {
@@ -59,7 +50,7 @@ func newPostgresContainer(ctx context.Context) (*testpg.PostgresContainer, error
 		return nil, fmt.Errorf("failed to get db driver from instance: %s", err)
 	}
 
-	mig, err := migrate.NewWithDatabaseInstance(sourceUrl, postgresConfig.Database, driver)
+	mig, err := migrate.NewWithDatabaseInstance(sourceUrl, "eschool", driver)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create migrator driver: %s", err)
 	}
@@ -69,7 +60,7 @@ func newPostgresContainer(ctx context.Context) (*testpg.PostgresContainer, error
 		return nil, fmt.Errorf("failed to up migrations: %s", err)
 	}
 
-	err = container.Snapshot(ctx)
+	err = container.Snapshot(ctx, testpg.WithSnapshotName("test-snapshot"))
 	if err != nil {
 		return nil, fmt.Errorf("failed to make a snapshot of postgres db: %s", err)
 	}
