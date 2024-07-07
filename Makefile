@@ -45,6 +45,6 @@ mocks:
     		--filename stat.go --structname StatRepository
 
 clean:
-	rm -rf .bin .data
+	rm -rf .bin .data logs
 
 .DEFAULT_GOAL := run_web
