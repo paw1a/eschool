@@ -13,29 +13,29 @@ insert into school (id, name, description, owner_id)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7034cd', 'school2', 'desc2', '30e18bc1-4354-4937-9a3b-03cf0b7027cb');
 
 -- insert courses
-insert into course (id, name, school_id, level, price, language, status)
+insert into course (id, name, school_id, level, price, language, status, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7027ca', 'course1', '30e18bc1-4354-4937-9a3b-03cf0b7034cc',
-        4, 1200, 'russian', 'draft');
-insert into course (id, name, school_id, level, price, language, status)
+        4, 1200, 'russian', 'draft', 0);
+insert into course (id, name, school_id, level, price, language, status, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7027cb', 'course2', '30e18bc1-4354-4937-9a3b-03cf0b7034cc',
-        2, 1500, 'english', 'published');
-insert into course (id, name, school_id, level, price, language, status)
+        2, 1500, 'english', 'published', 0);
+insert into course (id, name, school_id, level, price, language, status, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7026cc', 'course3', '30e18bc1-4354-4937-9a3b-03cf0b7034cd',
-        3, 12000, 'russian', 'ready');
-insert into course (id, name, school_id, level, price, language, status)
+        3, 12000, 'russian', 'ready', 0);
+insert into course (id, name, school_id, level, price, language, status, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7026cd', 'course4', '30e18bc1-4354-4937-9a3b-03cf0b7034cd',
-        2, 0, 'english', 'published');
+        2, 0, 'english', 'published', 0);
 
 -- insert reviews
-insert into review (id, text, course_id, user_id)
+insert into review (id, text, course_id, user_id, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7021ca', 'review1 text',
-        '30e18bc1-4354-4937-9a4d-03cf0b7027ca', '30e18bc1-4354-4937-9a3b-03cf0b7027ca');
-insert into review (id, text, course_id, user_id)
+        '30e18bc1-4354-4937-9a4d-03cf0b7027ca', '30e18bc1-4354-4937-9a3b-03cf0b7027ca', 5);
+insert into review (id, text, course_id, user_id, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7021cb', 'review2 text',
-        '30e18bc1-4354-4937-9a4d-03cf0b7027ca', '30e18bc1-4354-4937-9a3b-03cf0b7027cb');
-insert into review (id, text, course_id, user_id)
+        '30e18bc1-4354-4937-9a4d-03cf0b7027ca', '30e18bc1-4354-4937-9a3b-03cf0b7027cb', 4);
+insert into review (id, text, course_id, user_id, rating)
 values ('30e18bc1-4354-4937-9a4d-03cf0b7021cc', 'review3 text',
-        '30e18bc1-4354-4937-9a4d-03cf0b7027cb', '30e18bc1-4354-4937-9a3b-03cf0b7027ca');
+        '30e18bc1-4354-4937-9a4d-03cf0b7027cb', '30e18bc1-4354-4937-9a3b-03cf0b7027ca', 3);
 
 -- insert certificates
 insert into certificate (id, name, score, grade, created_at, user_id, course_id)

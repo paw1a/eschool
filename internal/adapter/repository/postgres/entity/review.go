@@ -10,6 +10,7 @@ type PgReview struct {
 	UserID   uuid.UUID `db:"user_id"`
 	CourseID uuid.UUID `db:"course_id"`
 	Text     string    `db:"text"`
+	Rating   int64     `db:"rating"`
 }
 
 func (r *PgReview) ToDomain() domain.Review {
@@ -17,6 +18,7 @@ func (r *PgReview) ToDomain() domain.Review {
 		ID:       domain.ID(r.ID.String()),
 		UserID:   domain.ID(r.UserID.String()),
 		CourseID: domain.ID(r.CourseID.String()),
+		Rating:   r.Rating,
 		Text:     r.Text,
 	}
 }
@@ -30,5 +32,6 @@ func NewPgReview(review domain.Review) PgReview {
 		UserID:   userID,
 		CourseID: courseID,
 		Text:     review.Text,
+		Rating:   review.Rating,
 	}
 }

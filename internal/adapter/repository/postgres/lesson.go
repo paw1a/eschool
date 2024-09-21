@@ -4,18 +4,18 @@ import (
 	"context"
 	"database/sql"
 	"github.com/jackc/pgconn"
-	"github.com/jmoiron/sqlx"
 	"github.com/paw1a/eschool/internal/adapter/repository/postgres/entity"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/pkg/errors"
 )
 
 type PostgresLessonRepo struct {
-	db *sqlx.DB
+	db *postgres.DB
 }
 
-func NewLessonRepo(db *sqlx.DB) *PostgresLessonRepo {
+func NewLessonRepo(db *postgres.DB) *PostgresLessonRepo {
 	return &PostgresLessonRepo{
 		db: db,
 	}
@@ -32,7 +32,7 @@ const (
 
 func (p *PostgresLessonRepo) FindAll(ctx context.Context) ([]domain.Lesson, error) {
 	var pgLessons []entity.PgLesson
-	if err := p.db.SelectContext(ctx, &pgLessons, lessonFindAllQuery); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgLessons, lessonFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -56,7 +56,7 @@ func (p *PostgresLessonRepo) FindAll(ctx context.Context) ([]domain.Lesson, erro
 
 func (p *PostgresLessonRepo) FindByID(ctx context.Context, lessonID domain.ID) (domain.Lesson, error) {
 	var pgLesson entity.PgLesson
-	if err := p.db.GetContext(ctx, &pgLesson, lessonFindByIDQuery, lessonID); err != nil {
+	if err := p.db.Authenticated.GetContext(ctx, &pgLesson, lessonFindByIDQuery, lessonID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Lesson{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -77,7 +77,7 @@ func (p *PostgresLessonRepo) FindByID(ctx context.Context, lessonID domain.ID) (
 func (p *PostgresLessonRepo) FindCourseLessons(ctx context.Context,
 	courseID domain.ID) ([]domain.Lesson, error) {
 	var pgLessons []entity.PgLesson
-	if err := p.db.SelectContext(ctx, &pgLessons, lessonFindStudentCoursesQuery, courseID); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgLessons, lessonFindStudentCoursesQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -101,7 +101,7 @@ func (p *PostgresLessonRepo) FindCourseLessons(ctx context.Context,
 
 func (p *PostgresLessonRepo) FindLessonTests(ctx context.Context, lessonID domain.ID) ([]domain.Test, error) {
 	var pgTests []entity.PgTest
-	if err := p.db.SelectContext(ctx, &pgTests, lessonFindLessonTestsQuery, lessonID); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgTests, lessonFindLessonTestsQuery, lessonID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -117,7 +117,7 @@ func (p *PostgresLessonRepo) FindLessonTests(ctx context.Context, lessonID domai
 }
 
 func (p *PostgresLessonRepo) Create(ctx context.Context, lesson domain.Lesson) (domain.Lesson, error) {
-	tx, err := p.db.Beginx()
+	tx, err := p.db.Authenticated.Beginx()
 	if err != nil {
 		return domain.Lesson{}, errors.Wrap(errs.ErrTransactionError, err.Error())
 	}
@@ -169,7 +169,7 @@ func (p *PostgresLessonRepo) Create(ctx context.Context, lesson domain.Lesson) (
 }
 
 func (p *PostgresLessonRepo) Update(ctx context.Context, lesson domain.Lesson) (domain.Lesson, error) {
-	tx, err := p.db.Beginx()
+	tx, err := p.db.Authenticated.Beginx()
 	if err != nil {
 		return domain.Lesson{}, errors.Wrap(errs.ErrTransactionError, err.Error())
 	}
@@ -218,7 +218,7 @@ func (p *PostgresLessonRepo) Update(ctx context.Context, lesson domain.Lesson) (
 }
 
 func (p *PostgresLessonRepo) Delete(ctx context.Context, lessonID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, lessonDeleteQuery, lessonID)
+	_, err := p.db.Authenticated.ExecContext(ctx, lessonDeleteQuery, lessonID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
 	}

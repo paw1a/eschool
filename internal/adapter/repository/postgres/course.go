@@ -4,18 +4,18 @@ import (
 	"context"
 	"database/sql"
 	"github.com/jackc/pgconn"
-	"github.com/jmoiron/sqlx"
 	"github.com/paw1a/eschool/internal/adapter/repository/postgres/entity"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/pkg/errors"
 )
 
 type PostgresCourseRepo struct {
-	db *sqlx.DB
+	db *postgres.DB
 }
 
-func NewCourseRepo(db *sqlx.DB) *PostgresCourseRepo {
+func NewCourseRepo(db *postgres.DB) *PostgresCourseRepo {
 	return &PostgresCourseRepo{
 		db: db,
 	}
@@ -46,7 +46,7 @@ const (
 
 func (p *PostgresCourseRepo) FindAll(ctx context.Context) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := p.db.SelectContext(ctx, &pgCourses, courseFindAllQuery); err != nil {
+	if err := p.db.Guest.SelectContext(ctx, &pgCourses, courseFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -63,7 +63,7 @@ func (p *PostgresCourseRepo) FindAll(ctx context.Context) ([]domain.Course, erro
 
 func (p *PostgresCourseRepo) FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error) {
 	var pgCourse entity.PgCourse
-	if err := p.db.GetContext(ctx, &pgCourse, courseFindByIDQuery, courseID); err != nil {
+	if err := p.db.Guest.GetContext(ctx, &pgCourse, courseFindByIDQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Course{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -75,7 +75,7 @@ func (p *PostgresCourseRepo) FindByID(ctx context.Context, courseID domain.ID) (
 
 func (p *PostgresCourseRepo) FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := p.db.SelectContext(ctx, &pgCourses, courseFindStudentCoursesQuery, studentID); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgCourses, courseFindStudentCoursesQuery, studentID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -92,7 +92,7 @@ func (p *PostgresCourseRepo) FindStudentCourses(ctx context.Context, studentID d
 
 func (p *PostgresCourseRepo) FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := p.db.SelectContext(ctx, &pgCourses, courseFindTeacherCoursesQuery, teacherID); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgCourses, courseFindTeacherCoursesQuery, teacherID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -109,7 +109,7 @@ func (p *PostgresCourseRepo) FindTeacherCourses(ctx context.Context, teacherID d
 
 func (p *PostgresCourseRepo) FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
-	if err := p.db.SelectContext(ctx, &pgUsers, courseFindCourseTeachersQuery, courseID); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgUsers, courseFindCourseTeachersQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -126,7 +126,7 @@ func (p *PostgresCourseRepo) FindCourseTeachers(ctx context.Context, courseID do
 
 func (p *PostgresCourseRepo) IsCourseStudent(ctx context.Context, studentID, courseID domain.ID) (bool, error) {
 	var exists bool
-	err := p.db.GetContext(ctx, &exists, courseContainsStudentQuery, courseID, studentID)
+	err := p.db.Authenticated.GetContext(ctx, &exists, courseContainsStudentQuery, courseID, studentID)
 	if err != nil {
 		return false, err
 	}
@@ -135,7 +135,7 @@ func (p *PostgresCourseRepo) IsCourseStudent(ctx context.Context, studentID, cou
 
 func (p *PostgresCourseRepo) IsCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) (bool, error) {
 	var exists bool
-	err := p.db.GetContext(ctx, &exists, courseContainsTeacherQuery, courseID, teacherID)
+	err := p.db.Authenticated.GetContext(ctx, &exists, courseContainsTeacherQuery, courseID, teacherID)
 	if err != nil {
 		return false, err
 	}
@@ -143,7 +143,7 @@ func (p *PostgresCourseRepo) IsCourseTeacher(ctx context.Context, teacherID, cou
 }
 
 func (p *PostgresCourseRepo) AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, courseAddCourseStudentQuery, studentID, courseID)
+	_, err := p.db.Authenticated.ExecContext(ctx, courseAddCourseStudentQuery, studentID, courseID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -160,7 +160,7 @@ func (p *PostgresCourseRepo) AddCourseStudent(ctx context.Context, studentID, co
 }
 
 func (p *PostgresCourseRepo) AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, courseAddCourseTeacherQuery, teacherID, courseID)
+	_, err := p.db.Authenticated.ExecContext(ctx, courseAddCourseTeacherQuery, teacherID, courseID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -179,7 +179,7 @@ func (p *PostgresCourseRepo) AddCourseTeacher(ctx context.Context, teacherID, co
 func (p *PostgresCourseRepo) Create(ctx context.Context, course domain.Course) (domain.Course, error) {
 	var pgCourse = entity.NewPgCourse(course)
 	queryString := entity.InsertQueryString(pgCourse, "course")
-	_, err := p.db.NamedExecContext(ctx, queryString, pgCourse)
+	_, err := p.db.Authenticated.NamedExecContext(ctx, queryString, pgCourse)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -194,7 +194,7 @@ func (p *PostgresCourseRepo) Create(ctx context.Context, course domain.Course) (
 	}
 
 	var createdCourse entity.PgCourse
-	err = p.db.GetContext(ctx, &createdCourse, courseFindByIDQuery, pgCourse.ID)
+	err = p.db.Authenticated.GetContext(ctx, &createdCourse, courseFindByIDQuery, pgCourse.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Course{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -209,13 +209,13 @@ func (p *PostgresCourseRepo) Create(ctx context.Context, course domain.Course) (
 func (p *PostgresCourseRepo) Update(ctx context.Context, course domain.Course) (domain.Course, error) {
 	var pgCourse = entity.NewPgCourse(course)
 	queryString := entity.UpdateQueryString(pgCourse, "course")
-	_, err := p.db.NamedExecContext(ctx, queryString, pgCourse)
+	_, err := p.db.Authenticated.NamedExecContext(ctx, queryString, pgCourse)
 	if err != nil {
 		return domain.Course{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
 	}
 
 	var updatedCourse entity.PgCourse
-	err = p.db.GetContext(ctx, &updatedCourse, courseFindByIDQuery, pgCourse.ID)
+	err = p.db.Authenticated.GetContext(ctx, &updatedCourse, courseFindByIDQuery, pgCourse.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Course{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -228,7 +228,7 @@ func (p *PostgresCourseRepo) Update(ctx context.Context, course domain.Course) (
 
 func (p *PostgresCourseRepo) UpdateStatus(ctx context.Context, courseID domain.ID, status domain.CourseStatus) error {
 	var pgCourse entity.PgCourse
-	err := p.db.GetContext(ctx, &pgCourse, courseFindByIDQuery, courseID)
+	err := p.db.Authenticated.GetContext(ctx, &pgCourse, courseFindByIDQuery, courseID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return errors.Wrap(errs.ErrNotExist, err.Error())
@@ -242,7 +242,7 @@ func (p *PostgresCourseRepo) UpdateStatus(ctx context.Context, courseID domain.I
 	pgCourse = entity.NewPgCourse(course)
 
 	queryString := entity.UpdateQueryString(pgCourse, "course")
-	_, err = p.db.NamedExecContext(ctx, queryString, pgCourse)
+	_, err = p.db.Authenticated.NamedExecContext(ctx, queryString, pgCourse)
 	if err != nil {
 		return errors.Wrap(errs.ErrUpdateFailed, err.Error())
 	}
@@ -251,7 +251,7 @@ func (p *PostgresCourseRepo) UpdateStatus(ctx context.Context, courseID domain.I
 }
 
 func (p *PostgresCourseRepo) Delete(ctx context.Context, courseID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, courseDeleteQuery, courseID)
+	_, err := p.db.Authenticated.ExecContext(ctx, courseDeleteQuery, courseID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
 	}

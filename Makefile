@@ -21,6 +21,9 @@ run_console: build_console
 debug_console: build_console
 	docker-compose up postgres redis minio pgadmin debug
 
+research:
+	go mod download && go run cmd/research/main.go
+
 migrate:
 	# if "error: file does not exist" was occurred,
     # it means that data is up to date

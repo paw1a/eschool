@@ -67,11 +67,10 @@ func TestCertificateRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCertificateRepo(db)
 		found, err := repo.FindAll(ctx)
@@ -89,11 +88,10 @@ func TestCertificateRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCertificateRepo(db)
 		certificate, err := repo.FindByID(ctx, certificates[0].ID)
@@ -112,11 +110,10 @@ func TestCertificateRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCertificateRepo(db)
 		found, err := repo.FindUserCertificates(ctx, certificates[0].UserID)
@@ -134,11 +131,10 @@ func TestCertificateRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCertificateRepo(db)
 		certificate, err := repo.Create(ctx, createdCertificate)

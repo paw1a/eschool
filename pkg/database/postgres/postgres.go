@@ -16,6 +16,12 @@ type Config struct {
 	Password string
 }
 
+type DB struct {
+	Root          *sqlx.DB
+	Guest         *sqlx.DB
+	Authenticated *sqlx.DB
+}
+
 const (
 	maxConn         = 100
 	maxConnIdleTime = 1 * time.Minute

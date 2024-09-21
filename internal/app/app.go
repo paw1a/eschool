@@ -129,7 +129,8 @@ func RunWeb() {
 				fx.As(new(port.IAuthTokenService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT,
+		fx.Supply(cfg, &cfg.Redis, &cfg.PostgresRoot, &cfg.PostgresGuest,
+			&cfg.PostgresAuthenticated, &cfg.JWT,
 			&cfg.Minio, &cfg.Yoomoney, &cfg.Web, logger),
 		fx.Invoke(func(*http.Server) {}),
 		fx.NopLogger,
@@ -148,11 +149,33 @@ func RunConsole() {
 	logger.Info("logger initialized")
 	logger.Info("application startup")
 
+	root, err := postgres.NewPostgresDB(&cfg.PostgresRoot, logger)
+	if err != nil {
+		logger.Fatal("failed to create postgres root connection")
+	}
+
+	guest, err := postgres.NewPostgresDB(&cfg.PostgresGuest, logger)
+	if err != nil {
+		logger.Fatal("failed to create postgres guest connection")
+	}
+
+	authenticated, err := postgres.NewPostgresDB(&cfg.PostgresAuthenticated, logger)
+	if err != nil {
+		logger.Fatal("failed to create postgres authenticated connection")
+	}
+
+	logger.Info("application startup end")
+
+	db := postgres.DB{
+		Root:          root,
+		Guest:         guest,
+		Authenticated: authenticated,
+	}
+
 	fx.New(
 		fx.Provide(
 			console.NewConsole,
 			console.NewHandler,
-			postgres.NewPostgresDB,
 			redis.NewClient,
 			minio.NewClient,
 			// repositories
@@ -242,7 +265,7 @@ func RunConsole() {
 				fx.As(new(port.IAuthTokenService)),
 			),
 		),
-		fx.Supply(cfg, &cfg.Redis, &cfg.Postgres, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney, logger),
+		fx.Supply(cfg, &cfg.Redis, &cfg.JWT, &cfg.Minio, &cfg.Yoomoney, logger, &db),
 		fx.Invoke(func(*console.Console) {}),
 		fx.NopLogger,
 	).Run()

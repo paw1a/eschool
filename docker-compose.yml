@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: eschool
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U user"]
       interval: 1s
       timeout: 3s
       retries: 30
@@ -30,8 +30,8 @@ services:
     volumes:
       - ./migrations:/migrations
     command: ["-path", "/migrations", "-database",
-              "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable",
-              "up", "2"]
+              "postgres://user:password@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable",
+              "up", "4"]
     depends_on:
       postgres:
         condition: service_healthy

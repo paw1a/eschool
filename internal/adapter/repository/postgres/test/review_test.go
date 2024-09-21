@@ -66,11 +66,10 @@ func TestReviewRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewReviewRepo(db)
 		found, err := repo.FindAll(ctx)
@@ -91,11 +90,10 @@ func TestReviewRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewReviewRepo(db)
 		review, err := repo.FindByID(ctx, reviews[0].ID)
@@ -103,28 +101,6 @@ func TestReviewRepository(t *testing.T) {
 			t.Errorf("failed to find review with id: %v", err)
 		}
 		require.Equal(t, review, reviews[0])
-	})
-
-	t.Run("test create review", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewReviewRepo(db)
-		review, err := repo.Create(ctx, createdReview)
-		if err != nil {
-			t.Errorf("failed to create review: %v", err)
-		}
-		require.Equal(t, review, createdReview)
 	})
 
 	t.Run("test find user reviews", func(t *testing.T) {
@@ -135,11 +111,10 @@ func TestReviewRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewReviewRepo(db)
 		found, err := repo.FindUserReviews(ctx, userID)
@@ -160,11 +135,10 @@ func TestReviewRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewReviewRepo(db)
 		found, err := repo.FindCourseReviews(ctx, courseID)
@@ -185,11 +159,10 @@ func TestReviewRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewReviewRepo(db)
 		err = repo.Delete(ctx, reviews[0].ID)

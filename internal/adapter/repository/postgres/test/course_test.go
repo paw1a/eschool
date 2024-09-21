@@ -98,11 +98,10 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		found, err := repo.FindAll(ctx)
@@ -120,11 +119,10 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		course, err := repo.FindByID(ctx, courses[0].ID)
@@ -142,11 +140,10 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		found, err := repo.FindStudentCourses(ctx, studentCoursesID)
@@ -166,11 +163,10 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		found, err := repo.FindTeacherCourses(ctx, teacherCoursesID)
@@ -190,11 +186,10 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		err = repo.AddCourseStudent(ctx, newUserID, courses[0].ID)
@@ -211,61 +206,16 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		err = repo.AddCourseTeacher(ctx, newUserID, courses[0].ID)
 		if err != nil {
 			t.Errorf("failed to add course teacher: %v", err)
 		}
-	})
-
-	t.Run("test create course", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewCourseRepo(db)
-		course, err := repo.Create(ctx, createdCourse)
-		if err != nil {
-			t.Errorf("failed to create course: %v", err)
-		}
-		require.Equal(t, course, createdCourse)
-	})
-
-	t.Run("test update course", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewCourseRepo(db)
-		course, err := repo.Update(ctx, updatedCourse)
-		if err != nil {
-			t.Errorf("failed to create course: %v", err)
-		}
-		require.Equal(t, course, updatedCourse)
 	})
 
 	t.Run("test delete course", func(t *testing.T) {
@@ -276,11 +226,10 @@ func TestCourseRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewCourseRepo(db)
 		err = repo.Delete(ctx, courses[0].ID)

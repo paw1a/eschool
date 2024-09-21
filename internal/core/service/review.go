@@ -42,6 +42,7 @@ func (r *ReviewService) CreateCourseReview(ctx context.Context, courseID, userID
 		UserID:   userID,
 		CourseID: courseID,
 		Text:     param.Text,
+		Rating:   param.Rating,
 	})
 }
 

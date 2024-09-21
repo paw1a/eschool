@@ -1,5 +1,6 @@
 package port
 
 type CreateReviewParam struct {
-	Text string
+	Text   string
+	Rating int64
 }

@@ -14,13 +14,15 @@ import (
 )
 
 type Config struct {
-	Logging  logging.Config
-	Web      v1.Config
-	Postgres postgres.Config
-	JWT      jwt.Config
-	Redis    redis.Config
-	Minio    storage.Config
-	Yoomoney yoomoney.Config
+	Logging               logging.Config  `mapstructure:"logging"`
+	Web                   v1.Config       `mapstructure:"web"`
+	PostgresRoot          postgres.Config `mapstructure:"db_root"`
+	PostgresGuest         postgres.Config `mapstructure:"db_guest"`
+	PostgresAuthenticated postgres.Config `mapstructure:"db_authenticated"`
+	JWT                   jwt.Config      `mapstructure:"jwt"`
+	Redis                 redis.Config    `mapstructure:"redis"`
+	Minio                 storage.Config  `mapstructure:"minio"`
+	Yoomoney              yoomoney.Config `mapstructure:"yoomoney"`
 }
 
 var instance *Config
@@ -55,11 +57,25 @@ func bindEnvConfig() error {
 	bindings["web.host"] = "HOST"
 	bindings["web.port"] = "PORT"
 	bindings["jwt.secret"] = "JWT_SECRET"
-	bindings["postgres.database"] = "DB_NAME"
-	bindings["postgres.user"] = "DB_USER"
-	bindings["postgres.password"] = "DB_PASSWORD"
-	bindings["postgres.host"] = "DB_HOST"
-	bindings["postgres.port"] = "DB_PORT"
+
+	bindings["db_root.database"] = "DB_NAME"
+	bindings["db_root.host"] = "DB_HOST"
+	bindings["db_root.port"] = "DB_PORT"
+	bindings["db_root.user"] = "DB_ROOT_USER"
+	bindings["db_root.password"] = "DB_ROOT_PASSWORD"
+
+	bindings["db_guest.database"] = "DB_NAME"
+	bindings["db_guest.host"] = "DB_HOST"
+	bindings["db_guest.port"] = "DB_PORT"
+	bindings["db_guest.user"] = "DB_GUEST_USER"
+	bindings["db_guest.password"] = "DB_GUEST_PASSWORD"
+
+	bindings["db_authenticated.database"] = "DB_NAME"
+	bindings["db_authenticated.host"] = "DB_HOST"
+	bindings["db_authenticated.port"] = "DB_PORT"
+	bindings["db_authenticated.user"] = "DB_AUTHENTICATED_USER"
+	bindings["db_authenticated.password"] = "DB_AUTHENTICATED_PASSWORD"
+
 	bindings["redis.uri"] = "REDIS_URI"
 	bindings["minio.endpoint"] = "MINIO_ENDPOINT"
 	bindings["minio.user"] = "MINIO_ROOT_USER"

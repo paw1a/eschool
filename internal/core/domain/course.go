@@ -16,4 +16,5 @@ type Course struct {
 	Price    int64
 	Language string
 	Status   CourseStatus
+	Rating   float64
 }

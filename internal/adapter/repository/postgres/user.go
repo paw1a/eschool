@@ -4,19 +4,19 @@ import (
 	"context"
 	"database/sql"
 	"github.com/jackc/pgconn"
-	"github.com/jmoiron/sqlx"
 	"github.com/paw1a/eschool/internal/adapter/repository/postgres/entity"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/errs"
 	"github.com/paw1a/eschool/internal/core/port"
+	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/pkg/errors"
 )
 
 type PostgresUserRepo struct {
-	db *sqlx.DB
+	db *postgres.DB
 }
 
-func NewUserRepo(db *sqlx.DB) *PostgresUserRepo {
+func NewUserRepo(db *postgres.DB) *PostgresUserRepo {
 	return &PostgresUserRepo{
 		db: db,
 	}
@@ -33,7 +33,7 @@ const (
 
 func (u *PostgresUserRepo) FindAll(ctx context.Context) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
-	if err := u.db.SelectContext(ctx, &pgUsers, userFindAllQuery); err != nil {
+	if err := u.db.Guest.SelectContext(ctx, &pgUsers, userFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -50,7 +50,7 @@ func (u *PostgresUserRepo) FindAll(ctx context.Context) ([]domain.User, error) {
 
 func (u *PostgresUserRepo) FindByID(ctx context.Context, userID domain.ID) (domain.User, error) {
 	var pgUser entity.PgUser
-	if err := u.db.GetContext(ctx, &pgUser, userFindByIDQuery, userID); err != nil {
+	if err := u.db.Guest.GetContext(ctx, &pgUser, userFindByIDQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -62,7 +62,7 @@ func (u *PostgresUserRepo) FindByID(ctx context.Context, userID domain.ID) (doma
 
 func (u *PostgresUserRepo) FindByEmail(ctx context.Context, email string) (domain.User, error) {
 	var pgUser entity.PgUser
-	if err := u.db.GetContext(ctx, &pgUser, userFindByEmailQuery, email); err != nil {
+	if err := u.db.Guest.GetContext(ctx, &pgUser, userFindByEmailQuery, email); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -74,7 +74,7 @@ func (u *PostgresUserRepo) FindByEmail(ctx context.Context, email string) (domai
 
 func (u *PostgresUserRepo) FindByCredentials(ctx context.Context, email string, password string) (domain.User, error) {
 	var pgUser entity.PgUser
-	err := u.db.GetContext(ctx, &pgUser, userFindByCredentialsQuery, email, password)
+	err := u.db.Guest.GetContext(ctx, &pgUser, userFindByCredentialsQuery, email, password)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -87,7 +87,7 @@ func (u *PostgresUserRepo) FindByCredentials(ctx context.Context, email string, 
 
 func (u *PostgresUserRepo) FindUserInfo(ctx context.Context, userID domain.ID) (port.UserInfo, error) {
 	var pgUser entity.PgUser
-	err := u.db.GetContext(ctx, &pgUser, userFindUserInfoQuery, userID)
+	err := u.db.Authenticated.GetContext(ctx, &pgUser, userFindUserInfoQuery, userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return port.UserInfo{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -104,7 +104,7 @@ func (u *PostgresUserRepo) FindUserInfo(ctx context.Context, userID domain.ID) (
 func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain.User, error) {
 	var pgUser = entity.NewPgUser(user)
 	queryString := entity.InsertQueryString(pgUser, "user")
-	_, err := u.db.NamedExecContext(ctx, queryString, pgUser)
+	_, err := u.db.Guest.NamedExecContext(ctx, queryString, pgUser)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -119,7 +119,7 @@ func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain
 	}
 
 	var createdUser entity.PgUser
-	err = u.db.GetContext(ctx, &createdUser, userFindByIDQuery, pgUser.ID)
+	err = u.db.Guest.GetContext(ctx, &createdUser, userFindByIDQuery, pgUser.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -134,13 +134,13 @@ func (u *PostgresUserRepo) Create(ctx context.Context, user domain.User) (domain
 func (u *PostgresUserRepo) Update(ctx context.Context, user domain.User) (domain.User, error) {
 	var pgUser = entity.NewPgUser(user)
 	queryString := entity.UpdateQueryString(pgUser, "user")
-	_, err := u.db.NamedExecContext(ctx, queryString, pgUser)
+	_, err := u.db.Authenticated.NamedExecContext(ctx, queryString, pgUser)
 	if err != nil {
 		return domain.User{}, errors.Wrap(errs.ErrUpdateFailed, err.Error())
 	}
 
 	var updatedUser entity.PgUser
-	err = u.db.GetContext(ctx, &updatedUser, userFindByIDQuery, pgUser.ID)
+	err = u.db.Authenticated.GetContext(ctx, &updatedUser, userFindByIDQuery, pgUser.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.User{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -152,7 +152,7 @@ func (u *PostgresUserRepo) Update(ctx context.Context, user domain.User) (domain
 }
 
 func (u *PostgresUserRepo) Delete(ctx context.Context, userID domain.ID) error {
-	_, err := u.db.ExecContext(ctx, userDeleteQuery, userID)
+	_, err := u.db.Authenticated.ExecContext(ctx, userDeleteQuery, userID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
 	}

@@ -91,11 +91,10 @@ func TestUserRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewUserRepo(db)
 		found, err := repo.FindAll(ctx)
@@ -116,11 +115,10 @@ func TestUserRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewUserRepo(db)
 		user, err := repo.FindByID(ctx, users[0].ID)
@@ -138,11 +136,10 @@ func TestUserRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewUserRepo(db)
 		user, err := repo.Create(ctx, createdUser)
@@ -160,11 +157,10 @@ func TestUserRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewUserRepo(db)
 		user, err := repo.Update(ctx, updatedUser)
@@ -182,11 +178,10 @@ func TestUserRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewUserRepo(db)
 		err = repo.Delete(ctx, users[0].ID)

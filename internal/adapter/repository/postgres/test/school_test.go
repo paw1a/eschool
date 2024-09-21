@@ -90,11 +90,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		found, err := repo.FindAll(ctx)
@@ -115,11 +114,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		school, err := repo.FindByID(ctx, schools[0].ID)
@@ -137,11 +135,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		found, err := repo.FindSchoolTeachers(ctx, schools[0].ID)
@@ -162,11 +159,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		ok, err := repo.IsSchoolTeacher(ctx, schools[0].ID, teachers[0].ID)
@@ -190,11 +186,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		err = repo.AddSchoolTeacher(ctx, schools[0].ID, newTeacherID)
@@ -211,11 +206,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		school, err := repo.Create(ctx, createdSchool)
@@ -233,11 +227,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		school, err := repo.Update(ctx, updatedSchool)
@@ -255,11 +248,10 @@ func TestSchoolRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewSchoolRepo(db)
 		err = repo.Delete(ctx, schools[0].ID)

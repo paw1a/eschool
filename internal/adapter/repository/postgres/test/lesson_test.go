@@ -153,11 +153,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		found, err := repo.FindAll(ctx)
@@ -186,11 +185,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		lesson, err := repo.FindByID(ctx, lessons[2].ID)
@@ -213,11 +211,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		found, err := repo.FindCourseLessons(ctx, lessonCourseID)
@@ -246,11 +243,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		found, err := repo.FindLessonTests(ctx, lessons[2].ID)
@@ -273,11 +269,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		lesson, err := repo.Create(ctx, createdLesson)
@@ -300,11 +295,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		lesson, err := repo.Update(ctx, updatedLesson)
@@ -327,11 +321,10 @@ func TestLessonRepository(t *testing.T) {
 			}
 		})
 
-		db, err := newPostgresDB(url)
+		db, err := NewPostgresConnections(url)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer db.Close()
 
 		repo := repository.NewLessonRepo(db)
 		err = repo.Delete(ctx, lessons[0].ID)

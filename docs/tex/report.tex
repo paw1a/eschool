@@ -4,6 +4,7 @@
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{appendix}
 
 \newcounter{myfigure}
 \pretocmd{\figure}{\stepcounter{myfigure}}{}{}
@@ -28,27 +29,28 @@ urlseen={дата обращения:}
 \bibliography{biblio}
 
 \begin{document}
-\renewcommand{\thelstlisting}{\arabic{lstlisting}}
+% \renewcommand{\thelstlisting}{\arabic{lstlisting}}
 
-\makecourseworktitle
-    {Информатика и системы управления}
-    {Программное обеспечение ЭВМ и информационные технологии}
-    {Разработка базы данных электронной образовательной платформы}
-    {~П.~А. Шпаковский/ИУ7-63Б}
-    {~Т.~А. Никульшина}
-    {}
+% \makecourseworktitle
+%     {Информатика и системы управления}
+%     {Программное обеспечение ЭВМ и информационные технологии}
+%     {Разработка базы данных электронной образовательной платформы}
+%     {~П.~А. Шпаковский/ИУ7-63Б}
+%     {~Т.~А. Никульшина}
+%     {}
 
+\setcounter{page}{3}
 \maketableofcontents
 
 \include{intro}
 \include{analysis}
-% \include{design}
-% \include{techn}
-% \include{research}
-% \include{conclusion}
+\include{design}
+\include{techn}
+\include{research}
+\include{conclusion}
 
 \makebibliography
 
-% \include{appendix}
+\include{appendix}
 
 \end{document}

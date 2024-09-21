@@ -105,6 +105,7 @@ type CourseDTO struct {
 	Price    int64
 	Language string
 	Status   string
+	Rating   float64
 }
 
 func NewCourseDTO(course domain.Course) CourseDTO {
@@ -126,6 +127,7 @@ func NewCourseDTO(course domain.Course) CourseDTO {
 		Price:    course.Price,
 		Language: course.Language,
 		Status:   status,
+		Rating:   course.Rating,
 	}
 }
 
@@ -137,4 +139,5 @@ func PrintCourseDTO(d CourseDTO) {
 	fmt.Printf("Level: %d\n", d.Level)
 	fmt.Printf("Language: %s\n", d.Language)
 	fmt.Printf("Status: %s\n", d.Status)
+	fmt.Printf("Avg rating: %.2f\n", d.Rating)
 }

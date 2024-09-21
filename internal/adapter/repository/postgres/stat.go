@@ -4,18 +4,18 @@ import (
 	"context"
 	"database/sql"
 	"github.com/jackc/pgconn"
-	"github.com/jmoiron/sqlx"
 	"github.com/paw1a/eschool/internal/adapter/repository/postgres/entity"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/pkg/database/postgres"
 	"github.com/pkg/errors"
 )
 
 type PostgresStatRepo struct {
-	db *sqlx.DB
+	db *postgres.DB
 }
 
-func NewStatRepo(db *sqlx.DB) *PostgresStatRepo {
+func NewStatRepo(db *postgres.DB) *PostgresStatRepo {
 	return &PostgresStatRepo{
 		db: db,
 	}
@@ -30,7 +30,7 @@ const (
 func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 	userID, lessonID domain.ID) (domain.LessonStat, error) {
 	var pgLessonStat entity.PgLessonStat
-	if err := p.db.GetContext(ctx, &pgLessonStat, statFindByUserLessonQuery, userID, lessonID); err != nil {
+	if err := p.db.Authenticated.GetContext(ctx, &pgLessonStat, statFindByUserLessonQuery, userID, lessonID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.LessonStat{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -40,7 +40,7 @@ func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 	lessonStat := pgLessonStat.ToDomain()
 
 	var pgTests []entity.PgTest
-	if err := p.db.SelectContext(ctx, &pgTests, statFindLessonTestsQuery, lessonID); err != nil {
+	if err := p.db.Authenticated.SelectContext(ctx, &pgTests, statFindLessonTestsQuery, lessonID); err != nil {
 		if err == sql.ErrNoRows {
 			return lessonStat, nil
 		} else {
@@ -52,7 +52,7 @@ func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 	for i, pgTest := range pgTests {
 		test := pgTest.ToDomain()
 		var pgTestStat entity.PgTestStat
-		if err := p.db.GetContext(ctx, &pgTestStat, statFindByUserTestQuery, userID, test.ID); err != nil {
+		if err := p.db.Authenticated.GetContext(ctx, &pgTestStat, statFindByUserTestQuery, userID, test.ID); err != nil {
 			if err == sql.ErrNoRows {
 				return domain.LessonStat{}, errors.Wrap(errs.ErrNotExist, err.Error())
 			} else {
@@ -67,7 +67,7 @@ func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 }
 
 func (p *PostgresStatRepo) CreateLessonStat(ctx context.Context, stat domain.LessonStat) error {
-	tx, err := p.db.Beginx()
+	tx, err := p.db.Authenticated.Beginx()
 	if err != nil {
 		return errors.Wrap(errs.ErrTransactionError, err.Error())
 	}
@@ -117,7 +117,7 @@ func (p *PostgresStatRepo) CreateLessonStat(ctx context.Context, stat domain.Les
 }
 
 func (p *PostgresStatRepo) UpdateLessonStat(ctx context.Context, stat domain.LessonStat) error {
-	tx, err := p.db.Beginx()
+	tx, err := p.db.Authenticated.Beginx()
 	if err != nil {
 		return errors.Wrap(errs.ErrTransactionError, err.Error())
 	}

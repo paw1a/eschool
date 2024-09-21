@@ -19,6 +19,7 @@ type PgCourse struct {
 	Price    int64     `db:"price"`
 	Language string    `db:"language"`
 	Status   string    `db:"status"`
+	Rating   float64   `db:"rating"`
 }
 
 func (s *PgCourse) ToDomain() domain.Course {
@@ -40,6 +41,7 @@ func (s *PgCourse) ToDomain() domain.Course {
 		Price:    s.Price,
 		Language: s.Language,
 		Status:   status,
+		Rating:   s.Rating,
 	}
 }
 

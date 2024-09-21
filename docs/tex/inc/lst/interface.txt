@@ -1,0 +1,35 @@
+--------------------------------
+Menu
+0  Exit
+1  Print menu
+2  Sign In
+3  Sign Up
+4  Logout
+5  Get all users
+6  Get user account
+7  Update user account
+8  Get user purchased courses
+9  Add free course to user library
+10 Get all courses
+11 Create course
+12 Update course
+13 Delete course
+14 Get course lessons
+15 Create course lesson
+16 Get course teachers
+17 Add course teacher
+18 Publish course
+19 Get all schools
+20 Create school
+21 Update school
+22 Get school courses
+23 Get school teachers
+24 Add school teacher
+25 Pass course lesson
+26 Get lesson progress
+27 Find course reviews
+28 Add course review
+29 Get course certificate
+30 Generate course certificate
+--------------------------------
+Choose menu option:

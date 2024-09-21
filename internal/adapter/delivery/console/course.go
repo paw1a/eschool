@@ -11,6 +11,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -322,8 +323,14 @@ func (h *Handler) AddCourseReview(c *Console) {
 	text = strings.TrimSpace(text)
 	createReviewDTO.Text = text
 
+	fmt.Print("Review rating: ")
+	text, _ = reader.ReadString('\n')
+	text = strings.TrimSpace(text)
+	rating, _ := strconv.Atoi(text)
+	createReviewDTO.Rating = int64(rating)
+
 	review, err := h.reviewService.CreateCourseReview(context.Background(), courseID, userID,
-		port.CreateReviewParam{Text: createReviewDTO.Text})
+		port.CreateReviewParam{Text: createReviewDTO.Text, Rating: createReviewDTO.Rating})
 
 	reviewDTO := dto2.NewReviewDTO(review)
 	dto2.PrintReviewDTO(reviewDTO)

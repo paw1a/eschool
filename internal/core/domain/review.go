@@ -5,4 +5,5 @@ type Review struct {
 	UserID   ID
 	CourseID ID
 	Text     string
+	Rating   int64
 }
