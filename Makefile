@@ -27,22 +27,20 @@ migrate:
 	docker compose up migrate
 
 mocks:
-	mockery --dir internal/core/port --name IUserRepository --output internal/adapter/repository/mocks \
+	mockery --dir internal/core/port --name IUserRepository --output internal/core/service/mocks \
 		--filename user.go --structname UserRepository
-	mockery --dir internal/core/port --name ICourseRepository --output internal/adapter/repository/mocks \
+	mockery --dir internal/core/port --name ICourseRepository --output internal/core/service/mocks \
 		--filename course.go --structname CourseRepository
-	mockery --dir internal/core/port --name ISchoolRepository --output internal/adapter/repository/mocks \
+	mockery --dir internal/core/port --name ISchoolRepository --output internal/core/service/mocks \
 		--filename school.go --structname SchoolRepository
-	mockery --dir internal/core/port --name IReviewRepository --output internal/adapter/repository/mocks \
+	mockery --dir internal/core/port --name IReviewRepository --output internal/core/service/mocks \
 		--filename review.go --structname ReviewRepository
-	mockery --dir internal/core/port --name ILessonRepository --output internal/adapter/repository/mocks \
+	mockery --dir internal/core/port --name ILessonRepository --output internal/core/service/mocks \
 		--filename lesson.go --structname LessonRepository
-	mockery --dir internal/core/port --name ICertificateRepository --output internal/adapter/repository/mocks \
-		--filename certificate.go --structname CertificateRepository
-	mockery --dir internal/core/port --name IObjectStorage --output internal/adapter/storage/mocks \
-    		--filename storage.go --structname ObjectStorage
-	mockery --dir internal/core/port --name IStatRepository --output internal/adapter/repository/mocks \
-    		--filename stat.go --structname StatRepository
+	mockery --dir internal/core/port --name IStatRepository --output internal/core/service/mocks \
+		--filename stat.go --structname StatRepository
+	mockery --dir internal/core/port --name IObjectStorage --output internal/core/service/mocks \
+		--filename storage.go --structname ObjectStorage
 
 clean:
 	rm -rf .bin .data logs

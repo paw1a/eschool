@@ -5,7 +5,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/service"
-	repositoryMocks "github.com/paw1a/eschool/internal/core/service/mocks/repository"
+	repositoryMocks "github.com/paw1a/eschool/internal/core/service/mocks"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"testing"

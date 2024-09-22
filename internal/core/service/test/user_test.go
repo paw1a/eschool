@@ -7,7 +7,7 @@ import (
 	"github.com/paw1a/eschool/internal/core/domain"
 	"github.com/paw1a/eschool/internal/core/port"
 	"github.com/paw1a/eschool/internal/core/service"
-	mocks "github.com/paw1a/eschool/internal/core/service/mocks/repository"
+	mocks "github.com/paw1a/eschool/internal/core/service/mocks"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"testing"
