@@ -64,10 +64,6 @@ func RunWeb() {
 				fx.As(new(port.IReviewRepository)),
 			),
 			fx.Annotate(
-				repository.NewCertificateRepo,
-				fx.As(new(port.ICertificateRepository)),
-			),
-			fx.Annotate(
 				repository.NewStatRepo,
 				fx.As(new(port.IStatRepository)),
 			),
@@ -107,10 +103,6 @@ func RunWeb() {
 			fx.Annotate(
 				service.NewReviewService,
 				fx.As(new(port.IReviewService)),
-			),
-			fx.Annotate(
-				service.NewCertificateService,
-				fx.As(new(port.ICertificateService)),
 			),
 			fx.Annotate(
 				service.NewMediaService,
@@ -177,10 +169,6 @@ func RunConsole() {
 				fx.As(new(port.IReviewRepository)),
 			),
 			fx.Annotate(
-				repository.NewCertificateRepo,
-				fx.As(new(port.ICertificateRepository)),
-			),
-			fx.Annotate(
 				repository.NewStatRepo,
 				fx.As(new(port.IStatRepository)),
 			),
@@ -220,10 +208,6 @@ func RunConsole() {
 			fx.Annotate(
 				service.NewReviewService,
 				fx.As(new(port.IReviewService)),
-			),
-			fx.Annotate(
-				service.NewCertificateService,
-				fx.As(new(port.ICertificateService)),
 			),
 			fx.Annotate(
 				service.NewMediaService,

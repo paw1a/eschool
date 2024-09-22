@@ -489,65 +489,6 @@ func (h *Handler) PassCourseLesson(c *Console) {
 	fmt.Println("successfully passed lesson")
 }
 
-func (h *Handler) GetCourseCertificate(c *Console) {
-	err := h.verifyAuth(c)
-	if err != nil {
-		ErrorResponse(UnauthorizedError)
-		return
-	}
-	userID := *c.UserID
-
-	var courseID domain.ID
-	err = dto2.InputID(&courseID, "course")
-	if err != nil {
-		ErrorResponse(err)
-		return
-	}
-
-	certificate, err := h.certificateService.FindCourseCertificate(context.Background(),
-		courseID, userID)
-	if err != nil {
-		ErrorResponse(err)
-		return
-	}
-
-	certificateDTO := dto2.NewCertificateDTO(certificate)
-	dto2.PrintCertificateDTO(certificateDTO)
-}
-
-func (h *Handler) CreateCourseCertificate(c *Console) {
-	err := h.verifyAuth(c)
-	if err != nil {
-		ErrorResponse(UnauthorizedError)
-		return
-	}
-	userID := *c.UserID
-
-	var courseID domain.ID
-	err = dto2.InputID(&courseID, "course")
-	if err != nil {
-		ErrorResponse(err)
-		return
-	}
-
-	certificate, err := h.certificateService.FindCourseCertificate(context.Background(),
-		courseID, userID)
-	if err == nil {
-		fmt.Println("Certificate for this course is already exists")
-		return
-	}
-
-	certificate, err = h.certificateService.CreateCourseCertificate(context.Background(),
-		userID, courseID)
-	if err != nil {
-		ErrorResponse(err)
-		return
-	}
-
-	certificateDTO := dto2.NewCertificateDTO(certificate)
-	dto2.PrintCertificateDTO(certificateDTO)
-}
-
 func (h *Handler) verifyCourseWriteAccess(c *Console, courseID domain.ID) bool {
 	return h.checkCurrentUserIsCourseTeacher(c, courseID)
 }

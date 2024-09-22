@@ -78,14 +78,6 @@ type IReviewService interface {
 	Delete(ctx context.Context, reviewID domain.ID) error
 }
 
-type ICertificateService interface {
-	FindAll(ctx context.Context) ([]domain.Certificate, error)
-	FindByID(ctx context.Context, certificateID domain.ID) (domain.Certificate, error)
-	FindCourseCertificate(ctx context.Context, courseID, userID domain.ID) (domain.Certificate, error)
-	FindUserCertificates(ctx context.Context, userID domain.ID) ([]domain.Certificate, error)
-	CreateCourseCertificate(ctx context.Context, userID, courseID domain.ID) (domain.Certificate, error)
-}
-
 type IStatService interface {
 	FindLessonStat(ctx context.Context, userID, lessonID domain.ID) (domain.LessonStat, error)
 	CreateLessonStat(ctx context.Context, userID, lessonID domain.ID) error

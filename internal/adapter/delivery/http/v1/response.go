@@ -45,7 +45,6 @@ var errorStatusMap = map[error]int{
 	errs.ErrCoursePublishedState:                 http.StatusBadRequest,
 	errs.ErrCourseInvalidLevel:                   http.StatusBadRequest,
 	errs.ErrCourseInvalidPrice:                   http.StatusBadRequest,
-	errs.ErrCertificateCourseNotPassed:           http.StatusBadRequest,
 	errs.ErrFilenameEmpty:                        http.StatusBadRequest,
 	errs.ErrFilepathEmpty:                        http.StatusBadRequest,
 	errs.ErrFileReaderEmpty:                      http.StatusBadRequest,

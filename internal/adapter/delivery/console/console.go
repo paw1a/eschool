@@ -55,9 +55,6 @@ const (
 
 	findCourseReviews
 	addCourseReview
-
-	getCourseCertificate
-	createCourseCertificate
 )
 
 func NewConsole(lc fx.Lifecycle, handler *Handler, logger *zap.Logger) *Console {
@@ -118,9 +115,6 @@ func (c *Console) InitRoutes() {
 
 		findCourseReviews: c.Handler.FindCourseReviews,
 		addCourseReview:   c.Handler.AddCourseReview,
-
-		getCourseCertificate:    c.Handler.GetCourseCertificate,
-		createCourseCertificate: c.Handler.CreateCourseCertificate,
 	}
 }
 
@@ -185,7 +179,5 @@ func (c *Console) PrintMenu() {
 	fmt.Println("27 Find course reviews")
 	fmt.Println("28 Add course review")
 
-	fmt.Println("29 Get course certificate")
-	fmt.Println("30 Generate course certificate")
 	fmt.Println("--------------------------------")
 }

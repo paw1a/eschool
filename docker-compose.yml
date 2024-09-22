@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: eschool
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U user"]
       interval: 1s
       timeout: 3s
       retries: 30

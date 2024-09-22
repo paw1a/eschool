@@ -19,50 +19,47 @@ type Config struct {
 }
 
 type Handler struct {
-	config             *Config
-	logger             *zap.Logger
-	userService        port.IUserService
-	schoolService      port.ISchoolService
-	lessonService      port.ILessonService
-	reviewService      port.IReviewService
-	courseService      port.ICourseService
-	certificateService port.ICertificateService
-	mediaService       port.IMediaService
-	statService        port.IStatService
-	authService        port.IAuthTokenService
-	paymentService     port.IPaymentService
+	config         *Config
+	logger         *zap.Logger
+	userService    port.IUserService
+	schoolService  port.ISchoolService
+	lessonService  port.ILessonService
+	reviewService  port.IReviewService
+	courseService  port.ICourseService
+	mediaService   port.IMediaService
+	statService    port.IStatService
+	authService    port.IAuthTokenService
+	paymentService port.IPaymentService
 }
 
 type HandlerParams struct {
 	fx.In
-	Config             *Config
-	Logger             *zap.Logger
-	UserService        port.IUserService
-	SchoolService      port.ISchoolService
-	LessonService      port.ILessonService
-	ReviewService      port.IReviewService
-	CourseService      port.ICourseService
-	CertificateService port.ICertificateService
-	MediaService       port.IMediaService
-	StatService        port.IStatService
-	AuthService        port.IAuthTokenService
-	PaymentService     port.IPaymentService
+	Config         *Config
+	Logger         *zap.Logger
+	UserService    port.IUserService
+	SchoolService  port.ISchoolService
+	LessonService  port.ILessonService
+	ReviewService  port.IReviewService
+	CourseService  port.ICourseService
+	MediaService   port.IMediaService
+	StatService    port.IStatService
+	AuthService    port.IAuthTokenService
+	PaymentService port.IPaymentService
 }
 
 func NewHandler(params HandlerParams, router *gin.Engine) *Handler {
 	handler := &Handler{
-		config:             params.Config,
-		logger:             params.Logger,
-		userService:        params.UserService,
-		schoolService:      params.SchoolService,
-		lessonService:      params.LessonService,
-		reviewService:      params.ReviewService,
-		courseService:      params.CourseService,
-		certificateService: params.CertificateService,
-		mediaService:       params.MediaService,
-		statService:        params.StatService,
-		authService:        params.AuthService,
-		paymentService:     params.PaymentService,
+		config:         params.Config,
+		logger:         params.Logger,
+		userService:    params.UserService,
+		schoolService:  params.SchoolService,
+		lessonService:  params.LessonService,
+		reviewService:  params.ReviewService,
+		courseService:  params.CourseService,
+		mediaService:   params.MediaService,
+		statService:    params.StatService,
+		authService:    params.AuthService,
+		paymentService: params.PaymentService,
 	}
 
 	api := router.Group("/api")

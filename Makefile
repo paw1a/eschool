@@ -1,13 +1,13 @@
 include .env
 export
 
-build_web:
+build:
 	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/web/main.go
 
-run_web: build_web
+run: build
 	docker-compose up postgres redis minio pgadmin app
 
-debug_web: build_web
+debug: build
 	docker-compose up postgres redis minio pgadmin debug
 
 console: run_console
@@ -47,4 +47,4 @@ mocks:
 clean:
 	rm -rf .bin .data logs
 
-.DEFAULT_GOAL := run_web
+.DEFAULT_GOAL := run
