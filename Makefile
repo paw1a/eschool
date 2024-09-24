@@ -45,4 +45,15 @@ mocks:
 clean:
 	rm -rf .bin .data logs
 
+test:
+	rm -rf allure-results
+	go test -shuffle on ./internal/core/service/test --race --parallel 1
+
+allure:
+	rm -rf allure-reports
+	allure generate allure-results -o allure-reports
+	allure serve allure-results -p 4000
+
+report: test allure
+
 .DEFAULT_GOAL := run

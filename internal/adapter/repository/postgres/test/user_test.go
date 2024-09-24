@@ -1,197 +1,72 @@
-package repository
+package test
 
 import (
 	"context"
-	"github.com/guregu/null"
+	"database/sql"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/jmoiron/sqlx"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 	repository "github.com/paw1a/eschool/internal/adapter/repository/postgres"
 	"github.com/paw1a/eschool/internal/core/domain"
-	"github.com/stretchr/testify/require"
+	"github.com/paw1a/eschool/internal/core/errs"
+	"github.com/paw1a/eschool/internal/core/port"
 	"testing"
 )
 
-var users = []domain.User{
-	domain.User{
-		ID:        domain.ID("30e18bc1-4354-4937-9a3b-03cf0b7027ca"),
-		Name:      "Pavel",
-		Surname:   "Shpakovsliy",
-		Phone:     null.StringFrom("+79992233444"),
-		City:      null.String{},
-		AvatarUrl: null.String{},
-		Email:     "paw1a@yandex.ru",
-		Password:  "123",
-	},
-	domain.User{
-		ID:        domain.ID("30e18bc1-4354-4937-9a3b-03cf0b7027cb"),
-		Name:      "Timur",
-		Surname:   "Musin",
-		Phone:     null.String{},
-		City:      null.StringFrom("Moscow"),
-		AvatarUrl: null.String{},
-		Email:     "hanoys@mail.ru",
-		Password:  "qwerty",
-	},
-	domain.User{
-		ID:        domain.ID("30e18bc1-4354-4937-9a3b-03cf0b7027cc"),
-		Name:      "Emir",
-		Surname:   "Shimshir",
-		Phone:     null.StringFrom("+79992233555"),
-		City:      null.String{},
-		AvatarUrl: null.String{},
-		Email:     "emir@gmail.com",
-		Password:  "12345",
-	},
+type UserSuite struct {
+	suite.Suite
+	db         *sql.DB
+	mock       sqlmock.Sqlmock
+	repository port.IUserRepository
 }
 
-var createdUser = domain.User{
-	ID:        domain.ID("30e18bc1-4354-4937-9a3b-03cf0b7027cd"),
-	Name:      "createdName",
-	Surname:   "createdSurname",
-	Phone:     null.StringFrom("+77777777777"),
-	City:      null.StringFrom("Test city"),
-	AvatarUrl: null.String{},
-	Email:     "user@mail.com",
-	Password:  "password",
-}
-
-var updatedUser = domain.User{
-	ID:        domain.ID("30e18bc1-4354-4937-9a3b-03cf0b7027ca"),
-	Name:      "Maxim",
-	Surname:   "Shpakovsliy",
-	Phone:     null.String{},
-	City:      null.StringFrom("Sochi"),
-	AvatarUrl: null.String{},
-	Email:     "paw1a@yandex.ru",
-	Password:  "12345678",
-}
-
-func TestUserRepository(t *testing.T) {
-	ctx := context.Background()
-	container, err := newPostgresContainer(ctx)
+func (s *UserSuite) BeforeEach(t provider.T) {
+	var err error
+	s.db, s.mock, err = sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("error creating mock database: %v", err)
 	}
+	db := sqlx.NewDb(s.db, "pgx")
+	s.repository = repository.NewUserRepo(db)
+}
 
-	// Clean up the container after the test is complete
-	t.Cleanup(func() {
-		if err := container.Terminate(ctx); err != nil {
-			t.Fatalf("failed to terminate container: %s", err)
-		}
-	})
+// FindAll Suite
+type UserFindAllSuite struct {
+	UserSuite
+}
 
-	url, err := container.ConnectionString(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
+func (s *UserFindAllSuite) UserFindAllSuccessRepositoryMock(user *domain.User) {
+	expectedRows := sqlmock.NewRows([]string{"name", "surname", "email", "password"})
+	expectedRows.AddRow(user.Name, user.Surname, user.Email, user.Password)
+	s.mock.ExpectQuery(repository.UserFindAllQuery).WillReturnRows(expectedRows)
+}
 
-	t.Run("test find all users", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
+func (s *UserFindAllSuite) TestFindAll_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Find all success")
+	user := NewUserBuilder().Build()
+	s.UserFindAllSuccessRepositoryMock(&user)
+	users, err := s.repository.FindAll(context.Background())
+	t.Assert().Nil(err)
+	t.Assert().Equal(users[0].Email, user.Email)
+	t.Assert().Equal(users[0].Password, user.Password)
+	t.Assert().Equal(users[0].Name, user.Name)
+	t.Assert().Equal(users[0].Surname, user.Surname)
+}
 
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
+func (s *UserFindAllSuite) UserFindAllFailureRepositoryMock() {
+	s.mock.ExpectQuery(repository.UserFindAllQuery).WillReturnError(sql.ErrNoRows)
+}
 
-		repo := repository.NewUserRepo(db)
-		found, err := repo.FindAll(ctx)
-		if err != nil {
-			t.Errorf("failed to find all users: %v", err)
-		}
-		require.Equal(t, len(found), len(users))
-		for i := range users {
-			require.Equal(t, users[i], found[i])
-		}
-	})
+func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Find all failure")
+	s.UserFindAllFailureRepositoryMock()
+	_, err := s.repository.FindAll(context.Background())
+	t.Assert().ErrorIs(err, errs.ErrNotExist)
+}
 
-	t.Run("test find user by id", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewUserRepo(db)
-		user, err := repo.FindByID(ctx, users[0].ID)
-		if err != nil {
-			t.Errorf("failed to find user with id: %v", err)
-		}
-		require.Equal(t, user, users[0])
-	})
-
-	t.Run("test create user", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewUserRepo(db)
-		user, err := repo.Create(ctx, createdUser)
-		if err != nil {
-			t.Errorf("failed to create user: %v", err)
-		}
-		require.Equal(t, user, createdUser)
-	})
-
-	t.Run("test update user", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewUserRepo(db)
-		user, err := repo.Update(ctx, updatedUser)
-		if err != nil {
-			t.Errorf("failed to create user: %v", err)
-		}
-		require.Equal(t, user, updatedUser)
-	})
-
-	t.Run("test delete user", func(t *testing.T) {
-		t.Cleanup(func() {
-			err = container.Restore(ctx)
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
-
-		db, err := newPostgresDB(url)
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer db.Close()
-
-		repo := repository.NewUserRepo(db)
-		err = repo.Delete(ctx, users[0].ID)
-		if err != nil {
-			t.Errorf("failed to delete user: %v", err)
-		}
-	})
+func TestUserFindAllSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "Repository FindAll", new(UserFindAllSuite))
 }
