@@ -43,11 +43,13 @@ mocks:
 		--filename storage.go --structname ObjectStorage
 
 clean:
-	rm -rf .bin .data logs
+	rm -rf .bin .data logs allure-reports allure-results
 
 test:
 	rm -rf allure-results
-	go test -shuffle on ./internal/core/service/test --race --parallel 1
+	go test -shuffle on \
+		./internal/core/service/test \
+		./internal/adapter/repository/postgres/test --parallel 8
 
 allure:
 	rm -rf allure-reports

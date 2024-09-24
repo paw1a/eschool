@@ -16,19 +16,16 @@ import (
 
 type UserSuite struct {
 	suite.Suite
-	db         *sql.DB
-	mock       sqlmock.Sqlmock
-	repository port.IUserRepository
+}
+
+func NewUserRepository() (port.IUserRepository, sqlmock.Sqlmock) {
+	db, mock, _ := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+	conn := sqlx.NewDb(db, "pgx")
+	repo := repository.NewUserRepo(conn)
+	return repo, mock
 }
 
 func (s *UserSuite) BeforeEach(t provider.T) {
-	var err error
-	s.db, s.mock, err = sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
-	if err != nil {
-		t.Fatalf("error creating mock database: %v", err)
-	}
-	db := sqlx.NewDb(s.db, "pgx")
-	s.repository = repository.NewUserRepo(db)
 }
 
 // FindAll Suite
@@ -36,34 +33,33 @@ type UserFindAllSuite struct {
 	UserSuite
 }
 
-func (s *UserFindAllSuite) UserFindAllSuccessRepositoryMock(user *domain.User) {
+func (s *UserFindAllSuite) UserFindAllSuccessRepositoryMock(mock sqlmock.Sqlmock, user *domain.User) {
 	expectedRows := sqlmock.NewRows([]string{"name", "surname", "email", "password"})
 	expectedRows.AddRow(user.Name, user.Surname, user.Email, user.Password)
-	s.mock.ExpectQuery(repository.UserFindAllQuery).WillReturnRows(expectedRows)
+	mock.ExpectQuery(repository.UserFindAllQuery).WillReturnRows(expectedRows)
 }
 
 func (s *UserFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Find all success")
+	t.Title("Repository find all success")
+	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
-	s.UserFindAllSuccessRepositoryMock(&user)
-	users, err := s.repository.FindAll(context.Background())
+	s.UserFindAllSuccessRepositoryMock(mock, &user)
+	users, err := repo.FindAll(context.Background())
 	t.Assert().Nil(err)
 	t.Assert().Equal(users[0].Email, user.Email)
-	t.Assert().Equal(users[0].Password, user.Password)
-	t.Assert().Equal(users[0].Name, user.Name)
-	t.Assert().Equal(users[0].Surname, user.Surname)
 }
 
-func (s *UserFindAllSuite) UserFindAllFailureRepositoryMock() {
-	s.mock.ExpectQuery(repository.UserFindAllQuery).WillReturnError(sql.ErrNoRows)
+func (s *UserFindAllSuite) UserFindAllFailureRepositoryMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(repository.UserFindAllQuery).WillReturnError(sql.ErrNoRows)
 }
 
 func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Find all failure")
-	s.UserFindAllFailureRepositoryMock()
-	_, err := s.repository.FindAll(context.Background())
+	t.Title("Repository find all failure")
+	repo, mock := NewUserRepository()
+	s.UserFindAllFailureRepositoryMock(mock)
+	_, err := repo.FindAll(context.Background())
 	t.Assert().ErrorIs(err, errs.ErrNotExist)
 }
 

@@ -17,18 +17,13 @@ import (
 
 type UserSuite struct {
 	suite.Suite
-	logger         *zap.Logger
-	userRepository *mocks.UserRepository
-	userService    *service.UserService
+	logger *zap.Logger
 }
 
 func (s *UserSuite) BeforeEach(t provider.T) {
 	loggerBuilder := zap.NewDevelopmentConfig()
 	loggerBuilder.Level = zap.NewAtomicLevelAt(zap.FatalLevel)
 	s.logger, _ = loggerBuilder.Build()
-
-	s.userRepository = mocks.NewUserRepository(t)
-	s.userService = service.NewUserService(s.userRepository, s.logger)
 }
 
 // FindAll Suite
@@ -45,8 +40,10 @@ func UserFindAllSuccessRepositoryMock(repository *mocks.UserRepository) {
 func (s *UserFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
 	t.Title("Find all success")
-	UserFindAllSuccessRepositoryMock(s.userRepository)
-	_, err := s.userService.FindAll(context.Background())
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserFindAllSuccessRepositoryMock(userRepository)
+	_, err := userService.FindAll(context.Background())
 	t.Assert().Nil(err)
 }
 
@@ -59,8 +56,10 @@ func UserFindAllFailureRepositoryMock(repository *mocks.UserRepository) {
 func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
 	t.Title("Find all failure")
-	UserFindAllFailureRepositoryMock(s.userRepository)
-	_, err := s.userService.FindAll(context.Background())
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserFindAllFailureRepositoryMock(userRepository)
+	_, err := userService.FindAll(context.Background())
 	t.Assert().ErrorIs(err, errs.ErrNotExist)
 }
 
@@ -80,11 +79,12 @@ func UserFindByIDSuccessRepositoryMock(repository *mocks.UserRepository, userID 
 }
 
 func (s *UserFindByIDSuite) TestFindByID_Success(t provider.T) {
-	t.Parallel()
 	t.Title("Find by id success")
 	userID := domain.NewID()
-	UserFindByIDSuccessRepositoryMock(s.userRepository, userID)
-	user, err := s.userService.FindByID(context.Background(), userID)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserFindByIDSuccessRepositoryMock(userRepository, userID)
+	user, err := userService.FindByID(context.Background(), userID)
 	t.Assert().Nil(err)
 	t.Assert().Equal(userID, user.ID)
 }
@@ -96,15 +96,17 @@ func UserFindByIDFailureRepositoryMock(repository *mocks.UserRepository, userID 
 }
 
 func (s *UserFindByIDSuite) TestFindByID_Failure(t provider.T) {
-	t.Parallel()
 	t.Title("Find by id failure")
 	userID := domain.NewID()
-	UserFindByIDFailureRepositoryMock(s.userRepository, userID)
-	_, err := s.userService.FindByID(context.Background(), userID)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserFindByIDFailureRepositoryMock(userRepository, userID)
+	_, err := userService.FindByID(context.Background(), userID)
 	t.Assert().ErrorIs(err, errs.ErrNotExist)
 }
 
 func TestUserFindByIDSuite(t *testing.T) {
+	t.Parallel()
 	suite.RunNamedSuite(t, "FindByID", new(UserFindByIDSuite))
 }
 
@@ -123,12 +125,13 @@ func UserFindByCredentialsSuccessRepositoryMock(repository *mocks.UserRepository
 }
 
 func (s *UserFindByCredentialsSuite) TestFindByCredentials_Success(t provider.T) {
-	t.Parallel()
 	t.Title("Find by credentials success")
 	email := "test@example.com"
 	password := "password"
-	UserFindByCredentialsSuccessRepositoryMock(s.userRepository, email, password)
-	user, err := s.userService.FindByCredentials(context.Background(),
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserFindByCredentialsSuccessRepositoryMock(userRepository, email, password)
+	user, err := userService.FindByCredentials(context.Background(),
 		port.UserCredentials{Email: email, Password: password})
 	t.Assert().Nil(err)
 	t.Assert().Equal(email, user.Email)
@@ -141,17 +144,19 @@ func UserFindByCredentialsFailureRepositoryMock(repository *mocks.UserRepository
 }
 
 func (s *UserFindByCredentialsSuite) TestFindByCredentials_Failure(t provider.T) {
-	t.Parallel()
 	t.Title("Find by credentials failure")
 	email := "test@example.com"
 	password := "password"
-	UserFindByCredentialsFailureRepositoryMock(s.userRepository, email, password)
-	_, err := s.userService.FindByCredentials(context.Background(),
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserFindByCredentialsFailureRepositoryMock(userRepository, email, password)
+	_, err := userService.FindByCredentials(context.Background(),
 		port.UserCredentials{Email: email, Password: password})
 	t.Assert().ErrorIs(err, errs.ErrInvalidCredentials)
 }
 
 func TestUserFindByCredentialsSuite(t *testing.T) {
+	t.Parallel()
 	suite.RunNamedSuite(t, "FindByCredentials", new(UserFindByCredentialsSuite))
 }
 
@@ -167,11 +172,12 @@ func UserCreateSuccessRepositoryMock(repository *mocks.UserRepository, email str
 }
 
 func (s *UserCreateSuite) TestCreate_Success(t provider.T) {
-	t.Parallel()
 	t.Title("Create success")
 	param := NewCreateUserParamBuilder().Build()
-	UserCreateSuccessRepositoryMock(s.userRepository, param.Email)
-	user, err := s.userService.Create(context.Background(), param)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserCreateSuccessRepositoryMock(userRepository, param.Email)
+	user, err := userService.Create(context.Background(), param)
 	t.Assert().Nil(err)
 	t.Assert().Equal(param.Email, user.Email)
 }
@@ -183,15 +189,17 @@ func UserCreateFailureRepositoryMock(repository *mocks.UserRepository) {
 }
 
 func (s *UserCreateSuite) TestCreate_Failure(t provider.T) {
-	t.Parallel()
 	t.Title("Create failure")
 	param := NewCreateUserParamBuilder().Build()
-	UserCreateFailureRepositoryMock(s.userRepository)
-	_, err := s.userService.Create(context.Background(), param)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserCreateFailureRepositoryMock(userRepository)
+	_, err := userService.Create(context.Background(), param)
 	t.Assert().ErrorIs(err, errs.ErrNotUniqueEmail)
 }
 
 func TestUserCreateSuite(t *testing.T) {
+	t.Parallel()
 	suite.RunNamedSuite(t, "Create", new(UserCreateSuite))
 }
 
@@ -210,12 +218,13 @@ func UserUpdateSuccessRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserUpdateSuite) TestUpdate_Success(t provider.T) {
-	t.Parallel()
 	t.Title("Update success")
 	userID := domain.NewID()
 	param := NewUpdateUserParamBuilder().WithName("name").Build()
-	UserUpdateSuccessRepositoryMock(s.userRepository, userID)
-	_, err := s.userService.Update(context.Background(), userID, param)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserUpdateSuccessRepositoryMock(userRepository, userID)
+	_, err := userService.Update(context.Background(), userID, param)
 	t.Assert().Nil(err)
 }
 
@@ -226,16 +235,18 @@ func UserUpdateFailureRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserUpdateSuite) TestUpdate_Failure(t provider.T) {
-	t.Parallel()
 	t.Title("Update failure")
 	userID := domain.NewID()
 	param := NewUpdateUserParamBuilder().WithName("name").Build()
-	UserUpdateFailureRepositoryMock(s.userRepository, userID)
-	_, err := s.userService.Update(context.Background(), userID, param)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserUpdateFailureRepositoryMock(userRepository, userID)
+	_, err := userService.Update(context.Background(), userID, param)
 	t.Assert().ErrorIs(err, errs.ErrNotExist)
 }
 
 func TestUserUpdateSuite(t *testing.T) {
+	t.Parallel()
 	suite.RunNamedSuite(t, "Update", new(UserUpdateSuite))
 }
 
@@ -251,11 +262,12 @@ func UserDeleteSuccessRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserDeleteSuite) TestDelete_Success(t provider.T) {
-	t.Parallel()
 	t.Title("Delete success")
 	userID := domain.NewID()
-	UserDeleteSuccessRepositoryMock(s.userRepository, userID)
-	err := s.userService.Delete(context.Background(), userID)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserDeleteSuccessRepositoryMock(userRepository, userID)
+	err := userService.Delete(context.Background(), userID)
 	t.Assert().Nil(err)
 }
 
@@ -266,14 +278,16 @@ func UserDeleteFailureRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserDeleteSuite) TestDelete_Failure(t provider.T) {
-	t.Parallel()
 	t.Title("Delete failure")
 	userID := domain.NewID()
-	UserDeleteFailureRepositoryMock(s.userRepository, userID)
-	err := s.userService.Delete(context.Background(), userID)
+	userRepository := mocks.NewUserRepository(t)
+	userService := service.NewUserService(userRepository, s.logger)
+	UserDeleteFailureRepositoryMock(userRepository, userID)
+	err := userService.Delete(context.Background(), userID)
 	t.Assert().ErrorIs(err, errs.ErrDeleteFailed)
 }
 
 func TestUserDeleteSuite(t *testing.T) {
+	t.Parallel()
 	suite.RunNamedSuite(t, "Delete", new(UserDeleteSuite))
 }
