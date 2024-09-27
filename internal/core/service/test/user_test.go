@@ -106,7 +106,6 @@ func (s *UserFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestUserFindByIDSuite(t *testing.T) {
-	t.Parallel()
 	suite.RunNamedSuite(t, "FindByID", new(UserFindByIDSuite))
 }
 
@@ -156,7 +155,6 @@ func (s *UserFindByCredentialsSuite) TestFindByCredentials_Failure(t provider.T)
 }
 
 func TestUserFindByCredentialsSuite(t *testing.T) {
-	t.Parallel()
 	suite.RunNamedSuite(t, "FindByCredentials", new(UserFindByCredentialsSuite))
 }
 
@@ -199,7 +197,6 @@ func (s *UserCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestUserCreateSuite(t *testing.T) {
-	t.Parallel()
 	suite.RunNamedSuite(t, "Create", new(UserCreateSuite))
 }
 
@@ -246,7 +243,6 @@ func (s *UserUpdateSuite) TestUpdate_Failure(t provider.T) {
 }
 
 func TestUserUpdateSuite(t *testing.T) {
-	t.Parallel()
 	suite.RunNamedSuite(t, "Update", new(UserUpdateSuite))
 }
 
@@ -288,6 +284,5 @@ func (s *UserDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestUserDeleteSuite(t *testing.T) {
-	t.Parallel()
 	suite.RunNamedSuite(t, "Delete", new(UserDeleteSuite))
 }

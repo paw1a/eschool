@@ -25,9 +25,6 @@ func NewUserRepository() (port.IUserRepository, sqlmock.Sqlmock) {
 	return repo, mock
 }
 
-func (s *UserSuite) BeforeEach(t provider.T) {
-}
-
 // FindAll Suite
 type UserFindAllSuite struct {
 	UserSuite
