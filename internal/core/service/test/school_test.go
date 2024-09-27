@@ -153,6 +153,172 @@ func TestSchoolFindUserSchoolsSuite(t *testing.T) {
 	suite.RunNamedSuite(t, "FindUserSchools", new(SchoolFindUserSchoolsSuite))
 }
 
+// FindSchoolCourses Suite
+type SchoolFindSchoolCoursesSuite struct {
+	SchoolSuite
+}
+
+func SchoolFindSchoolCoursesSuccessRepositoryMock(repository *mocks.SchoolRepository, schoolID domain.ID) {
+	repository.
+		On("FindSchoolCourses", context.Background(), schoolID).
+		Return([]domain.Course{NewCourseBuilder().Build()}, nil)
+}
+
+func (s *SchoolFindSchoolCoursesSuite) TestFindSchoolCourses_Success(t provider.T) {
+	schoolID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolFindSchoolCoursesSuccessRepositoryMock(repo, schoolID)
+	courses, err := service.FindSchoolCourses(context.Background(), schoolID)
+	t.Assert().Nil(err)
+	t.Assert().Equal(courses[0].Name, NewCourseBuilder().Build().Name)
+}
+
+func SchoolFindSchoolCoursesFailureRepositoryMock(repository *mocks.SchoolRepository, schoolID domain.ID) {
+	repository.
+		On("FindSchoolCourses", context.Background(), schoolID).
+		Return(nil, errs.ErrNotExist)
+}
+
+func (s *SchoolFindSchoolCoursesSuite) TestFindSchoolCourses_Failure(t provider.T) {
+	schoolID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolFindSchoolCoursesFailureRepositoryMock(repo, schoolID)
+	_, err := service.FindSchoolCourses(context.Background(), schoolID)
+	t.Assert().ErrorIs(err, errs.ErrNotExist)
+}
+
+func TestSchoolFindSchoolCoursesSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "FindSchoolCourses", new(SchoolFindSchoolCoursesSuite))
+}
+
+// FindSchoolTeachers Suite
+type SchoolFindSchoolTeachersSuite struct {
+	SchoolSuite
+}
+
+func SchoolFindSchoolTeachersSuccessRepositoryMock(repository *mocks.SchoolRepository, schoolID domain.ID) {
+	repository.
+		On("FindSchoolTeachers", context.Background(), schoolID).
+		Return([]domain.User{NewUserBuilder().Build()}, nil)
+}
+
+func (s *SchoolFindSchoolTeachersSuite) TestFindSchoolTeachers_Success(t provider.T) {
+	schoolID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolFindSchoolTeachersSuccessRepositoryMock(repo, schoolID)
+	teachers, err := service.FindSchoolTeachers(context.Background(), schoolID)
+	t.Assert().Nil(err)
+	t.Assert().Equal(teachers[0].Name, NewUserBuilder().Build().Name)
+}
+
+func SchoolFindSchoolTeachersFailureRepositoryMock(repository *mocks.SchoolRepository, schoolID domain.ID) {
+	repository.
+		On("FindSchoolTeachers", context.Background(), schoolID).
+		Return(nil, errs.ErrNotExist)
+}
+
+func (s *SchoolFindSchoolTeachersSuite) TestFindSchoolTeachers_Failure(t provider.T) {
+	schoolID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolFindSchoolTeachersFailureRepositoryMock(repo, schoolID)
+	_, err := service.FindSchoolTeachers(context.Background(), schoolID)
+	t.Assert().ErrorIs(err, errs.ErrNotExist)
+}
+
+func TestSchoolFindSchoolTeachersSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "FindSchoolTeachers", new(SchoolFindSchoolTeachersSuite))
+}
+
+// IsSchoolTeacher Suite
+type SchoolIsSchoolTeacherSuite struct {
+	SchoolSuite
+}
+
+func SchoolIsSchoolTeacherSuccessRepositoryMock(repository *mocks.SchoolRepository, schoolID, teacherID domain.ID) {
+	repository.
+		On("IsSchoolTeacher", context.Background(), schoolID, teacherID).
+		Return(true, nil)
+}
+
+func (s *SchoolIsSchoolTeacherSuite) TestIsSchoolTeacher_Success(t provider.T) {
+	schoolID := domain.NewID()
+	teacherID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolIsSchoolTeacherSuccessRepositoryMock(repo, schoolID, teacherID)
+	isTeacher, err := service.IsSchoolTeacher(context.Background(), schoolID, teacherID)
+	t.Assert().Nil(err)
+	t.Assert().True(isTeacher)
+}
+
+func SchoolIsSchoolTeacherFailureRepositoryMock(repository *mocks.SchoolRepository, schoolID, teacherID domain.ID) {
+	repository.
+		On("IsSchoolTeacher", context.Background(), schoolID, teacherID).
+		Return(false, errs.ErrNotExist)
+}
+
+func (s *SchoolIsSchoolTeacherSuite) TestIsSchoolTeacher_Failure(t provider.T) {
+	schoolID := domain.NewID()
+	teacherID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolIsSchoolTeacherFailureRepositoryMock(repo, schoolID, teacherID)
+	isTeacher, err := service.IsSchoolTeacher(context.Background(), schoolID, teacherID)
+	t.Assert().ErrorIs(err, errs.ErrNotExist)
+	t.Assert().False(isTeacher)
+}
+
+func TestSchoolIsSchoolTeacherSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "IsSchoolTeacher", new(SchoolIsSchoolTeacherSuite))
+}
+
+// AddSchoolTeacher Suite
+type SchoolAddSchoolTeacherSuite struct {
+	SchoolSuite
+}
+
+func SchoolAddSchoolTeacherSuccessRepositoryMock(repository *mocks.SchoolRepository, schoolID, teacherID domain.ID) {
+	repository.
+		On("AddSchoolTeacher", context.Background(), schoolID, teacherID).
+		Return(nil)
+}
+
+func (s *SchoolAddSchoolTeacherSuite) TestAddSchoolTeacher_Success(t provider.T) {
+	schoolID := domain.NewID()
+	teacherID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolAddSchoolTeacherSuccessRepositoryMock(repo, schoolID, teacherID)
+
+	err := service.AddSchoolTeacher(context.Background(), schoolID, teacherID)
+	t.Assert().Nil(err)
+}
+
+func SchoolAddSchoolTeacherFailureRepositoryMock(repository *mocks.SchoolRepository, schoolID, teacherID domain.ID) {
+	repository.
+		On("AddSchoolTeacher", context.Background(), schoolID, teacherID).
+		Return(errs.ErrNotExist)
+}
+
+func (s *SchoolAddSchoolTeacherSuite) TestAddSchoolTeacher_Failure(t provider.T) {
+	schoolID := domain.NewID()
+	teacherID := domain.NewID()
+	repo := mocks.NewSchoolRepository(t)
+	service := service.NewSchoolService(repo, s.logger)
+	SchoolAddSchoolTeacherFailureRepositoryMock(repo, schoolID, teacherID)
+
+	err := service.AddSchoolTeacher(context.Background(), schoolID, teacherID)
+	t.Assert().ErrorIs(err, errs.ErrNotExist)
+}
+
+func TestSchoolAddSchoolTeacherSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "AddSchoolTeacher", new(SchoolAddSchoolTeacherSuite))
+}
+
 // Create Suite
 type SchoolCreateSuite struct {
 	SchoolSuite
