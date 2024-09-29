@@ -22,23 +22,23 @@ func NewSchoolRepo(db *sqlx.DB) *PostgresSchoolRepo {
 }
 
 const (
-	schoolFindAllQuery            = "SELECT * FROM public.school"
-	schoolFindByIDQuery           = "SELECT * FROM public.school WHERE id = $1"
-	schoolFindUserSchoolsQuery    = "SELECT * FROM public.school WHERE owner_id = $1"
-	schoolFindSchoolCoursesQuery  = "SELECT * FROM public.course WHERE school_id = $1"
-	schoolFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
+	SchoolFindAllQuery            = "SELECT * FROM public.school"
+	SchoolFindByIDQuery           = "SELECT * FROM public.school WHERE id = $1"
+	SchoolFindUserSchoolsQuery    = "SELECT * FROM public.school WHERE owner_id = $1"
+	SchoolFindSchoolCoursesQuery  = "SELECT * FROM public.course WHERE school_id = $1"
+	SchoolFindSchoolTeachersQuery = "SELECT u.* FROM public.user u " +
 		"JOIN public.school_teacher st on u.id = st.teacher_id " +
 		"JOIN public.school s on st.school_id = s.id WHERE s.id = $1"
-	schoolContainsTeacherQuery = "SELECT EXISTS (SELECT 1 FROM public.school_teacher " +
+	SchoolContainsTeacherQuery = "SELECT EXISTS (SELECT 1 FROM public.school_teacher " +
 		"WHERE school_id = $1 AND teacher_id = $2)"
-	schoolAddTeacherQuery = "INSERT INTO public.school_teacher (teacher_id, school_id) " +
+	SchoolAddTeacherQuery = "INSERT INTO public.school_teacher (teacher_id, school_id) " +
 		"VALUES ($1, $2)"
-	schoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
+	SchoolDeleteQuery = "DELETE FROM public.school WHERE id = $1"
 )
 
 func (s *PostgresSchoolRepo) FindAll(ctx context.Context) ([]domain.School, error) {
 	var pgSchools []entity.PgSchool
-	if err := s.db.SelectContext(ctx, &pgSchools, schoolFindAllQuery); err != nil {
+	if err := s.db.SelectContext(ctx, &pgSchools, SchoolFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -55,7 +55,7 @@ func (s *PostgresSchoolRepo) FindAll(ctx context.Context) ([]domain.School, erro
 
 func (s *PostgresSchoolRepo) FindByID(ctx context.Context, schoolID domain.ID) (domain.School, error) {
 	var pgSchool entity.PgSchool
-	if err := s.db.GetContext(ctx, &pgSchool, schoolFindByIDQuery, schoolID); err != nil {
+	if err := s.db.GetContext(ctx, &pgSchool, SchoolFindByIDQuery, schoolID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -67,7 +67,7 @@ func (s *PostgresSchoolRepo) FindByID(ctx context.Context, schoolID domain.ID) (
 
 func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
 	var pgSchools []entity.PgSchool
-	if err := s.db.SelectContext(ctx, &pgSchools, schoolFindUserSchoolsQuery, userID); err != nil {
+	if err := s.db.SelectContext(ctx, &pgSchools, SchoolFindUserSchoolsQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -84,7 +84,7 @@ func (s *PostgresSchoolRepo) FindUserSchools(ctx context.Context, userID domain.
 
 func (s *PostgresSchoolRepo) FindSchoolCourses(ctx context.Context, schoolID domain.ID) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := s.db.SelectContext(ctx, &pgCourses, schoolFindSchoolCoursesQuery, schoolID); err != nil {
+	if err := s.db.SelectContext(ctx, &pgCourses, SchoolFindSchoolCoursesQuery, schoolID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -101,7 +101,7 @@ func (s *PostgresSchoolRepo) FindSchoolCourses(ctx context.Context, schoolID dom
 
 func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID domain.ID) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
-	if err := s.db.SelectContext(ctx, &pgUsers, schoolFindSchoolTeachersQuery, schoolID); err != nil {
+	if err := s.db.SelectContext(ctx, &pgUsers, SchoolFindSchoolTeachersQuery, schoolID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -118,15 +118,19 @@ func (s *PostgresSchoolRepo) FindSchoolTeachers(ctx context.Context, schoolID do
 
 func (s *PostgresSchoolRepo) IsSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) (bool, error) {
 	var exists bool
-	err := s.db.GetContext(ctx, &exists, schoolContainsTeacherQuery, schoolID, teacherID)
+	err := s.db.GetContext(ctx, &exists, SchoolContainsTeacherQuery, schoolID, teacherID)
 	if err != nil {
-		return false, err
+		if err == sql.ErrNoRows {
+			return false, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return false, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
 	}
 	return exists, nil
 }
 
 func (s *PostgresSchoolRepo) AddSchoolTeacher(ctx context.Context, schoolID, teacherID domain.ID) error {
-	_, err := s.db.ExecContext(ctx, schoolAddTeacherQuery, teacherID, schoolID)
+	_, err := s.db.ExecContext(ctx, SchoolAddTeacherQuery, teacherID, schoolID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -160,7 +164,7 @@ func (s *PostgresSchoolRepo) Create(ctx context.Context, school domain.School) (
 	}
 
 	var createdSchool entity.PgSchool
-	err = s.db.GetContext(ctx, &createdSchool, schoolFindByIDQuery, pgSchool.ID)
+	err = s.db.GetContext(ctx, &createdSchool, SchoolFindByIDQuery, pgSchool.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -181,7 +185,7 @@ func (s *PostgresSchoolRepo) Update(ctx context.Context, school domain.School) (
 	}
 
 	var updatedSchool entity.PgSchool
-	err = s.db.GetContext(ctx, &updatedSchool, schoolFindByIDQuery, pgSchool.ID)
+	err = s.db.GetContext(ctx, &updatedSchool, SchoolFindByIDQuery, pgSchool.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.School{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -193,7 +197,7 @@ func (s *PostgresSchoolRepo) Update(ctx context.Context, school domain.School) (
 }
 
 func (s *PostgresSchoolRepo) Delete(ctx context.Context, schoolID domain.ID) error {
-	_, err := s.db.ExecContext(ctx, schoolDeleteQuery, schoolID)
+	_, err := s.db.ExecContext(ctx, SchoolDeleteQuery, schoolID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
 	}
