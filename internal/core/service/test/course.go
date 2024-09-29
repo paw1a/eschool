@@ -14,7 +14,9 @@ type CourseBuilder struct {
 func NewCourseBuilder() *CourseBuilder {
 	return &CourseBuilder{
 		course: domain.Course{
-			Status: domain.CourseDraft, // Значение по умолчанию
+			Name:   "course name",
+			Status: domain.CourseDraft,
+			Level:  3,
 		},
 	}
 }
@@ -97,7 +99,14 @@ type CreateCourseParamBuilder struct {
 }
 
 func NewCreateCourseParamBuilder() *CreateCourseParamBuilder {
-	return &CreateCourseParamBuilder{}
+	return &CreateCourseParamBuilder{
+		param: port.CreateCourseParam{
+			Name:     "course name",
+			Level:    3,
+			Price:    0,
+			Language: "english",
+		},
+	}
 }
 
 func (b *CreateCourseParamBuilder) WithName(name string) *CreateCourseParamBuilder {
