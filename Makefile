@@ -41,6 +41,10 @@ mocks:
 		--filename stat.go --structname StatRepository
 	mockery --dir internal/core/port --name IObjectStorage --output internal/core/service/mocks \
 		--filename storage.go --structname ObjectStorage
+	mockery --dir internal/core/port --name IPaymentGateway --output internal/core/service/mocks \
+		--filename payment.go --structname PaymentGateway
+	mockery --dir internal/core/port --name IAuthProvider --output internal/core/service/mocks \
+			--filename auth.go --structname AuthProvider
 
 clean:
 	rm -rf .bin .data logs allure-reports allure-results

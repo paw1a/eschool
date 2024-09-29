@@ -13,7 +13,11 @@ type FileBuilder struct {
 // NewFileBuilder creates a new instance of FileBuilder.
 func NewFileBuilder() *FileBuilder {
 	return &FileBuilder{
-		file: domain.File{},
+		file: domain.File{
+			Name:   "filename",
+			Path:   "media/",
+			Reader: nil,
+		},
 	}
 }
 
