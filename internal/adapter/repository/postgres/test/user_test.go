@@ -233,26 +233,12 @@ func (s *UserCreateSuite) UserCreateSuccessRepositoryMock(mock sqlmock.Sqlmock, 
 	pgUser := entity.NewPgUser(user)
 	queryString := InsertQueryString(pgUser, "user")
 	mock.ExpectExec(queryString).
-		WithArgs(sqlmock.AnyArg(),
-			user.Name,
-			user.Surname,
-			user.Phone,
-			user.City,
-			user.AvatarUrl,
-			user.Email,
-			user.Password).
+		WithArgs(EntityValues(pgUser)...).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	expectedRows := sqlmock.NewRows(EntityColumns(pgUser)).
-		AddRow(user.ID.String(),
-			user.Name,
-			user.Surname,
-			user.Phone,
-			user.City,
-			user.AvatarUrl,
-			user.Email,
-			user.Password)
-	mock.ExpectQuery(repository.UserFindByIDQuery).WithArgs(user.ID).WillReturnRows(expectedRows)
+		AddRow(EntityValues(pgUser)...)
+	mock.ExpectQuery(repository.UserFindByIDQuery).WithArgs(pgUser.ID).WillReturnRows(expectedRows)
 }
 
 func (s *UserCreateSuite) TestCreate_Success(t provider.T) {
@@ -292,27 +278,13 @@ type UserUpdateSuite struct {
 func (s *UserUpdateSuite) UserUpdateSuccessRepositoryMock(mock sqlmock.Sqlmock, user domain.User) {
 	pgUser := entity.NewPgUser(user)
 	queryString := UpdateQueryString(pgUser, "user")
+	values := append(EntityValues(pgUser), pgUser.ID)
 	mock.ExpectExec(queryString).
-		WithArgs(sqlmock.AnyArg(),
-			user.Name,
-			user.Surname,
-			user.Phone,
-			user.City,
-			user.AvatarUrl,
-			user.Email,
-			user.Password,
-			pgUser.ID).
+		WithArgs(values...).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	expectedRows := sqlmock.NewRows(EntityColumns(pgUser)).
-		AddRow(user.ID.String(),
-			user.Name,
-			user.Surname,
-			user.Phone,
-			user.City,
-			user.AvatarUrl,
-			user.Email,
-			user.Password)
+		AddRow(EntityValues(pgUser)...)
 	mock.ExpectQuery(repository.UserFindByIDQuery).WithArgs(user.ID).WillReturnRows(expectedRows)
 }
 

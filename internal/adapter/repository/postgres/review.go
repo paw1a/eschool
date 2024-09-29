@@ -22,16 +22,16 @@ func NewReviewRepo(db *sqlx.DB) *PostgresReviewRepo {
 }
 
 const (
-	reviewFindAllQuery           = "SELECT * FROM public.review"
-	reviewFindByIDQuery          = "SELECT * FROM public.review WHERE id = $1"
-	reviewFindUserReviewsQuery   = "SELECT * FROM public.review WHERE user_id = $1"
-	reviewFindCourseReviewsQuery = "SELECT * FROM public.review WHERE course_id = $1"
-	reviewDeleteQuery            = "DELETE FROM public.school WHERE id = $1"
+	ReviewFindAllQuery           = "SELECT * FROM public.review"
+	ReviewFindByIDQuery          = "SELECT * FROM public.review WHERE id = $1"
+	ReviewFindUserReviewsQuery   = "SELECT * FROM public.review WHERE user_id = $1"
+	ReviewFindCourseReviewsQuery = "SELECT * FROM public.review WHERE course_id = $1"
+	ReviewDeleteQuery            = "DELETE FROM public.school WHERE id = $1"
 )
 
 func (r *PostgresReviewRepo) FindAll(ctx context.Context) ([]domain.Review, error) {
 	var pgReviews []entity.PgReview
-	if err := r.db.SelectContext(ctx, &pgReviews, reviewFindAllQuery); err != nil {
+	if err := r.db.SelectContext(ctx, &pgReviews, ReviewFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -48,7 +48,7 @@ func (r *PostgresReviewRepo) FindAll(ctx context.Context) ([]domain.Review, erro
 
 func (r *PostgresReviewRepo) FindByID(ctx context.Context, reviewID domain.ID) (domain.Review, error) {
 	var pgReview entity.PgReview
-	if err := r.db.GetContext(ctx, &pgReview, reviewFindByIDQuery, reviewID); err != nil {
+	if err := r.db.GetContext(ctx, &pgReview, ReviewFindByIDQuery, reviewID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Review{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -60,7 +60,7 @@ func (r *PostgresReviewRepo) FindByID(ctx context.Context, reviewID domain.ID) (
 
 func (r *PostgresReviewRepo) FindUserReviews(ctx context.Context, userID domain.ID) ([]domain.Review, error) {
 	var pgReviews []entity.PgReview
-	if err := r.db.SelectContext(ctx, &pgReviews, reviewFindUserReviewsQuery, userID); err != nil {
+	if err := r.db.SelectContext(ctx, &pgReviews, ReviewFindUserReviewsQuery, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -77,7 +77,7 @@ func (r *PostgresReviewRepo) FindUserReviews(ctx context.Context, userID domain.
 
 func (r *PostgresReviewRepo) FindCourseReviews(ctx context.Context, courseID domain.ID) ([]domain.Review, error) {
 	var pgReviews []entity.PgReview
-	if err := r.db.SelectContext(ctx, &pgReviews, reviewFindCourseReviewsQuery, courseID); err != nil {
+	if err := r.db.SelectContext(ctx, &pgReviews, ReviewFindCourseReviewsQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -110,7 +110,7 @@ func (r *PostgresReviewRepo) Create(ctx context.Context, review domain.Review) (
 	}
 
 	var createdReview entity.PgReview
-	err = r.db.GetContext(ctx, &createdReview, reviewFindByIDQuery, pgReview.ID)
+	err = r.db.GetContext(ctx, &createdReview, ReviewFindByIDQuery, pgReview.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Review{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -123,7 +123,7 @@ func (r *PostgresReviewRepo) Create(ctx context.Context, review domain.Review) (
 }
 
 func (r *PostgresReviewRepo) Delete(ctx context.Context, reviewID domain.ID) error {
-	_, err := r.db.ExecContext(ctx, reviewDeleteQuery, reviewID)
+	_, err := r.db.ExecContext(ctx, ReviewDeleteQuery, reviewID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
 	}
