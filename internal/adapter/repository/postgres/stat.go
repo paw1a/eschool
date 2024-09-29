@@ -22,15 +22,15 @@ func NewStatRepo(db *sqlx.DB) *PostgresStatRepo {
 }
 
 const (
-	statFindByUserLessonQuery = "SELECT * FROM public.lesson_stat WHERE user_id = $1 AND lesson_id = $2"
-	statFindByUserTestQuery   = "SELECT * FROM public.test_stat WHERE user_id = $1 AND test_id = $2"
-	statFindLessonTestsQuery  = "SELECT * FROM public.test WHERE lesson_id = $1"
+	StatFindByUserLessonQuery = "SELECT * FROM public.lesson_stat WHERE user_id = $1 AND lesson_id = $2"
+	StatFindByUserTestQuery   = "SELECT * FROM public.test_stat WHERE user_id = $1 AND test_id = $2"
+	StatFindLessonTestsQuery  = "SELECT * FROM public.test WHERE lesson_id = $1"
 )
 
 func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 	userID, lessonID domain.ID) (domain.LessonStat, error) {
 	var pgLessonStat entity.PgLessonStat
-	if err := p.db.GetContext(ctx, &pgLessonStat, statFindByUserLessonQuery, userID, lessonID); err != nil {
+	if err := p.db.GetContext(ctx, &pgLessonStat, StatFindByUserLessonQuery, userID, lessonID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.LessonStat{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -40,7 +40,7 @@ func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 	lessonStat := pgLessonStat.ToDomain()
 
 	var pgTests []entity.PgTest
-	if err := p.db.SelectContext(ctx, &pgTests, statFindLessonTestsQuery, lessonID); err != nil {
+	if err := p.db.SelectContext(ctx, &pgTests, StatFindLessonTestsQuery, lessonID); err != nil {
 		if err == sql.ErrNoRows {
 			return lessonStat, nil
 		} else {
@@ -52,7 +52,7 @@ func (p *PostgresStatRepo) FindLessonStat(ctx context.Context,
 	for i, pgTest := range pgTests {
 		test := pgTest.ToDomain()
 		var pgTestStat entity.PgTestStat
-		if err := p.db.GetContext(ctx, &pgTestStat, statFindByUserTestQuery, userID, test.ID); err != nil {
+		if err := p.db.GetContext(ctx, &pgTestStat, StatFindByUserTestQuery, userID, test.ID); err != nil {
 			if err == sql.ErrNoRows {
 				return domain.LessonStat{}, errors.Wrap(errs.ErrNotExist, err.Error())
 			} else {
