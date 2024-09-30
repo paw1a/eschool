@@ -12,9 +12,13 @@ type CourseBuilder struct {
 func NewCourseBuilder() *CourseBuilder {
 	return &CourseBuilder{
 		course: domain.Course{
-			Name:   "course name",
-			Status: domain.CourseDraft,
-			Level:  3,
+			ID:       domain.NewID(),
+			SchoolID: domain.NewID(),
+			Name:     "course name",
+			Level:    3,
+			Price:    1000,
+			Language: "english",
+			Status:   domain.CourseDraft,
 		},
 	}
 }

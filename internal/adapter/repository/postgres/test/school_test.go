@@ -40,7 +40,7 @@ func (s *SchoolFindAllSuite) SchoolFindAllSuccessRepositoryMock(mock sqlmock.Sql
 
 func (s *SchoolFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("School repository find all success")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolFindAllSuccessRepositoryMock(mock, school)
@@ -55,7 +55,7 @@ func (s *SchoolFindAllSuite) SchoolFindAllFailureRepositoryMock(mock sqlmock.Sql
 
 func (s *SchoolFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("School repository find all failure")
 	repo, mock := NewSchoolRepository()
 	s.SchoolFindAllFailureRepositoryMock(mock)
 	_, err := repo.FindAll(context.Background())
@@ -63,7 +63,7 @@ func (s *SchoolFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestSchoolFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindAll", new(SchoolFindAllSuite))
+	suite.RunNamedSuite(t, "School repository find all", new(SchoolFindAllSuite))
 }
 
 type SchoolFindByIDSuite struct {
@@ -79,7 +79,7 @@ func (s *SchoolFindByIDSuite) SchoolFindByIDSuccessRepositoryMock(mock sqlmock.S
 
 func (s *SchoolFindByIDSuite) TestFindByID_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID success")
+	t.Title("School repository find by id success")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolFindByIDSuccessRepositoryMock(mock, school)
@@ -94,7 +94,7 @@ func (s *SchoolFindByIDSuite) SchoolFindByIDFailureRepositoryMock(mock sqlmock.S
 
 func (s *SchoolFindByIDSuite) TestFindByID_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID failure")
+	t.Title("School repository find by id failure")
 	repo, mock := NewSchoolRepository()
 	s.SchoolFindByIDFailureRepositoryMock(mock)
 	_, err := repo.FindByID(context.Background(), domain.NewID())
@@ -102,7 +102,7 @@ func (s *SchoolFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestSchoolFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindByID", new(SchoolFindByIDSuite))
+	suite.RunNamedSuite(t, "School repository find by id", new(SchoolFindByIDSuite))
 }
 
 type SchoolFindUserSchoolsSuite struct {
@@ -119,7 +119,7 @@ func (s *SchoolFindUserSchoolsSuite) SchoolFindUserSchoolsSuccessRepositoryMock(
 
 func (s *SchoolFindUserSchoolsSuite) TestFindUserSchools_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("School repository find user schools success")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	userID := domain.NewID()
@@ -135,7 +135,7 @@ func (s *SchoolFindUserSchoolsSuite) SchoolFindUserSchoolsFailureRepositoryMock(
 
 func (s *SchoolFindUserSchoolsSuite) TestFindUserSchools_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("School repository find user schools failure")
 	repo, mock := NewSchoolRepository()
 	userID := domain.NewID()
 	s.SchoolFindUserSchoolsFailureRepositoryMock(mock)
@@ -144,7 +144,7 @@ func (s *SchoolFindUserSchoolsSuite) TestFindUserSchools_Failure(t provider.T) {
 }
 
 func TestSchoolFindUserSchoolsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindUserSchools", new(SchoolFindUserSchoolsSuite))
+	suite.RunNamedSuite(t, "School repository find user schools", new(SchoolFindUserSchoolsSuite))
 }
 
 type SchoolFindSchoolCoursesSuite struct {
@@ -161,7 +161,7 @@ func (s *SchoolFindSchoolCoursesSuite) SchoolFindSchoolCoursesSuccessRepositoryM
 
 func (s *SchoolFindSchoolCoursesSuite) TestFindSchoolCourses_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("School repository find school courses success")
 	repo, mock := NewSchoolRepository()
 	course := NewCourseBuilder().Build()
 	schoolID := domain.NewID()
@@ -177,7 +177,7 @@ func (s *SchoolFindSchoolCoursesSuite) SchoolFindSchoolCoursesFailureRepositoryM
 
 func (s *SchoolFindSchoolCoursesSuite) TestFindSchoolCourses_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("School repository find school courses failure")
 	repo, mock := NewSchoolRepository()
 	schoolID := domain.NewID()
 	s.SchoolFindSchoolCoursesFailureRepositoryMock(mock)
@@ -186,7 +186,7 @@ func (s *SchoolFindSchoolCoursesSuite) TestFindSchoolCourses_Failure(t provider.
 }
 
 func TestSchoolFindSchoolCoursesSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindSchoolCourses", new(SchoolFindSchoolCoursesSuite))
+	suite.RunNamedSuite(t, "School repository find school courses", new(SchoolFindSchoolCoursesSuite))
 }
 
 type SchoolFindSchoolTeachersSuite struct {
@@ -203,7 +203,7 @@ func (s *SchoolFindSchoolTeachersSuite) SchoolFindSchoolTeachersSuccessRepositor
 
 func (s *SchoolFindSchoolTeachersSuite) TestFindSchoolTeachers_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("School repository find school teachers success")
 	repo, mock := NewSchoolRepository()
 	teacher := NewUserBuilder().Build()
 	schoolID := domain.NewID()
@@ -219,7 +219,7 @@ func (s *SchoolFindSchoolTeachersSuite) SchoolFindSchoolTeachersFailureRepositor
 
 func (s *SchoolFindSchoolTeachersSuite) TestFindSchoolTeachers_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("School repository find school teachers failure")
 	repo, mock := NewSchoolRepository()
 	schoolID := domain.NewID()
 	s.SchoolFindSchoolTeachersFailureRepositoryMock(mock)
@@ -228,7 +228,7 @@ func (s *SchoolFindSchoolTeachersSuite) TestFindSchoolTeachers_Failure(t provide
 }
 
 func TestSchoolFindSchoolTeachersSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindSchoolTeachers", new(SchoolFindSchoolTeachersSuite))
+	suite.RunNamedSuite(t, "School repository find school teachers", new(SchoolFindSchoolTeachersSuite))
 }
 
 type SchoolIsSchoolTeacherSuite struct {
@@ -245,7 +245,7 @@ func (s *SchoolIsSchoolTeacherSuite) SchoolIsSchoolTeacherSuccessRepositoryMock(
 
 func (s *SchoolIsSchoolTeacherSuite) TestIsSchoolTeacher_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("School repository is school teacher success")
 	repo, mock := NewSchoolRepository()
 	schoolID := domain.NewID()
 	teacherID := domain.NewID()
@@ -261,7 +261,7 @@ func (s *SchoolIsSchoolTeacherSuite) SchoolIsSchoolTeacherFailureRepositoryMock(
 
 func (s *SchoolIsSchoolTeacherSuite) TestIsSchoolTeacher_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("School repository is school teacher failure")
 	repo, mock := NewSchoolRepository()
 	schoolID := domain.NewID()
 	teacherID := domain.NewID()
@@ -271,7 +271,7 @@ func (s *SchoolIsSchoolTeacherSuite) TestIsSchoolTeacher_Failure(t provider.T) {
 }
 
 func TestSchoolIsSchoolTeacherSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository IsSchoolTeacher", new(SchoolIsSchoolTeacherSuite))
+	suite.RunNamedSuite(t, "School repository is school teacher", new(SchoolIsSchoolTeacherSuite))
 }
 
 type SchoolAddSchoolTeacherSuite struct {
@@ -287,7 +287,7 @@ func (s *SchoolAddSchoolTeacherSuite) SchoolAddSchoolTeacherSuccessRepositoryMoc
 
 func (s *SchoolAddSchoolTeacherSuite) TestAddSchoolTeacher_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create school success")
+	t.Title("School repository add school teacher success")
 	repo, mock := NewSchoolRepository()
 	schoolID := domain.NewID()
 	teacherID := domain.NewID()
@@ -302,7 +302,7 @@ func (s *SchoolAddSchoolTeacherSuite) SchoolAddSchoolTeacherFailureRepositoryMoc
 
 func (s *SchoolAddSchoolTeacherSuite) TestAddSchoolTeacher_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create school failure")
+	t.Title("School repository add school teacher failure")
 	repo, mock := NewSchoolRepository()
 	schoolID := domain.NewID()
 	teacherID := domain.NewID()
@@ -312,7 +312,7 @@ func (s *SchoolAddSchoolTeacherSuite) TestAddSchoolTeacher_Failure(t provider.T)
 }
 
 func TestSchoolAddSchoolTeacherSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository AddSchoolTeacher", new(SchoolAddSchoolTeacherSuite))
+	suite.RunNamedSuite(t, "School repository add school teacher", new(SchoolAddSchoolTeacherSuite))
 }
 
 type SchoolCreateSuite struct {
@@ -333,7 +333,7 @@ func (s *SchoolCreateSuite) SchoolCreateSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *SchoolCreateSuite) TestCreate_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create school success")
+	t.Title("School repository create school success")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolCreateSuccessRepositoryMock(mock, school)
@@ -349,7 +349,7 @@ func (s *SchoolCreateSuite) SchoolCreateFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *SchoolCreateSuite) TestCreate_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create school failure")
+	t.Title("School repository create school failure")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolCreateFailureRepositoryMock(mock)
@@ -358,7 +358,7 @@ func (s *SchoolCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestSchoolCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Create", new(SchoolCreateSuite))
+	suite.RunNamedSuite(t, "School repository create school", new(SchoolCreateSuite))
 }
 
 type SchoolUpdateSuite struct {
@@ -380,7 +380,7 @@ func (s *SchoolUpdateSuite) SchoolUpdateSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *SchoolUpdateSuite) TestUpdate_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository update school success")
+	t.Title("School repository update school success")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolUpdateSuccessRepositoryMock(mock, school)
@@ -396,7 +396,7 @@ func (s *SchoolUpdateSuite) SchoolUpdateFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *SchoolUpdateSuite) TestUpdate_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository update school failure")
+	t.Title("School repository update school failure")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolUpdateFailureRepositoryMock(mock)
@@ -405,7 +405,7 @@ func (s *SchoolUpdateSuite) TestUpdate_Failure(t provider.T) {
 }
 
 func TestSchoolUpdateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Update", new(SchoolUpdateSuite))
+	suite.RunNamedSuite(t, "School repository update school", new(SchoolUpdateSuite))
 }
 
 type SchoolDeleteSuite struct {
@@ -418,7 +418,7 @@ func (s *SchoolDeleteSuite) SchoolDeleteSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *SchoolDeleteSuite) TestDelete_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete school success")
+	t.Title("School repository delete school success")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolDeleteSuccessRepositoryMock(mock, school.ID)
@@ -432,7 +432,7 @@ func (s *SchoolDeleteSuite) SchoolDeleteFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *SchoolDeleteSuite) TestDelete_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete school failure")
+	t.Title("School repository delete school failure")
 	repo, mock := NewSchoolRepository()
 	school := NewSchoolBuilder().Build()
 	s.SchoolDeleteFailureRepositoryMock(mock)
@@ -441,5 +441,5 @@ func (s *SchoolDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestSchoolDeleteSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Delete", new(SchoolDeleteSuite))
+	suite.RunNamedSuite(t, "School repository delete school", new(SchoolDeleteSuite))
 }

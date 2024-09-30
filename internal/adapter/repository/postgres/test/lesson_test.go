@@ -40,7 +40,7 @@ func (s *LessonFindAllSuite) LessonFindAllSuccessRepositoryMock(mock sqlmock.Sql
 
 func (s *LessonFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("Lesson repository find all success")
 	repo, mock := NewLessonRepository()
 	lesson := NewLessonBuilder().Build()
 	s.LessonFindAllSuccessRepositoryMock(mock, lesson)
@@ -55,7 +55,7 @@ func (s *LessonFindAllSuite) LessonFindAllFailureRepositoryMock(mock sqlmock.Sql
 
 func (s *LessonFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("Lesson repository find all failure")
 	repo, mock := NewLessonRepository()
 	s.LessonFindAllFailureRepositoryMock(mock)
 	_, err := repo.FindAll(context.Background())
@@ -63,7 +63,7 @@ func (s *LessonFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestLessonFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindAll", new(LessonFindAllSuite))
+	suite.RunNamedSuite(t, "Lesson repository find all", new(LessonFindAllSuite))
 }
 
 type LessonFindByIDSuite struct {
@@ -79,7 +79,7 @@ func (s *LessonFindByIDSuite) LessonFindByIDSuccessRepositoryMock(mock sqlmock.S
 
 func (s *LessonFindByIDSuite) TestFindByID_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID success")
+	t.Title("Lesson repository find by id success")
 	repo, mock := NewLessonRepository()
 	lesson := NewLessonBuilder().Build()
 	s.LessonFindByIDSuccessRepositoryMock(mock, lesson)
@@ -94,7 +94,7 @@ func (s *LessonFindByIDSuite) LessonFindByIDFailureRepositoryMock(mock sqlmock.S
 
 func (s *LessonFindByIDSuite) TestFindByID_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID failure")
+	t.Title("Lesson repository find by id failure")
 	repo, mock := NewLessonRepository()
 	s.LessonFindByIDFailureRepositoryMock(mock)
 	_, err := repo.FindByID(context.Background(), domain.NewID())
@@ -102,7 +102,7 @@ func (s *LessonFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestLessonFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindByID", new(LessonFindByIDSuite))
+	suite.RunNamedSuite(t, "Lesson repository find by id", new(LessonFindByIDSuite))
 }
 
 type LessonFindLessonTestsSuite struct {
@@ -121,7 +121,7 @@ func (s *LessonFindLessonTestsSuite) LessonFindLessonTestsSuccessRepositoryMock(
 
 func (s *LessonFindLessonTestsSuite) TestFindLessonTests_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("Lesson repository find lesson tests success")
 	repo, mock := NewLessonRepository()
 	lessonID := domain.NewID()
 	tests := []domain.Test{NewTestBuilder().Build(), NewTestBuilder().Build()}
@@ -138,7 +138,7 @@ func (s *LessonFindLessonTestsSuite) LessonFindLessonTestsFailureRepositoryMock(
 
 func (s *LessonFindLessonTestsSuite) TestFindLessonTests_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("Lesson repository find lesson tests failure")
 	repo, mock := NewLessonRepository()
 	userID := domain.NewID()
 	s.LessonFindLessonTestsFailureRepositoryMock(mock)
@@ -147,7 +147,7 @@ func (s *LessonFindLessonTestsSuite) TestFindLessonTests_Failure(t provider.T) {
 }
 
 func TestLessonFindLessonTestsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindLessonTests", new(LessonFindLessonTestsSuite))
+	suite.RunNamedSuite(t, "Lesson repository find lesson tests", new(LessonFindLessonTestsSuite))
 }
 
 type LessonFindCourseLessonsSuite struct {
@@ -164,7 +164,7 @@ func (s *LessonFindCourseLessonsSuite) LessonFindCourseLessonsSuccessRepositoryM
 
 func (s *LessonFindCourseLessonsSuite) TestFindCourseLessons_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("Lesson repository find course lessons success")
 	repo, mock := NewLessonRepository()
 	lesson := NewLessonBuilder().Build()
 	courseID := domain.NewID()
@@ -180,7 +180,7 @@ func (s *LessonFindCourseLessonsSuite) LessonFindCourseLessonsFailureRepositoryM
 
 func (s *LessonFindCourseLessonsSuite) TestFindCourseLessons_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("Lesson repository find course lessons failure")
 	repo, mock := NewLessonRepository()
 	courseID := domain.NewID()
 	s.LessonFindCourseLessonsFailureRepositoryMock(mock)
@@ -189,7 +189,105 @@ func (s *LessonFindCourseLessonsSuite) TestFindCourseLessons_Failure(t provider.
 }
 
 func TestLessonFindCourseLessonsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindCourseLessons", new(LessonFindCourseLessonsSuite))
+	suite.RunNamedSuite(t, "Lesson repository find course lessons", new(LessonFindCourseLessonsSuite))
+}
+
+type LessonCreateSuite struct {
+	LessonSuite
+}
+
+func (s *LessonCreateSuite) LessonCreateSuccessRepositoryMock(mock sqlmock.Sqlmock, lesson domain.Lesson) {
+	pgLesson := entity.NewPgLesson(lesson)
+	mock.ExpectBegin()
+	queryString := InsertQueryString(pgLesson, "lesson")
+	mock.ExpectExec(queryString).
+		WithArgs(EntityValues(pgLesson)...).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+	expectedRows := sqlmock.NewRows(EntityColumns(pgLesson)).
+		AddRow(EntityValues(pgLesson)...)
+	mock.ExpectQuery(repository.LessonFindByIDQuery).WithArgs(pgLesson.ID).WillReturnRows(expectedRows)
+}
+
+func (s *LessonCreateSuite) TestCreate_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Lesson repository create lesson success")
+	repo, mock := NewLessonRepository()
+	lesson := NewLessonBuilder().Build()
+	s.LessonCreateSuccessRepositoryMock(mock, lesson)
+	createdLesson, err := repo.Create(context.Background(), lesson)
+	t.Assert().Nil(err)
+	t.Assert().Equal(createdLesson.Title, lesson.Title)
+}
+
+func (s *LessonCreateSuite) LessonCreateFailureRepositoryMock(mock sqlmock.Sqlmock) {
+	mock.ExpectBegin()
+	queryString := InsertQueryString(entity.PgLesson{}, "lesson")
+	mock.ExpectExec(queryString).WillReturnError(sql.ErrConnDone)
+}
+
+func (s *LessonCreateSuite) TestCreate_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Lesson repository create lesson failure")
+	repo, mock := NewLessonRepository()
+	lesson := NewLessonBuilder().Build()
+	s.LessonCreateFailureRepositoryMock(mock)
+	_, err := repo.Create(context.Background(), lesson)
+	t.Assert().ErrorIs(err, errs.ErrPersistenceFailed)
+}
+
+func TestLessonCreateSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "Lesson repository create lesson", new(LessonCreateSuite))
+}
+
+type LessonUpdateSuite struct {
+	LessonSuite
+}
+
+func (s *LessonUpdateSuite) LessonUpdateSuccessRepositoryMock(mock sqlmock.Sqlmock, lesson domain.Lesson) {
+	pgLesson := entity.NewPgLesson(lesson)
+	mock.ExpectBegin()
+	queryString := UpdateQueryString(pgLesson, "lesson")
+	values := append(EntityValues(pgLesson), pgLesson.ID)
+	mock.ExpectExec(queryString).
+		WithArgs(values...).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	expectedRows := sqlmock.NewRows(EntityColumns(pgLesson)).
+		AddRow(EntityValues(pgLesson)...)
+	mock.ExpectQuery(repository.LessonFindByIDQuery).WithArgs(lesson.ID).WillReturnRows(expectedRows)
+}
+
+func (s *LessonUpdateSuite) TestUpdate_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Lesson repository update lesson success")
+	repo, mock := NewLessonRepository()
+	lesson := NewLessonBuilder().Build()
+	s.LessonUpdateSuccessRepositoryMock(mock, lesson)
+	updatedLesson, err := repo.Update(context.Background(), lesson)
+	t.Assert().Nil(err)
+	t.Assert().Equal(updatedLesson.Title, lesson.Title)
+}
+
+func (s *LessonUpdateSuite) LessonUpdateFailureRepositoryMock(mock sqlmock.Sqlmock) {
+	mock.ExpectBegin()
+	queryString := UpdateQueryString(entity.PgLesson{}, "lesson")
+	mock.ExpectExec(queryString).WillReturnError(sql.ErrConnDone)
+}
+
+func (s *LessonUpdateSuite) TestUpdate_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Lesson repository update lesson failure")
+	repo, mock := NewLessonRepository()
+	lesson := NewLessonBuilder().Build()
+	s.LessonUpdateFailureRepositoryMock(mock)
+	_, err := repo.Update(context.Background(), lesson)
+	t.Assert().ErrorIs(err, errs.ErrUpdateFailed)
+}
+
+func TestLessonUpdateSuite(t *testing.T) {
+	suite.RunNamedSuite(t, "Lesson repository update lesson", new(LessonUpdateSuite))
 }
 
 type LessonDeleteSuite struct {
@@ -202,7 +300,7 @@ func (s *LessonDeleteSuite) LessonDeleteSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *LessonDeleteSuite) TestDelete_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete lesson success")
+	t.Title("Lesson repository delete lesson success")
 	repo, mock := NewLessonRepository()
 	lesson := NewLessonBuilder().Build()
 	s.LessonDeleteSuccessRepositoryMock(mock, lesson.ID)
@@ -216,7 +314,7 @@ func (s *LessonDeleteSuite) LessonDeleteFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *LessonDeleteSuite) TestDelete_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete lesson failure")
+	t.Title("Lesson repository delete lesson failure")
 	repo, mock := NewLessonRepository()
 	lesson := NewLessonBuilder().Build()
 	s.LessonDeleteFailureRepositoryMock(mock)
@@ -225,5 +323,5 @@ func (s *LessonDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestLessonDeleteSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Delete", new(LessonDeleteSuite))
+	suite.RunNamedSuite(t, "Lesson repository delete lesson", new(LessonDeleteSuite))
 }

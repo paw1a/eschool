@@ -22,31 +22,31 @@ func NewCourseRepo(db *sqlx.DB) *PostgresCourseRepo {
 }
 
 const (
-	courseFindAllQuery            = "SELECT * FROM public.course ORDER BY id"
-	courseFindByIDQuery           = "SELECT * FROM public.course WHERE id = $1"
-	courseFindStudentCoursesQuery = "SELECT c.* FROM public.course c " +
+	CourseFindAllQuery            = "SELECT * FROM public.course ORDER BY id"
+	CourseFindByIDQuery           = "SELECT * FROM public.course WHERE id = $1"
+	CourseFindStudentCoursesQuery = "SELECT c.* FROM public.course c " +
 		"JOIN public.course_student cs on c.id = cs.course_id " +
 		"JOIN public.user u on cs.student_id = u.id WHERE u.id = $1"
-	courseFindTeacherCoursesQuery = "SELECT c.* FROM public.course c " +
+	CourseFindTeacherCoursesQuery = "SELECT c.* FROM public.course c " +
 		"JOIN public.course_teacher ct on c.id = ct.course_id " +
 		"JOIN public.user u on ct.teacher_id = u.id WHERE u.id = $1"
-	courseFindCourseTeachersQuery = "SELECT u.* FROM public.user u " +
+	CourseFindCourseTeachersQuery = "SELECT u.* FROM public.user u " +
 		"JOIN public.course_teacher ct on u.id = ct.teacher_id " +
 		"JOIN public.course c on ct.course_id = c.id WHERE c.id = $1"
-	courseContainsStudentQuery = "SELECT EXISTS (SELECT 1 FROM public.course_student " +
+	CourseContainsStudentQuery = "SELECT EXISTS (SELECT 1 FROM public.course_student " +
 		"WHERE course_id = $1 AND student_id = $2)"
-	courseContainsTeacherQuery = "SELECT EXISTS (SELECT 1 FROM public.course_teacher " +
+	CourseContainsTeacherQuery = "SELECT EXISTS (SELECT 1 FROM public.course_teacher " +
 		"WHERE course_id = $1 AND teacher_id = $2)"
-	courseAddCourseStudentQuery = "INSERT INTO public.course_student (student_id, course_id) " +
+	CourseAddCourseStudentQuery = "INSERT INTO public.course_student (student_id, course_id) " +
 		"VALUES ($1, $2)"
-	courseAddCourseTeacherQuery = "INSERT INTO public.course_teacher (teacher_id, course_id) " +
+	CourseAddCourseTeacherQuery = "INSERT INTO public.course_teacher (teacher_id, course_id) " +
 		"VALUES ($1, $2)"
-	courseDeleteQuery = "DELETE FROM public.course WHERE id = $1"
+	CourseDeleteQuery = "DELETE FROM public.course WHERE id = $1"
 )
 
 func (p *PostgresCourseRepo) FindAll(ctx context.Context) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := p.db.SelectContext(ctx, &pgCourses, courseFindAllQuery); err != nil {
+	if err := p.db.SelectContext(ctx, &pgCourses, CourseFindAllQuery); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -63,7 +63,7 @@ func (p *PostgresCourseRepo) FindAll(ctx context.Context) ([]domain.Course, erro
 
 func (p *PostgresCourseRepo) FindByID(ctx context.Context, courseID domain.ID) (domain.Course, error) {
 	var pgCourse entity.PgCourse
-	if err := p.db.GetContext(ctx, &pgCourse, courseFindByIDQuery, courseID); err != nil {
+	if err := p.db.GetContext(ctx, &pgCourse, CourseFindByIDQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Course{}, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -75,7 +75,7 @@ func (p *PostgresCourseRepo) FindByID(ctx context.Context, courseID domain.ID) (
 
 func (p *PostgresCourseRepo) FindStudentCourses(ctx context.Context, studentID domain.ID) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := p.db.SelectContext(ctx, &pgCourses, courseFindStudentCoursesQuery, studentID); err != nil {
+	if err := p.db.SelectContext(ctx, &pgCourses, CourseFindStudentCoursesQuery, studentID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -92,7 +92,7 @@ func (p *PostgresCourseRepo) FindStudentCourses(ctx context.Context, studentID d
 
 func (p *PostgresCourseRepo) FindTeacherCourses(ctx context.Context, teacherID domain.ID) ([]domain.Course, error) {
 	var pgCourses []entity.PgCourse
-	if err := p.db.SelectContext(ctx, &pgCourses, courseFindTeacherCoursesQuery, teacherID); err != nil {
+	if err := p.db.SelectContext(ctx, &pgCourses, CourseFindTeacherCoursesQuery, teacherID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -109,7 +109,7 @@ func (p *PostgresCourseRepo) FindTeacherCourses(ctx context.Context, teacherID d
 
 func (p *PostgresCourseRepo) FindCourseTeachers(ctx context.Context, courseID domain.ID) ([]domain.User, error) {
 	var pgUsers []entity.PgUser
-	if err := p.db.SelectContext(ctx, &pgUsers, courseFindCourseTeachersQuery, courseID); err != nil {
+	if err := p.db.SelectContext(ctx, &pgUsers, CourseFindCourseTeachersQuery, courseID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.Wrap(errs.ErrNotExist, err.Error())
 		} else {
@@ -126,24 +126,32 @@ func (p *PostgresCourseRepo) FindCourseTeachers(ctx context.Context, courseID do
 
 func (p *PostgresCourseRepo) IsCourseStudent(ctx context.Context, studentID, courseID domain.ID) (bool, error) {
 	var exists bool
-	err := p.db.GetContext(ctx, &exists, courseContainsStudentQuery, courseID, studentID)
+	err := p.db.GetContext(ctx, &exists, CourseContainsStudentQuery, courseID, studentID)
 	if err != nil {
-		return false, err
+		if err == sql.ErrNoRows {
+			return false, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return false, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
 	}
 	return exists, nil
 }
 
 func (p *PostgresCourseRepo) IsCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) (bool, error) {
 	var exists bool
-	err := p.db.GetContext(ctx, &exists, courseContainsTeacherQuery, courseID, teacherID)
+	err := p.db.GetContext(ctx, &exists, CourseContainsTeacherQuery, courseID, teacherID)
 	if err != nil {
-		return false, err
+		if err == sql.ErrNoRows {
+			return false, errors.Wrap(errs.ErrNotExist, err.Error())
+		} else {
+			return false, errors.Wrap(errs.ErrPersistenceFailed, err.Error())
+		}
 	}
 	return exists, nil
 }
 
 func (p *PostgresCourseRepo) AddCourseStudent(ctx context.Context, studentID, courseID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, courseAddCourseStudentQuery, studentID, courseID)
+	_, err := p.db.ExecContext(ctx, CourseAddCourseStudentQuery, studentID, courseID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -160,7 +168,7 @@ func (p *PostgresCourseRepo) AddCourseStudent(ctx context.Context, studentID, co
 }
 
 func (p *PostgresCourseRepo) AddCourseTeacher(ctx context.Context, teacherID, courseID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, courseAddCourseTeacherQuery, teacherID, courseID)
+	_, err := p.db.ExecContext(ctx, CourseAddCourseTeacherQuery, teacherID, courseID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -194,7 +202,7 @@ func (p *PostgresCourseRepo) Create(ctx context.Context, course domain.Course) (
 	}
 
 	var createdCourse entity.PgCourse
-	err = p.db.GetContext(ctx, &createdCourse, courseFindByIDQuery, pgCourse.ID)
+	err = p.db.GetContext(ctx, &createdCourse, CourseFindByIDQuery, pgCourse.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Course{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -215,7 +223,7 @@ func (p *PostgresCourseRepo) Update(ctx context.Context, course domain.Course) (
 	}
 
 	var updatedCourse entity.PgCourse
-	err = p.db.GetContext(ctx, &updatedCourse, courseFindByIDQuery, pgCourse.ID)
+	err = p.db.GetContext(ctx, &updatedCourse, CourseFindByIDQuery, pgCourse.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return domain.Course{}, errors.Wrap(errs.ErrNotExist, err.Error())
@@ -228,7 +236,7 @@ func (p *PostgresCourseRepo) Update(ctx context.Context, course domain.Course) (
 
 func (p *PostgresCourseRepo) UpdateStatus(ctx context.Context, courseID domain.ID, status domain.CourseStatus) error {
 	var pgCourse entity.PgCourse
-	err := p.db.GetContext(ctx, &pgCourse, courseFindByIDQuery, courseID)
+	err := p.db.GetContext(ctx, &pgCourse, CourseFindByIDQuery, courseID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return errors.Wrap(errs.ErrNotExist, err.Error())
@@ -251,7 +259,7 @@ func (p *PostgresCourseRepo) UpdateStatus(ctx context.Context, courseID domain.I
 }
 
 func (p *PostgresCourseRepo) Delete(ctx context.Context, courseID domain.ID) error {
-	_, err := p.db.ExecContext(ctx, courseDeleteQuery, courseID)
+	_, err := p.db.ExecContext(ctx, CourseDeleteQuery, courseID)
 	if err != nil {
 		return errors.Wrap(errs.ErrDeleteFailed, err.Error())
 	}

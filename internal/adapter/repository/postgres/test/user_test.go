@@ -40,7 +40,7 @@ func (s *UserFindAllSuite) UserFindAllSuccessRepositoryMock(mock sqlmock.Sqlmock
 
 func (s *UserFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("User repository find all success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserFindAllSuccessRepositoryMock(mock, user)
@@ -55,7 +55,7 @@ func (s *UserFindAllSuite) UserFindAllFailureRepositoryMock(mock sqlmock.Sqlmock
 
 func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("User repository find all failure")
 	repo, mock := NewUserRepository()
 	s.UserFindAllFailureRepositoryMock(mock)
 	_, err := repo.FindAll(context.Background())
@@ -63,7 +63,7 @@ func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestUserFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindAll", new(UserFindAllSuite))
+	suite.RunNamedSuite(t, "User repository find all", new(UserFindAllSuite))
 }
 
 type UserFindByIDSuite struct {
@@ -79,7 +79,7 @@ func (s *UserFindByIDSuite) UserFindByIDSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *UserFindByIDSuite) TestFindByID_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID success")
+	t.Title("User repository find by id success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserFindByIDSuccessRepositoryMock(mock, user)
@@ -94,7 +94,7 @@ func (s *UserFindByIDSuite) UserFindByIDFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *UserFindByIDSuite) TestFindByID_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID failure")
+	t.Title("User repository find by id failure")
 	repo, mock := NewUserRepository()
 	s.UserFindByIDFailureRepositoryMock(mock)
 	_, err := repo.FindByID(context.Background(), domain.NewID())
@@ -102,7 +102,7 @@ func (s *UserFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestUserFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindByID", new(UserFindByIDSuite))
+	suite.RunNamedSuite(t, "User repository find by id", new(UserFindByIDSuite))
 }
 
 type UserFindByEmailSuite struct {
@@ -118,7 +118,7 @@ func (s *UserFindByEmailSuite) UserFindByEmailSuccessRepositoryMock(mock sqlmock
 
 func (s *UserFindByEmailSuite) TestFindByEmail_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by email success")
+	t.Title("User repository find by email success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserFindByEmailSuccessRepositoryMock(mock, user)
@@ -133,7 +133,7 @@ func (s *UserFindByEmailSuite) UserFindByEmailFailureRepositoryMock(mock sqlmock
 
 func (s *UserFindByEmailSuite) TestFindByEmail_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by email failure")
+	t.Title("User repository find by email failure")
 	repo, mock := NewUserRepository()
 	s.UserFindByEmailFailureRepositoryMock(mock)
 	_, err := repo.FindByEmail(context.Background(), "nonexistent@example.com")
@@ -141,7 +141,7 @@ func (s *UserFindByEmailSuite) TestFindByEmail_Failure(t provider.T) {
 }
 
 func TestUserFindByEmailSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindByEmail", new(UserFindByEmailSuite))
+	suite.RunNamedSuite(t, "User repository find by email", new(UserFindByEmailSuite))
 }
 
 type UserFindByCredentialsSuite struct {
@@ -157,7 +157,7 @@ func (s *UserFindByCredentialsSuite) UserFindByCredentialsSuccessRepositoryMock(
 
 func (s *UserFindByCredentialsSuite) TestFindByCredentials_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by credentials success")
+	t.Title("User repository find by credentials success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserFindByCredentialsSuccessRepositoryMock(mock, user.Email, user.Password, user)
@@ -172,7 +172,7 @@ func (s *UserFindByCredentialsSuite) UserFindByCredentialsFailureRepositoryMock(
 
 func (s *UserFindByCredentialsSuite) TestFindByCredentials_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by credentials failure")
+	t.Title("User repository find by credentials failure")
 	repo, mock := NewUserRepository()
 	s.UserFindByCredentialsFailureRepositoryMock(mock, "nonexistent@example.com", "wrongpassword")
 	_, err := repo.FindByCredentials(context.Background(), "nonexistent@example.com", "wrongpassword")
@@ -180,7 +180,7 @@ func (s *UserFindByCredentialsSuite) TestFindByCredentials_Failure(t provider.T)
 }
 
 func TestUserFindByCredentialsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindByCredentials", new(UserFindByCredentialsSuite))
+	suite.RunNamedSuite(t, "User repository find by credentials", new(UserFindByCredentialsSuite))
 }
 
 type UserFindUserInfoSuite struct {
@@ -196,7 +196,7 @@ func (s *UserFindUserInfoSuite) UserFindUserInfoSuccessRepositoryMock(mock sqlmo
 
 func (s *UserFindUserInfoSuite) TestFindUserInfo_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find user info success")
+	t.Title("User repository find user info success")
 	repo, mock := NewUserRepository()
 	userID := domain.NewID()
 	userInfo := port.UserInfo{Name: "name", Surname: "surname"}
@@ -213,7 +213,7 @@ func (s *UserFindUserInfoSuite) UserFindUserInfoFailureRepositoryMock(mock sqlmo
 
 func (s *UserFindUserInfoSuite) TestFindUserInfo_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find user info failure")
+	t.Title("User repository find user info failure")
 	userID := domain.NewID()
 	repo, mock := NewUserRepository()
 	s.UserFindUserInfoFailureRepositoryMock(mock, userID)
@@ -222,7 +222,7 @@ func (s *UserFindUserInfoSuite) TestFindUserInfo_Failure(t provider.T) {
 }
 
 func TestUserFindUserInfoSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindUserInfo", new(UserFindUserInfoSuite))
+	suite.RunNamedSuite(t, "User repository find user info", new(UserFindUserInfoSuite))
 }
 
 type UserCreateSuite struct {
@@ -243,7 +243,7 @@ func (s *UserCreateSuite) UserCreateSuccessRepositoryMock(mock sqlmock.Sqlmock, 
 
 func (s *UserCreateSuite) TestCreate_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create user success")
+	t.Title("User repository create user success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserCreateSuccessRepositoryMock(mock, user)
@@ -259,7 +259,7 @@ func (s *UserCreateSuite) UserCreateFailureRepositoryMock(mock sqlmock.Sqlmock) 
 
 func (s *UserCreateSuite) TestCreate_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create user failure")
+	t.Title("User repository create user failure")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserCreateFailureRepositoryMock(mock)
@@ -268,7 +268,7 @@ func (s *UserCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestUserCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Create", new(UserCreateSuite))
+	suite.RunNamedSuite(t, "User repository create user", new(UserCreateSuite))
 }
 
 type UserUpdateSuite struct {
@@ -290,7 +290,7 @@ func (s *UserUpdateSuite) UserUpdateSuccessRepositoryMock(mock sqlmock.Sqlmock, 
 
 func (s *UserUpdateSuite) TestUpdate_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository update user success")
+	t.Title("User repository update user success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserUpdateSuccessRepositoryMock(mock, user)
@@ -306,7 +306,7 @@ func (s *UserUpdateSuite) UserUpdateFailureRepositoryMock(mock sqlmock.Sqlmock) 
 
 func (s *UserUpdateSuite) TestUpdate_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository update user failure")
+	t.Title("User repository update user failure")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserUpdateFailureRepositoryMock(mock)
@@ -315,7 +315,7 @@ func (s *UserUpdateSuite) TestUpdate_Failure(t provider.T) {
 }
 
 func TestUserUpdateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Update", new(UserUpdateSuite))
+	suite.RunNamedSuite(t, "User repository update user", new(UserUpdateSuite))
 }
 
 type UserDeleteSuite struct {
@@ -328,7 +328,7 @@ func (s *UserDeleteSuite) UserDeleteSuccessRepositoryMock(mock sqlmock.Sqlmock, 
 
 func (s *UserDeleteSuite) TestDelete_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete user success")
+	t.Title("User repository delete user success")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserDeleteSuccessRepositoryMock(mock, user.ID)
@@ -342,7 +342,7 @@ func (s *UserDeleteSuite) UserDeleteFailureRepositoryMock(mock sqlmock.Sqlmock) 
 
 func (s *UserDeleteSuite) TestDelete_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete user failure")
+	t.Title("User repository delete user failure")
 	repo, mock := NewUserRepository()
 	user := NewUserBuilder().Build()
 	s.UserDeleteFailureRepositoryMock(mock)
@@ -351,5 +351,5 @@ func (s *UserDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestUserDeleteSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Delete", new(UserDeleteSuite))
+	suite.RunNamedSuite(t, "User repository delete user", new(UserDeleteSuite))
 }

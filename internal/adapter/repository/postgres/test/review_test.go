@@ -40,7 +40,7 @@ func (s *ReviewFindAllSuite) ReviewFindAllSuccessRepositoryMock(mock sqlmock.Sql
 
 func (s *ReviewFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("Review repository find all success")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	s.ReviewFindAllSuccessRepositoryMock(mock, review)
@@ -55,7 +55,7 @@ func (s *ReviewFindAllSuite) ReviewFindAllFailureRepositoryMock(mock sqlmock.Sql
 
 func (s *ReviewFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("Review repository find all failure")
 	repo, mock := NewReviewRepository()
 	s.ReviewFindAllFailureRepositoryMock(mock)
 	_, err := repo.FindAll(context.Background())
@@ -63,7 +63,7 @@ func (s *ReviewFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestReviewFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindAll", new(ReviewFindAllSuite))
+	suite.RunNamedSuite(t, "Review repository find all", new(ReviewFindAllSuite))
 }
 
 type ReviewFindByIDSuite struct {
@@ -79,7 +79,7 @@ func (s *ReviewFindByIDSuite) ReviewFindByIDSuccessRepositoryMock(mock sqlmock.S
 
 func (s *ReviewFindByIDSuite) TestFindByID_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID success")
+	t.Title("Review repository find by id success")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	s.ReviewFindByIDSuccessRepositoryMock(mock, review)
@@ -94,7 +94,7 @@ func (s *ReviewFindByIDSuite) ReviewFindByIDFailureRepositoryMock(mock sqlmock.S
 
 func (s *ReviewFindByIDSuite) TestFindByID_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find by ID failure")
+	t.Title("Review repository find by id failure")
 	repo, mock := NewReviewRepository()
 	s.ReviewFindByIDFailureRepositoryMock(mock)
 	_, err := repo.FindByID(context.Background(), domain.NewID())
@@ -102,7 +102,7 @@ func (s *ReviewFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestReviewFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindByID", new(ReviewFindByIDSuite))
+	suite.RunNamedSuite(t, "Review repository find by id", new(ReviewFindByIDSuite))
 }
 
 type ReviewFindUserReviewsSuite struct {
@@ -119,7 +119,7 @@ func (s *ReviewFindUserReviewsSuite) ReviewFindUserReviewsSuccessRepositoryMock(
 
 func (s *ReviewFindUserReviewsSuite) TestFindUserReviews_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("Review repository find user reviews success")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	userID := domain.NewID()
@@ -135,7 +135,7 @@ func (s *ReviewFindUserReviewsSuite) ReviewFindUserReviewsFailureRepositoryMock(
 
 func (s *ReviewFindUserReviewsSuite) TestFindUserReviews_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("Review repository find user reviews failure")
 	repo, mock := NewReviewRepository()
 	userID := domain.NewID()
 	s.ReviewFindUserReviewsFailureRepositoryMock(mock)
@@ -144,7 +144,7 @@ func (s *ReviewFindUserReviewsSuite) TestFindUserReviews_Failure(t provider.T) {
 }
 
 func TestReviewFindUserReviewsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindUserReviews", new(ReviewFindUserReviewsSuite))
+	suite.RunNamedSuite(t, "Review repository find user reviews", new(ReviewFindUserReviewsSuite))
 }
 
 type ReviewFindCourseReviewsSuite struct {
@@ -161,7 +161,7 @@ func (s *ReviewFindCourseReviewsSuite) ReviewFindCourseReviewsSuccessRepositoryM
 
 func (s *ReviewFindCourseReviewsSuite) TestFindCourseReviews_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all success")
+	t.Title("Review repository find course reviews success")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	courseID := domain.NewID()
@@ -177,7 +177,7 @@ func (s *ReviewFindCourseReviewsSuite) ReviewFindCourseReviewsFailureRepositoryM
 
 func (s *ReviewFindCourseReviewsSuite) TestFindCourseReviews_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository find all failure")
+	t.Title("Review repository find course reviews failure")
 	repo, mock := NewReviewRepository()
 	courseID := domain.NewID()
 	s.ReviewFindCourseReviewsFailureRepositoryMock(mock)
@@ -186,7 +186,7 @@ func (s *ReviewFindCourseReviewsSuite) TestFindCourseReviews_Failure(t provider.
 }
 
 func TestReviewFindCourseReviewsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository FindCourseReviews", new(ReviewFindCourseReviewsSuite))
+	suite.RunNamedSuite(t, "Review repository find course reviews", new(ReviewFindCourseReviewsSuite))
 }
 
 type ReviewCreateSuite struct {
@@ -207,7 +207,7 @@ func (s *ReviewCreateSuite) ReviewCreateSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *ReviewCreateSuite) TestCreate_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create review success")
+	t.Title("Review repository create review success")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	s.ReviewCreateSuccessRepositoryMock(mock, review)
@@ -223,7 +223,7 @@ func (s *ReviewCreateSuite) ReviewCreateFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *ReviewCreateSuite) TestCreate_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository create review failure")
+	t.Title("Review repository create review failure")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	s.ReviewCreateFailureRepositoryMock(mock)
@@ -232,7 +232,7 @@ func (s *ReviewCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestReviewCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Create", new(ReviewCreateSuite))
+	suite.RunNamedSuite(t, "Review repository create review", new(ReviewCreateSuite))
 }
 
 type ReviewDeleteSuite struct {
@@ -245,7 +245,7 @@ func (s *ReviewDeleteSuite) ReviewDeleteSuccessRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *ReviewDeleteSuite) TestDelete_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete review success")
+	t.Title("Review repository delete review success")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	s.ReviewDeleteSuccessRepositoryMock(mock, review.ID)
@@ -259,7 +259,7 @@ func (s *ReviewDeleteSuite) ReviewDeleteFailureRepositoryMock(mock sqlmock.Sqlmo
 
 func (s *ReviewDeleteSuite) TestDelete_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Repository delete review failure")
+	t.Title("Review repository delete review failure")
 	repo, mock := NewReviewRepository()
 	review := NewReviewBuilder().Build()
 	s.ReviewDeleteFailureRepositoryMock(mock)
@@ -268,5 +268,5 @@ func (s *ReviewDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestReviewDeleteSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Repository Delete", new(ReviewDeleteSuite))
+	suite.RunNamedSuite(t, "Review repository delete review", new(ReviewDeleteSuite))
 }
