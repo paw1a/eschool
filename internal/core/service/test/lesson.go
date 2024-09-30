@@ -312,12 +312,10 @@ func (b *UpdatePracticeParamBuilder) Build() port.UpdatePracticeParam {
 	return b.param
 }
 
-// CreateTestParamBuilder is a builder for CreateTestParam.
 type CreateTestParamBuilder struct {
 	param port.CreateTestParam
 }
 
-// NewCreateTestParamBuilder creates a new instance of CreateTestParamBuilder.
 func NewCreateTestParamBuilder() *CreateTestParamBuilder {
 	return &CreateTestParamBuilder{
 		param: port.CreateTestParam{
@@ -330,47 +328,39 @@ func NewCreateTestParamBuilder() *CreateTestParamBuilder {
 	}
 }
 
-// WithTask sets the task of the test.
 func (b *CreateTestParamBuilder) WithTask(task string) *CreateTestParamBuilder {
 	b.param.Task = task
 	return b
 }
 
-// WithOptions sets the options of the test.
 func (b *CreateTestParamBuilder) WithOptions(options []string) *CreateTestParamBuilder {
 	b.param.Options = options
 	return b
 }
 
-// WithAnswer sets the answer of the test.
 func (b *CreateTestParamBuilder) WithAnswer(answer string) *CreateTestParamBuilder {
 	b.param.Answer = answer
 	return b
 }
 
-// WithLevel sets the level of the test.
 func (b *CreateTestParamBuilder) WithLevel(level int) *CreateTestParamBuilder {
 	b.param.Level = level
 	return b
 }
 
-// WithScore sets the score of the test.
 func (b *CreateTestParamBuilder) WithScore(score int) *CreateTestParamBuilder {
 	b.param.Score = score
 	return b
 }
 
-// Build constructs the CreateTestParam object.
 func (b *CreateTestParamBuilder) Build() port.CreateTestParam {
 	return b.param
 }
 
-// UpdateTestParamBuilder is a builder for UpdateTestParam.
 type UpdateTestParamBuilder struct {
 	param port.UpdateTestParam
 }
 
-// NewUpdateTestParamBuilder creates a new instance of UpdateTestParamBuilder.
 func NewUpdateTestParamBuilder() *UpdateTestParamBuilder {
 	return &UpdateTestParamBuilder{
 		param: port.UpdateTestParam{
@@ -383,37 +373,31 @@ func NewUpdateTestParamBuilder() *UpdateTestParamBuilder {
 	}
 }
 
-// WithTask sets the task of the test.
 func (b *UpdateTestParamBuilder) WithTask(task string) *UpdateTestParamBuilder {
 	b.param.Task = task
 	return b
 }
 
-// WithOptions sets the options of the test.
 func (b *UpdateTestParamBuilder) WithOptions(options []string) *UpdateTestParamBuilder {
 	b.param.Options = options
 	return b
 }
 
-// WithAnswer sets the answer of the test.
 func (b *UpdateTestParamBuilder) WithAnswer(answer string) *UpdateTestParamBuilder {
 	b.param.Answer = answer
 	return b
 }
 
-// WithLevel sets the level of the test.
 func (b *UpdateTestParamBuilder) WithLevel(level int) *UpdateTestParamBuilder {
 	b.param.Level = level
 	return b
 }
 
-// WithScore sets the score of the test.
 func (b *UpdateTestParamBuilder) WithScore(score int) *UpdateTestParamBuilder {
 	b.param.Score = score
 	return b
 }
 
-// Build constructs the UpdateTestParam object.
 func (b *UpdateTestParamBuilder) Build() port.UpdateTestParam {
 	return b.param
 }

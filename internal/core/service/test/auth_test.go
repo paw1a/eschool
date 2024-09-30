@@ -41,7 +41,7 @@ func AuthSignInSuccessRepositoryMock(repository *mocks.UserRepository, provider 
 
 func (s *AuthSignInSuite) TestSignIn_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Sign in success")
+	t.Title("Auth service sign in success")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -59,7 +59,7 @@ func AuthSignInFailureRepositoryMock(repository *mocks.UserRepository, provider 
 
 func (s *AuthSignInSuite) TestSignIn_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Sign in failure")
+	t.Title("Auth service sign in failure")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -70,7 +70,7 @@ func (s *AuthSignInSuite) TestSignIn_Failure(t provider.T) {
 }
 
 func TestAuthSignInSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "SignIn", new(AuthSignInSuite))
+	suite.RunNamedSuite(t, "Auth service sign in", new(AuthSignInSuite))
 }
 
 // SignUp Suite
@@ -89,7 +89,7 @@ func AuthSignUpSuccessRepositoryMock(repository *mocks.UserRepository) {
 
 func (s *AuthSignUpSuite) TestSignUp_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Sign up success")
+	t.Title("Auth service sign up success")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -107,7 +107,7 @@ func AuthSignUpFailureRepositoryMock(repository *mocks.UserRepository) {
 
 func (s *AuthSignUpSuite) TestSignUp_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Sign up failure")
+	t.Title("Auth service sign up failure")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -118,7 +118,7 @@ func (s *AuthSignUpSuite) TestSignUp_Failure(t provider.T) {
 }
 
 func TestAuthSignUpSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "SignUp", new(AuthSignUpSuite))
+	suite.RunNamedSuite(t, "Auth service sign up", new(AuthSignUpSuite))
 }
 
 // LogOut Suite
@@ -134,7 +134,7 @@ func AuthLogOutSuccessRepositoryMock(provider *mocks.AuthProvider) {
 
 func (s *AuthLogOutSuite) TestLogOut_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Log out success")
+	t.Title("Auth service log out success")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -151,7 +151,7 @@ func AuthLogOutFailureRepositoryMock(repository *mocks.UserRepository, provider 
 
 func (s *AuthLogOutSuite) TestLogOut_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Sign in failure")
+	t.Title("Auth service log out failure")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -161,7 +161,7 @@ func (s *AuthLogOutSuite) TestLogOut_Failure(t provider.T) {
 }
 
 func TestAuthLogOutSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "LogOut", new(AuthLogOutSuite))
+	suite.RunNamedSuite(t, "Auth service log out", new(AuthLogOutSuite))
 }
 
 // Refresh Suite
@@ -177,7 +177,7 @@ func AuthRefreshSuccessRepositoryMock(provider *mocks.AuthProvider) {
 
 func (s *AuthRefreshSuite) TestRefresh_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Refresh token success")
+	t.Title("Auth service refresh token success")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -194,7 +194,7 @@ func AuthRefreshFailureRepositoryMock(repository *mocks.UserRepository, provider
 
 func (s *AuthRefreshSuite) TestRefresh_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Refresh token failure")
+	t.Title("Auth service refresh token failure")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -204,7 +204,7 @@ func (s *AuthRefreshSuite) TestRefresh_Failure(t provider.T) {
 }
 
 func TestAuthRefreshSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Refresh", new(AuthRefreshSuite))
+	suite.RunNamedSuite(t, "Auth service refresh token", new(AuthRefreshSuite))
 }
 
 // Verify Suite
@@ -220,7 +220,7 @@ func AuthVerifySuccessRepositoryMock(provider *mocks.AuthProvider) {
 
 func (s *AuthVerifySuite) TestVerify_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Verify token success")
+	t.Title("Auth service verify token success")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -237,7 +237,7 @@ func AuthVerifyFailureRepositoryMock(repository *mocks.UserRepository, provider 
 
 func (s *AuthVerifySuite) TestVerify_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Verify token failure")
+	t.Title("Auth service verify token failure")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -247,7 +247,7 @@ func (s *AuthVerifySuite) TestVerify_Failure(t provider.T) {
 }
 
 func TestAuthVerifySuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Verify", new(AuthVerifySuite))
+	suite.RunNamedSuite(t, "Auth service verify token", new(AuthVerifySuite))
 }
 
 // Payload Suite
@@ -263,7 +263,7 @@ func AuthPayloadSuccessRepositoryMock(provider *mocks.AuthProvider) {
 
 func (s *AuthPayloadSuite) TestPayload_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Payload token success")
+	t.Title("Auth service payload success")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -280,7 +280,7 @@ func AuthPayloadFailureRepositoryMock(repository *mocks.UserRepository, provider
 
 func (s *AuthPayloadSuite) TestPayload_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Payload token failure")
+	t.Title("Auth service payload failure")
 	userRepository := mocks.NewUserRepository(t)
 	provider := mocks.NewAuthProvider(t)
 	authService := service.NewAuthTokenService(provider, userRepository, s.logger)
@@ -290,5 +290,5 @@ func (s *AuthPayloadSuite) TestPayload_Failure(t provider.T) {
 }
 
 func TestAuthPayloadSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Payload", new(AuthPayloadSuite))
+	suite.RunNamedSuite(t, "Auth service payload", new(AuthPayloadSuite))
 }

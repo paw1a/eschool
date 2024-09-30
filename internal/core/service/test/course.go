@@ -6,7 +6,6 @@ import (
 	"github.com/paw1a/eschool/internal/core/port"
 )
 
-// CourseBuilder - билдер для структуры domain.Course
 type CourseBuilder struct {
 	course domain.Course
 }
@@ -60,7 +59,6 @@ func (b *CourseBuilder) Build() domain.Course {
 	return b.course
 }
 
-// CourseInfoBuilder - билдер для структуры port.CourseInfo
 type CourseInfoBuilder struct {
 	info port.CourseInfo
 }
@@ -93,7 +91,6 @@ func (b *CourseInfoBuilder) Build() port.CourseInfo {
 	return b.info
 }
 
-// CreateCourseParamBuilder - билдер для структуры port.CreateCourseParam
 type CreateCourseParamBuilder struct {
 	param port.CreateCourseParam
 }
@@ -133,7 +130,6 @@ func (b *CreateCourseParamBuilder) Build() port.CreateCourseParam {
 	return b.param
 }
 
-// UpdateCourseParamBuilder - билдер для структуры port.UpdateCourseParam
 type UpdateCourseParamBuilder struct {
 	param port.UpdateCourseParam
 }

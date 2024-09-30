@@ -39,7 +39,7 @@ func ReviewFindAllSuccessRepositoryMock(repository *mocks.ReviewRepository) {
 
 func (s *ReviewFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Find all reviews success")
+	t.Title("Review service find all success")
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
 	ReviewFindAllSuccessRepositoryMock(reviewRepository)
@@ -55,7 +55,7 @@ func ReviewFindAllFailureRepositoryMock(repository *mocks.ReviewRepository) {
 
 func (s *ReviewFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Find all reviews failure")
+	t.Title("Review service find all failure")
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
 	ReviewFindAllFailureRepositoryMock(reviewRepository)
@@ -64,7 +64,7 @@ func (s *ReviewFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestReviewFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindAll", new(ReviewFindAllSuite))
+	suite.RunNamedSuite(t, "Review service find all", new(ReviewFindAllSuite))
 }
 
 // FindByID Suite
@@ -79,7 +79,7 @@ func ReviewFindByIDSuccessRepositoryMock(repository *mocks.ReviewRepository, rev
 }
 
 func (s *ReviewFindByIDSuite) TestFindByID_Success(t provider.T) {
-	t.Title("Find review by id success")
+	t.Title("Review service find by id success")
 	reviewID := domain.NewID()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -96,7 +96,7 @@ func ReviewFindByIDFailureRepositoryMock(repository *mocks.ReviewRepository, rev
 }
 
 func (s *ReviewFindByIDSuite) TestFindByID_Failure(t provider.T) {
-	t.Title("Find review by id failure")
+	t.Title("Review service find by id failure")
 	reviewID := domain.NewID()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -106,7 +106,7 @@ func (s *ReviewFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestReviewFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindByID", new(ReviewFindByIDSuite))
+	suite.RunNamedSuite(t, "Review service find by id", new(ReviewFindByIDSuite))
 }
 
 // Create Suite
@@ -121,7 +121,7 @@ func ReviewCreateSuccessRepositoryMock(repository *mocks.ReviewRepository) {
 }
 
 func (s *ReviewCreateSuite) TestCreate_Success(t provider.T) {
-	t.Title("Create review success")
+	t.Title("Review service create success")
 	param := NewCreateReviewParamBuilder().Build()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -139,7 +139,7 @@ func ReviewCreateFailureRepositoryMock(repository *mocks.ReviewRepository) {
 }
 
 func (s *ReviewCreateSuite) TestCreate_Failure(t provider.T) {
-	t.Title("Create review failure")
+	t.Title("Review service create failure")
 	param := NewCreateReviewParamBuilder().Build()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -149,7 +149,7 @@ func (s *ReviewCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestReviewCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Create", new(ReviewCreateSuite))
+	suite.RunNamedSuite(t, "Review service create", new(ReviewCreateSuite))
 }
 
 // Delete Suite
@@ -164,7 +164,7 @@ func ReviewDeleteSuccessRepositoryMock(repository *mocks.ReviewRepository, revie
 }
 
 func (s *ReviewDeleteSuite) TestDelete_Success(t provider.T) {
-	t.Title("Delete review success")
+	t.Title("Review service delete success")
 	reviewID := domain.NewID()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -180,7 +180,7 @@ func ReviewDeleteFailureRepositoryMock(repository *mocks.ReviewRepository, revie
 }
 
 func (s *ReviewDeleteSuite) TestDelete_Failure(t provider.T) {
-	t.Title("Delete review failure")
+	t.Title("Review service delete failure")
 	reviewID := domain.NewID()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -191,7 +191,7 @@ func (s *ReviewDeleteSuite) TestDelete_Failure(t provider.T) {
 
 func TestReviewDeleteSuite(t *testing.T) {
 	t.Parallel()
-	suite.RunNamedSuite(t, "Delete", new(ReviewDeleteSuite))
+	suite.RunNamedSuite(t, "Review service delete", new(ReviewDeleteSuite))
 }
 
 // FindUserReviews Suite
@@ -206,7 +206,7 @@ func ReviewFindUserReviewsSuccessRepositoryMock(repository *mocks.ReviewReposito
 }
 
 func (s *ReviewFindUserReviewsSuite) TestFindUserReviews_Success(t provider.T) {
-	t.Title("Find user reviews success")
+	t.Title("Review service find user reviews success")
 	userID := domain.NewID()
 	review := NewReviewBuilder().Build()
 	reviewRepository := mocks.NewReviewRepository(t)
@@ -224,7 +224,7 @@ func ReviewFindUserReviewsFailureRepositoryMock(repository *mocks.ReviewReposito
 }
 
 func (s *ReviewFindUserReviewsSuite) TestFindUserReviews_Failure(t provider.T) {
-	t.Title("Find user reviews failure")
+	t.Title("Review service find user reviews failure")
 	userID := domain.NewID()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -234,7 +234,7 @@ func (s *ReviewFindUserReviewsSuite) TestFindUserReviews_Failure(t provider.T) {
 }
 
 func TestReviewFindUserReviewsIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindUserReviews", new(ReviewFindUserReviewsSuite))
+	suite.RunNamedSuite(t, "Review service find user reviews", new(ReviewFindUserReviewsSuite))
 }
 
 // FindCourseReviews Suite
@@ -249,7 +249,7 @@ func ReviewFindCourseReviewsSuccessRepositoryMock(repository *mocks.ReviewReposi
 }
 
 func (s *ReviewFindCourseReviewsSuite) TestFindCourseReviews_Success(t provider.T) {
-	t.Title("Find course reviews success")
+	t.Title("Review service find course reviews success")
 	courseID := domain.NewID()
 	review := NewReviewBuilder().Build()
 	reviewRepository := mocks.NewReviewRepository(t)
@@ -267,7 +267,7 @@ func ReviewFindCourseReviewsFailureRepositoryMock(repository *mocks.ReviewReposi
 }
 
 func (s *ReviewFindCourseReviewsSuite) TestFindCourseReviews_Failure(t provider.T) {
-	t.Title("Find course reviews failure")
+	t.Title("Review service find course reviews failure")
 	courseID := domain.NewID()
 	reviewRepository := mocks.NewReviewRepository(t)
 	reviewService := service.NewReviewService(reviewRepository, s.logger)
@@ -277,5 +277,5 @@ func (s *ReviewFindCourseReviewsSuite) TestFindCourseReviews_Failure(t provider.
 }
 
 func TestReviewFindCourseReviewsIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindCourseReviews", new(ReviewFindCourseReviewsSuite))
+	suite.RunNamedSuite(t, "Review service find course reviews", new(ReviewFindCourseReviewsSuite))
 }

@@ -39,7 +39,7 @@ func CourseFindAllSuccessRepositoryMock(repository *mocks.CourseRepository) {
 
 func (s *CourseFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Find all courses success")
+	t.Title("Course service find all success")
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
 	schoolRepository := mocks.NewSchoolRepository(t)
@@ -59,7 +59,7 @@ func CourseFindAllFailureRepositoryMock(repository *mocks.CourseRepository) {
 
 func (s *CourseFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Find all courses failure")
+	t.Title("Course service find all failure")
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
 	schoolRepository := mocks.NewSchoolRepository(t)
@@ -72,7 +72,7 @@ func (s *CourseFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestCourseFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindAll", new(CourseFindAllSuite))
+	suite.RunNamedSuite(t, "Course service find all", new(CourseFindAllSuite))
 }
 
 // FindByID Suite
@@ -87,7 +87,8 @@ func CourseFindByIDSuccessRepositoryMock(repository *mocks.CourseRepository, cou
 }
 
 func (s *CourseFindByIDSuite) TestFindByID_Success(t provider.T) {
-	t.Title("Find course by id success")
+	t.Parallel()
+	t.Title("Course service find by id success")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -108,7 +109,8 @@ func CourseFindByIDFailureRepositoryMock(repository *mocks.CourseRepository, cou
 }
 
 func (s *CourseFindByIDSuite) TestFindByID_Failure(t provider.T) {
-	t.Title("Find course by id failure")
+	t.Parallel()
+	t.Title("Course service find by id failure")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -122,7 +124,7 @@ func (s *CourseFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestCourseFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindByID", new(CourseFindByIDSuite))
+	suite.RunNamedSuite(t, "Course service find by id", new(CourseFindByIDSuite))
 }
 
 // FindStudentCourses Suite
@@ -137,6 +139,8 @@ func CourseFindStudentCoursesSuccessRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseFindStudentCoursesSuite) TestFindStudentCourses_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service find student courses success")
 	userID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -157,6 +161,8 @@ func CourseFindStudentCoursesFailureRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseFindStudentCoursesSuite) TestFindStudentCourses_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service find student courses failure")
 	userID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -185,6 +191,8 @@ func CourseFindTeacherCoursesSuccessRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseFindTeacherCoursesSuite) TestFindTeacherCourses_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service find teacher courses success")
 	userID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -205,6 +213,8 @@ func CourseFindTeacherCoursesFailureRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseFindTeacherCoursesSuite) TestFindTeacherCourses_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service find teacher courses failure")
 	userID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -218,7 +228,7 @@ func (s *CourseFindTeacherCoursesSuite) TestFindTeacherCourses_Failure(t provide
 }
 
 func TestSchoolFindTeacherCoursesSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindTeacherCourses", new(CourseFindTeacherCoursesSuite))
+	suite.RunNamedSuite(t, "Course service find teacher courses", new(CourseFindTeacherCoursesSuite))
 }
 
 // FindCourseTeachers Suite
@@ -233,6 +243,8 @@ func CourseFindCourseTeachersSuccessRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseFindCourseTeachersSuite) TestFindCourseTeachers_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service find course teachers success")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -253,6 +265,8 @@ func CourseFindCourseTeachersFailureRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseFindCourseTeachersSuite) TestFindCourseTeachers_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service find course teachers failure")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -266,7 +280,7 @@ func (s *CourseFindCourseTeachersSuite) TestFindCourseTeachers_Failure(t provide
 }
 
 func TestCourseFindCourseTeachersSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindCourseTeachers", new(CourseFindCourseTeachersSuite))
+	suite.RunNamedSuite(t, "Course service find course teachers", new(CourseFindCourseTeachersSuite))
 }
 
 // IsCourseStudent Suite
@@ -281,6 +295,8 @@ func CourseIsCourseStudentSuccessRepositoryMock(repository *mocks.CourseReposito
 }
 
 func (s *CourseIsCourseStudentSuite) TestIsCourseStudent_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service is course student success")
 	courseID := domain.NewID()
 	studentID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -302,6 +318,8 @@ func CourseIsCourseStudentFailureRepositoryMock(repository *mocks.CourseReposito
 }
 
 func (s *CourseIsCourseStudentSuite) TestIsCourseStudent_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service is course student failure")
 	courseID := domain.NewID()
 	studentID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -317,7 +335,7 @@ func (s *CourseIsCourseStudentSuite) TestIsCourseStudent_Failure(t provider.T) {
 }
 
 func TestCourseIsCourseStudentSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "IsCourseStudent", new(CourseIsCourseStudentSuite))
+	suite.RunNamedSuite(t, "Course service is course student", new(CourseIsCourseStudentSuite))
 }
 
 // IsCourseTeacher Suite
@@ -332,6 +350,8 @@ func CourseIsCourseTeacherSuccessRepositoryMock(repository *mocks.CourseReposito
 }
 
 func (s *CourseIsCourseTeacherSuite) TestIsCourseTeacher_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service is course teacher success")
 	courseID := domain.NewID()
 	teacherID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -353,6 +373,8 @@ func CourseIsCourseTeacherFailureRepositoryMock(repository *mocks.CourseReposito
 }
 
 func (s *CourseIsCourseTeacherSuite) TestIsCourseTeacher_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service is course teacher failure")
 	courseID := domain.NewID()
 	teacherID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -368,7 +390,7 @@ func (s *CourseIsCourseTeacherSuite) TestIsCourseTeacher_Failure(t provider.T) {
 }
 
 func TestCourseIsCourseTeacherSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "IsCourseTeacher", new(CourseIsCourseTeacherSuite))
+	suite.RunNamedSuite(t, "Course service is course teacher", new(CourseIsCourseTeacherSuite))
 }
 
 // AddCourseStudent Suite
@@ -391,6 +413,8 @@ func CourseAddCourseStudentSuccessRepositoryMock(repository *mocks.CourseReposit
 }
 
 func (s *CourseAddCourseStudentSuite) TestAddCourseStudent_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service add course student success")
 	courseID := domain.NewID()
 	studentID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -420,6 +444,8 @@ func CourseAddCourseStudentFailureRepositoryMock(repository *mocks.CourseReposit
 }
 
 func (s *CourseAddCourseStudentSuite) TestAddCourseStudent_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service add course student failure")
 	courseID := domain.NewID()
 	studentID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -435,7 +461,7 @@ func (s *CourseAddCourseStudentSuite) TestAddCourseStudent_Failure(t provider.T)
 }
 
 func TestCourseAddCourseStudentSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "AddCourseStudent", new(CourseAddCourseStudentSuite))
+	suite.RunNamedSuite(t, "Course service add course student", new(CourseAddCourseStudentSuite))
 }
 
 // AddCourseTeacher Suite
@@ -457,6 +483,8 @@ func CourseAddCourseTeacherSuccessRepositoryMock(repository *mocks.CourseReposit
 }
 
 func (s *CourseAddCourseTeacherSuite) TestAddCourseTeacher_Success(t provider.T) {
+	t.Parallel()
+	t.Title("Course service add course teacher success")
 	courseID := domain.NewID()
 	teacherID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -484,6 +512,8 @@ func CourseAddCourseTeacherFailureRepositoryMock(repository *mocks.CourseReposit
 }
 
 func (s *CourseAddCourseTeacherSuite) TestAddCourseTeacher_Failure(t provider.T) {
+	t.Parallel()
+	t.Title("Course service add course teacher failure")
 	courseID := domain.NewID()
 	teacherID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -498,7 +528,7 @@ func (s *CourseAddCourseTeacherSuite) TestAddCourseTeacher_Failure(t provider.T)
 }
 
 func TestCourseAddCourseTeacherSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "AddCourseTeacher", new(CourseAddCourseTeacherSuite))
+	suite.RunNamedSuite(t, "Course service add course teacher", new(CourseAddCourseTeacherSuite))
 }
 
 // Create Suite
@@ -513,7 +543,8 @@ func CourseCreateSuccessRepositoryMock(repository *mocks.CourseRepository, name 
 }
 
 func (s *CourseCreateSuite) TestCreate_Success(t provider.T) {
-	t.Title("Create course success")
+	t.Parallel()
+	t.Title("Course service create course success")
 	schoolID := domain.NewID()
 	name := "course name"
 	param := NewCreateCourseParamBuilder().WithName(name).Build()
@@ -536,7 +567,8 @@ func CourseCreateFailureRepositoryMock(repository *mocks.CourseRepository) {
 }
 
 func (s *CourseCreateSuite) TestCreate_Failure(t provider.T) {
-	t.Title("Create course failure")
+	t.Parallel()
+	t.Title("Course service create course failure")
 	schoolID := domain.NewID()
 	param := NewCreateCourseParamBuilder().Build()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -551,7 +583,7 @@ func (s *CourseCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestCourseCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Create", new(CourseCreateSuite))
+	suite.RunNamedSuite(t, "Course service create course", new(CourseCreateSuite))
 }
 
 // Update Suite
@@ -570,7 +602,8 @@ func CourseUpdateSuccessRepositoryMock(repository *mocks.CourseRepository,
 }
 
 func (s *CourseUpdateSuite) TestUpdate_Success(t provider.T) {
-	t.Title("Update course success")
+	t.Parallel()
+	t.Title("Course service update course success")
 	courseID := domain.NewID()
 	name := "course name"
 	param := NewUpdateCourseParamBuilder().WithName(null.StringFrom(name)).Build()
@@ -593,7 +626,8 @@ func CourseUpdateFailureRepositoryMock(repository *mocks.CourseRepository, cours
 }
 
 func (s *CourseUpdateSuite) TestUpdate_Failure(t provider.T) {
-	t.Title("Update course failure")
+	t.Parallel()
+	t.Title("Course service update course failure")
 	courseID := domain.NewID()
 	param := NewUpdateCourseParamBuilder().Build()
 	courseRepository := mocks.NewCourseRepository(t)
@@ -608,7 +642,7 @@ func (s *CourseUpdateSuite) TestUpdate_Failure(t provider.T) {
 }
 
 func TestCourseUpdateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Update", new(CourseUpdateSuite))
+	suite.RunNamedSuite(t, "Course service update course", new(CourseUpdateSuite))
 }
 
 // Delete Suite
@@ -623,7 +657,8 @@ func CourseDeleteSuccessRepositoryMock(repository *mocks.CourseRepository, cours
 }
 
 func (s *CourseDeleteSuite) TestDelete_Success(t provider.T) {
-	t.Title("Delete course success")
+	t.Parallel()
+	t.Title("Course service delete course success")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -643,7 +678,8 @@ func CourseDeleteFailureRepositoryMock(repository *mocks.CourseRepository, cours
 }
 
 func (s *CourseDeleteSuite) TestDelete_Failure(t provider.T) {
-	t.Title("Delete course failure")
+	t.Parallel()
+	t.Title("Course service delete course failure")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -657,7 +693,7 @@ func (s *CourseDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestCourseDeleteSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Delete", new(CourseDeleteSuite))
+	suite.RunNamedSuite(t, "Course service delete course", new(CourseDeleteSuite))
 }
 
 // PublishReadyCourse Suite
@@ -675,7 +711,8 @@ func CoursePublishReadyCourseSuccessRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CoursePublishReadyCourseSuite) TestPublishReadyCourse_Success(t provider.T) {
-	t.Title("Publish ready course success")
+	t.Parallel()
+	t.Title("Course service publish ready course success")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -698,7 +735,8 @@ func CoursePublishReadyCourseFailureRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CoursePublishReadyCourseSuite) TestPublishReadyCourse_Failure(t provider.T) {
-	t.Title("Publish ready course failure")
+	t.Parallel()
+	t.Title("Course service publish ready course failure")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -712,7 +750,7 @@ func (s *CoursePublishReadyCourseSuite) TestPublishReadyCourse_Failure(t provide
 }
 
 func TestCoursePublishReadyCourseSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "PublishReadyCourse", new(CoursePublishReadyCourseSuite))
+	suite.RunNamedSuite(t, "Course service publish ready course", new(CoursePublishReadyCourseSuite))
 }
 
 // ConfirmDraftCourse Suite
@@ -742,7 +780,8 @@ func CourseConfirmDraftCourseSuccessRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseConfirmDraftCourseSuite) TestConfirmDraftCourse_Success(t provider.T) {
-	t.Title("Publish ready course success")
+	t.Parallel()
+	t.Title("Course service confirm draft course success")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -777,7 +816,8 @@ func CourseConfirmDraftCourseFailureRepositoryMock(repository *mocks.CourseRepos
 }
 
 func (s *CourseConfirmDraftCourseSuite) TestConfirmDraftCourse_Failure(t provider.T) {
-	t.Title("Publish ready course failure")
+	t.Parallel()
+	t.Title("Course service confirm draft course failure")
 	courseID := domain.NewID()
 	courseRepository := mocks.NewCourseRepository(t)
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -791,5 +831,5 @@ func (s *CourseConfirmDraftCourseSuite) TestConfirmDraftCourse_Failure(t provide
 }
 
 func TestCourseConfirmDraftCourseSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "ConfirmDraftCourse", new(CourseConfirmDraftCourseSuite))
+	suite.RunNamedSuite(t, "Course service confirm draft course", new(CourseConfirmDraftCourseSuite))
 }

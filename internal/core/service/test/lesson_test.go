@@ -39,7 +39,7 @@ func LessonFindAllSuccessRepositoryMock(repository *mocks.LessonRepository) {
 
 func (s *LessonFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Find all lessons success")
+	t.Title("Lesson service find all success")
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
 	lessonService := service.NewLessonService(lessonRepository, objectStorage, s.logger)
@@ -56,7 +56,7 @@ func LessonFindAllFailureRepositoryMock(repository *mocks.LessonRepository) {
 
 func (s *LessonFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Find all lessons failure")
+	t.Title("Lesson service find all failure")
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
 	lessonService := service.NewLessonService(lessonRepository, objectStorage, s.logger)
@@ -66,7 +66,7 @@ func (s *LessonFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestLessonFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindAll", new(LessonFindAllSuite))
+	suite.RunNamedSuite(t, "Lesson service find all", new(LessonFindAllSuite))
 }
 
 // FindByID Suite
@@ -81,7 +81,8 @@ func LessonFindByIDSuccessRepositoryMock(repository *mocks.LessonRepository, les
 }
 
 func (s *LessonFindByIDSuite) TestFindByID_Success(t provider.T) {
-	t.Title("Find lesson by id success")
+	t.Parallel()
+	t.Title("Lesson service find by id success")
 	lessonID := domain.NewID()
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
@@ -99,7 +100,8 @@ func LessonFindByIDFailureRepositoryMock(repository *mocks.LessonRepository, les
 }
 
 func (s *LessonFindByIDSuite) TestFindByID_Failure(t provider.T) {
-	t.Title("Find lesson by id failure")
+	t.Parallel()
+	t.Title("Lesson service find by id failure")
 	lessonID := domain.NewID()
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
@@ -110,7 +112,7 @@ func (s *LessonFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestLessonFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindByID", new(LessonFindByIDSuite))
+	suite.RunNamedSuite(t, "Lesson service find by id", new(LessonFindByIDSuite))
 }
 
 // FindUserLessons Suite
@@ -125,7 +127,8 @@ func LessonFindCourseLessonsSuccessRepositoryMock(repository *mocks.LessonReposi
 }
 
 func (s *LessonFindCourseLessonsSuite) TestFindUserLessons_Success(t provider.T) {
-	t.Title("Find course lessons success")
+	t.Parallel()
+	t.Title("Lesson service find course lessons success")
 	courseID := domain.NewID()
 	lesson := NewLessonBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -144,7 +147,8 @@ func LessonFindCourseLessonsFailureRepositoryMock(repository *mocks.LessonReposi
 }
 
 func (s *LessonFindCourseLessonsSuite) TestFindUserLessons_Failure(t provider.T) {
-	t.Title("Find course lessons failure")
+	t.Parallel()
+	t.Title("Lesson service find course lessons failure")
 	courseID := domain.NewID()
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
@@ -155,7 +159,7 @@ func (s *LessonFindCourseLessonsSuite) TestFindUserLessons_Failure(t provider.T)
 }
 
 func TestLessonFindCourseLessonsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindCourseLessons", new(LessonFindCourseLessonsSuite))
+	suite.RunNamedSuite(t, "Lesson service find course lessons", new(LessonFindCourseLessonsSuite))
 }
 
 // CreateTheoryLesson Suite
@@ -174,7 +178,8 @@ func LessonCreateTheoryLessonSuccessRepositoryMock(repository *mocks.LessonRepos
 }
 
 func (s *LessonCreateTheoryLessonSuite) TestCreateTheoryLesson_Success(t provider.T) {
-	t.Title("Create theory lesson success")
+	t.Parallel()
+	t.Title("Lesson service create theory lesson success")
 	courseID := domain.NewID()
 	title := "lesson name"
 	param := NewCreateTheoryParamBuilder().WithTitle(title).Build()
@@ -198,7 +203,8 @@ func LessonCreateTheoryLessonFailureRepositoryMock(repository *mocks.LessonRepos
 }
 
 func (s *LessonCreateTheoryLessonSuite) TestCreateTheoryLesson_Failure(t provider.T) {
-	t.Title("Create theory lesson failure")
+	t.Parallel()
+	t.Title("Lesson service create theory lesson failure")
 	courseID := domain.NewID()
 	param := NewCreateTheoryParamBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -210,7 +216,7 @@ func (s *LessonCreateTheoryLessonSuite) TestCreateTheoryLesson_Failure(t provide
 }
 
 func TestLessonCreateTheoryLessonSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "CreateTheoryLesson", new(LessonCreateTheoryLessonSuite))
+	suite.RunNamedSuite(t, "Lesson service create theory lesson", new(LessonCreateTheoryLessonSuite))
 }
 
 // CreateVideoLesson Suite
@@ -225,7 +231,8 @@ func LessonCreateVideoLessonSuccessRepositoryMock(repository *mocks.LessonReposi
 }
 
 func (s *LessonCreateVideoLessonSuite) TestCreateVideoLesson_Success(t provider.T) {
-	t.Title("Create video lesson success")
+	t.Parallel()
+	t.Title("Lesson service create video lesson success")
 	courseID := domain.NewID()
 	title := "lesson name"
 	param := NewCreateVideoParamBuilder().WithTitle(title).Build()
@@ -245,7 +252,8 @@ func LessonCreateVideoLessonFailureRepositoryMock(repository *mocks.LessonReposi
 }
 
 func (s *LessonCreateVideoLessonSuite) TestCreateVideoLesson_Failure(t provider.T) {
-	t.Title("Create video lesson failure")
+	t.Parallel()
+	t.Title("Lesson service create video lesson failure")
 	courseID := domain.NewID()
 	param := NewCreateVideoParamBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -257,7 +265,7 @@ func (s *LessonCreateVideoLessonSuite) TestCreateVideoLesson_Failure(t provider.
 }
 
 func TestLessonCreateVideoLessonSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "CreateVideoLesson", new(LessonCreateVideoLessonSuite))
+	suite.RunNamedSuite(t, "Lesson service create video lesson", new(LessonCreateVideoLessonSuite))
 }
 
 // CreatePracticeLesson Suite
@@ -276,7 +284,8 @@ func LessonCreatePracticeLessonSuccessRepositoryMock(repository *mocks.LessonRep
 }
 
 func (s *LessonCreatePracticeLessonSuite) TestCreatePracticeLesson_Success(t provider.T) {
-	t.Title("Create practice lesson success")
+	t.Parallel()
+	t.Title("Lesson service create practice lesson success")
 	courseID := domain.NewID()
 	title := "lesson name"
 	param := NewCreatePracticeParamBuilder().WithTitle(title).Build()
@@ -300,7 +309,8 @@ func LessonCreatePracticeLessonFailureRepositoryMock(repository *mocks.LessonRep
 }
 
 func (s *LessonCreatePracticeLessonSuite) TestCreatePracticeLesson_Failure(t provider.T) {
-	t.Title("Create practice lesson failure")
+	t.Parallel()
+	t.Title("Lesson service create practice lesson failure")
 	courseID := domain.NewID()
 	param := NewCreatePracticeParamBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -312,7 +322,7 @@ func (s *LessonCreatePracticeLessonSuite) TestCreatePracticeLesson_Failure(t pro
 }
 
 func TestLessonCreatePracticeLessonSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "CreatePracticeLesson", new(LessonCreatePracticeLessonSuite))
+	suite.RunNamedSuite(t, "Lesson service create practice lesson", new(LessonCreatePracticeLessonSuite))
 }
 
 // UpdateTheoryLesson Suite
@@ -331,7 +341,8 @@ func LessonUpdateTheoryLessonSuccessRepositoryMock(repository *mocks.LessonRepos
 }
 
 func (s *LessonUpdateTheoryLessonSuite) TestUpdateTheoryLesson_Success(t provider.T) {
-	t.Title("Update theory lesson success")
+	t.Parallel()
+	t.Title("Lesson service update theory lesson success")
 	lessonID := domain.NewID()
 	title := "lesson name"
 	param := NewUpdateTheoryParamBuilder().WithTitle(null.StringFrom(title)).Build()
@@ -355,7 +366,8 @@ func LessonUpdateTheoryLessonFailureRepositoryMock(repository *mocks.LessonRepos
 }
 
 func (s *LessonUpdateTheoryLessonSuite) TestUpdateTheoryLesson_Failure(t provider.T) {
-	t.Title("Update theory lesson failure")
+	t.Parallel()
+	t.Title("Lesson service update theory lesson failure")
 	lessonID := domain.NewID()
 	param := NewUpdateTheoryParamBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -367,7 +379,7 @@ func (s *LessonUpdateTheoryLessonSuite) TestUpdateTheoryLesson_Failure(t provide
 }
 
 func TestLessonUpdateTheoryLessonSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "UpdateTheoryLesson", new(LessonUpdateTheoryLessonSuite))
+	suite.RunNamedSuite(t, "Lesson service update theory lesson", new(LessonUpdateTheoryLessonSuite))
 }
 
 // UpdateVideoLesson Suite
@@ -386,7 +398,8 @@ func LessonUpdateVideoLessonSuccessRepositoryMock(repository *mocks.LessonReposi
 }
 
 func (s *LessonUpdateVideoLessonSuite) TestUpdateVideoLesson_Success(t provider.T) {
-	t.Title("Update video lesson success")
+	t.Parallel()
+	t.Title("Lesson service update video lesson success")
 	lessonID := domain.NewID()
 	title := "lesson name"
 	param := NewUpdateVideoParamBuilder().WithTitle(null.StringFrom(title)).Build()
@@ -409,7 +422,8 @@ func LessonUpdateVideoLessonFailureRepositoryMock(repository *mocks.LessonReposi
 }
 
 func (s *LessonUpdateVideoLessonSuite) TestUpdateVideoLesson_Failure(t provider.T) {
-	t.Title("Update video lesson failure")
+	t.Parallel()
+	t.Title("Lesson service update video lesson failure")
 	lessonID := domain.NewID()
 	param := NewUpdateVideoParamBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -421,7 +435,7 @@ func (s *LessonUpdateVideoLessonSuite) TestUpdateVideoLesson_Failure(t provider.
 }
 
 func TestLessonUpdateVideoLessonSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "UpdateVideoLesson", new(LessonUpdateVideoLessonSuite))
+	suite.RunNamedSuite(t, "Lesson service update video lesson", new(LessonUpdateVideoLessonSuite))
 }
 
 // UpdatePracticeLesson Suite
@@ -443,7 +457,8 @@ func LessonUpdatePracticeLessonSuccessRepositoryMock(repository *mocks.LessonRep
 }
 
 func (s *LessonUpdatePracticeLessonSuite) TestUpdatePracticeLesson_Success(t provider.T) {
-	t.Title("Update practice lesson success")
+	t.Parallel()
+	t.Title("Lesson service update practice lesson success")
 	lessonID := domain.NewID()
 	title := "lesson name"
 	param := NewUpdatePracticeParamBuilder().WithTitle(null.StringFrom(title)).Build()
@@ -470,7 +485,8 @@ func LessonUpdatePracticeLessonFailureRepositoryMock(repository *mocks.LessonRep
 }
 
 func (s *LessonUpdatePracticeLessonSuite) TestUpdatePracticeLesson_Failure(t provider.T) {
-	t.Title("Update practice lesson failure")
+	t.Parallel()
+	t.Title("Lesson service update practice lesson failure")
 	lessonID := domain.NewID()
 	param := NewUpdatePracticeParamBuilder().Build()
 	lessonRepository := mocks.NewLessonRepository(t)
@@ -482,5 +498,5 @@ func (s *LessonUpdatePracticeLessonSuite) TestUpdatePracticeLesson_Failure(t pro
 }
 
 func TestLessonUpdatePracticeLessonSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "UpdatePracticeLesson", new(LessonUpdatePracticeLessonSuite))
+	suite.RunNamedSuite(t, "Lesson service update practice lesson", new(LessonUpdatePracticeLessonSuite))
 }

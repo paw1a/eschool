@@ -76,7 +76,7 @@ func (s *PaymentGetCoursePaymentUrlSuite) TestGetCoursePaymentUrl_Failure(t prov
 }
 
 func TestPaymentGetCoursePaymentUrlSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "GetCoursePaymentUrl", new(PaymentGetCoursePaymentUrlSuite))
+	suite.RunNamedSuite(t, "Get course payment url", new(PaymentGetCoursePaymentUrlSuite))
 }
 
 // ProcessCoursePayment Suite
@@ -92,7 +92,7 @@ func PaymentProcessCoursePaymentSuccessRepositoryMock(gateway *mocks.PaymentGate
 
 func (s *PaymentProcessCoursePaymentSuite) TestProcessCoursePayment_Success(t provider.T) {
 	t.Parallel()
-	t.Title("process payment success")
+	t.Title("Process payment success")
 	gateway := mocks.NewPaymentGateway(t)
 	courseRepository := mocks.NewCourseRepository(t)
 	paymentService := service.NewPaymentService(gateway, courseRepository, s.logger)
@@ -119,5 +119,5 @@ func (s *PaymentProcessCoursePaymentSuite) TestProcessCoursePayment_Failure(t pr
 }
 
 func TestPaymentProcessCoursePaymentSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "ProcessCoursePayment", new(PaymentProcessCoursePaymentSuite))
+	suite.RunNamedSuite(t, "Process payment", new(PaymentProcessCoursePaymentSuite))
 }

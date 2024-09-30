@@ -37,6 +37,7 @@ func StatFindByIDSuccessRepositoryMock(repository *mocks.StatRepository, userID,
 }
 
 func (s *StatFindLessonStatSuite) TestFindByID_Success(t provider.T) {
+	t.Parallel()
 	t.Title("Find lesson stat success")
 	userID := domain.NewID()
 	lessonID := domain.NewID()
@@ -57,6 +58,7 @@ func StatFindByIDFailureRepositoryMock(repository *mocks.StatRepository, userID,
 }
 
 func (s *StatFindLessonStatSuite) TestFindByID_Failure(t provider.T) {
+	t.Parallel()
 	t.Title("Find stat by id failure")
 	userID := domain.NewID()
 	lessonID := domain.NewID()
@@ -69,7 +71,7 @@ func (s *StatFindLessonStatSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestStatFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindLessonStat", new(StatFindLessonStatSuite))
+	suite.RunNamedSuite(t, "Find lesson stat", new(StatFindLessonStatSuite))
 }
 
 // Create Suite
@@ -88,7 +90,8 @@ func StatCreateSuccessRepositoryMock(repository *mocks.StatRepository,
 }
 
 func (s *StatCreateSuite) TestCreate_Success(t provider.T) {
-	t.Title("Create success")
+	t.Parallel()
+	t.Title("Create test success")
 	userID := domain.NewID()
 	lessonID := domain.NewID()
 	statRepository := mocks.NewStatRepository(t)
@@ -107,7 +110,8 @@ func StatCreateFailureRepositoryMock(repository *mocks.StatRepository,
 }
 
 func (s *StatCreateSuite) TestCreate_Failure(t provider.T) {
-	t.Title("Create failure")
+	t.Parallel()
+	t.Title("Create test failure")
 	userID := domain.NewID()
 	lessonID := domain.NewID()
 	statRepository := mocks.NewStatRepository(t)
@@ -119,7 +123,7 @@ func (s *StatCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestStatCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Create", new(StatCreateSuite))
+	suite.RunNamedSuite(t, "Create test stat", new(StatCreateSuite))
 }
 
 // Update Suite
@@ -137,7 +141,7 @@ func StatUpdateSuccessRepositoryMock(repository *mocks.StatRepository, userID, l
 }
 
 func (s *StatUpdateSuite) TestUpdate_Success(t provider.T) {
-	t.Title("Update success")
+	t.Title("Update lesson stat success")
 	userID := domain.NewID()
 	lessonID := domain.NewID()
 	statRepository := mocks.NewStatRepository(t)
@@ -156,7 +160,7 @@ func StatUpdateFailureRepositoryMock(repository *mocks.StatRepository, userID, l
 }
 
 func (s *StatUpdateSuite) TestUpdate_Failure(t provider.T) {
-	t.Title("Update failure")
+	t.Title("Update lesson stat failure")
 	userID := domain.NewID()
 	lessonID := domain.NewID()
 	statRepository := mocks.NewStatRepository(t)
@@ -169,5 +173,5 @@ func (s *StatUpdateSuite) TestUpdate_Failure(t provider.T) {
 }
 
 func TestStatUpdateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Update", new(StatUpdateSuite))
+	suite.RunNamedSuite(t, "Update lesson stat", new(StatUpdateSuite))
 }

@@ -66,7 +66,7 @@ func (s *MediaSaveMediaFileSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestMediaSaveMediaFileSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "SaveMediaFile", new(MediaSaveMediaFileSuite))
+	suite.RunNamedSuite(t, "Save media file", new(MediaSaveMediaFileSuite))
 }
 
 // SaveUserAvatar Suite
@@ -112,7 +112,7 @@ func (s *MediaSaveUserAvatarSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestMediaSaveUserAvatarSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "SaveUserAvatar", new(MediaSaveUserAvatarSuite))
+	suite.RunNamedSuite(t, "Save user avatar", new(MediaSaveUserAvatarSuite))
 }
 
 // SaveLessonTheory Suite
@@ -160,7 +160,7 @@ func (s *MediaSaveLessonTheorySuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestMediaSaveLessonTheorySuite(t *testing.T) {
-	suite.RunNamedSuite(t, "SaveLessonTheory", new(MediaSaveLessonTheorySuite))
+	suite.RunNamedSuite(t, "Save lesson theory", new(MediaSaveLessonTheorySuite))
 }
 
 // SaveTestQuestion Suite
@@ -208,5 +208,5 @@ func (s *MediaSaveTestQuestionSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestMediaSaveTestQuestionSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "SaveTestQuestion", new(MediaSaveTestQuestionSuite))
+	suite.RunNamedSuite(t, "Save test question", new(MediaSaveTestQuestionSuite))
 }

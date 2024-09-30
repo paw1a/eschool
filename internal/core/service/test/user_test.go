@@ -39,7 +39,7 @@ func UserFindAllSuccessRepositoryMock(repository *mocks.UserRepository) {
 
 func (s *UserFindAllSuite) TestFindAll_Success(t provider.T) {
 	t.Parallel()
-	t.Title("Find all success")
+	t.Title("Find all users success")
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
 	UserFindAllSuccessRepositoryMock(userRepository)
@@ -55,7 +55,7 @@ func UserFindAllFailureRepositoryMock(repository *mocks.UserRepository) {
 
 func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
 	t.Parallel()
-	t.Title("Find all failure")
+	t.Title("Find all users failure")
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
 	UserFindAllFailureRepositoryMock(userRepository)
@@ -64,7 +64,7 @@ func (s *UserFindAllSuite) TestFindAll_Failure(t provider.T) {
 }
 
 func TestUserFindAllSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindAll", new(UserFindAllSuite))
+	suite.RunNamedSuite(t, "Find all users", new(UserFindAllSuite))
 }
 
 // FindByID Suite
@@ -79,7 +79,8 @@ func UserFindByIDSuccessRepositoryMock(repository *mocks.UserRepository, userID 
 }
 
 func (s *UserFindByIDSuite) TestFindByID_Success(t provider.T) {
-	t.Title("Find by id success")
+	t.Parallel()
+	t.Title("Find user by id success")
 	userID := domain.NewID()
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
@@ -96,7 +97,8 @@ func UserFindByIDFailureRepositoryMock(repository *mocks.UserRepository, userID 
 }
 
 func (s *UserFindByIDSuite) TestFindByID_Failure(t provider.T) {
-	t.Title("Find by id failure")
+	t.Parallel()
+	t.Title("Find user by id failure")
 	userID := domain.NewID()
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
@@ -106,7 +108,7 @@ func (s *UserFindByIDSuite) TestFindByID_Failure(t provider.T) {
 }
 
 func TestUserFindByIDSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindByID", new(UserFindByIDSuite))
+	suite.RunNamedSuite(t, "Find user by id", new(UserFindByIDSuite))
 }
 
 // FindByCredentials Suite
@@ -124,7 +126,8 @@ func UserFindByCredentialsSuccessRepositoryMock(repository *mocks.UserRepository
 }
 
 func (s *UserFindByCredentialsSuite) TestFindByCredentials_Success(t provider.T) {
-	t.Title("Find by credentials success")
+	t.Parallel()
+	t.Title("Find user by credentials success")
 	email := "test@example.com"
 	password := "password"
 	userRepository := mocks.NewUserRepository(t)
@@ -143,7 +146,8 @@ func UserFindByCredentialsFailureRepositoryMock(repository *mocks.UserRepository
 }
 
 func (s *UserFindByCredentialsSuite) TestFindByCredentials_Failure(t provider.T) {
-	t.Title("Find by credentials failure")
+	t.Parallel()
+	t.Title("Find user by credentials failure")
 	email := "test@example.com"
 	password := "password"
 	userRepository := mocks.NewUserRepository(t)
@@ -155,7 +159,7 @@ func (s *UserFindByCredentialsSuite) TestFindByCredentials_Failure(t provider.T)
 }
 
 func TestUserFindByCredentialsSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "FindByCredentials", new(UserFindByCredentialsSuite))
+	suite.RunNamedSuite(t, "Find user by credentials", new(UserFindByCredentialsSuite))
 }
 
 // Create Suite
@@ -170,7 +174,8 @@ func UserCreateSuccessRepositoryMock(repository *mocks.UserRepository, email str
 }
 
 func (s *UserCreateSuite) TestCreate_Success(t provider.T) {
-	t.Title("Create success")
+	t.Parallel()
+	t.Title("Create user success")
 	param := NewCreateUserParamBuilder().Build()
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
@@ -187,7 +192,8 @@ func UserCreateFailureRepositoryMock(repository *mocks.UserRepository) {
 }
 
 func (s *UserCreateSuite) TestCreate_Failure(t provider.T) {
-	t.Title("Create failure")
+	t.Parallel()
+	t.Title("Create user failure")
 	param := NewCreateUserParamBuilder().Build()
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
@@ -197,7 +203,7 @@ func (s *UserCreateSuite) TestCreate_Failure(t provider.T) {
 }
 
 func TestUserCreateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Create", new(UserCreateSuite))
+	suite.RunNamedSuite(t, "Create user", new(UserCreateSuite))
 }
 
 // Update Suite
@@ -215,7 +221,8 @@ func UserUpdateSuccessRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserUpdateSuite) TestUpdate_Success(t provider.T) {
-	t.Title("Update success")
+	t.Parallel()
+	t.Title("Update user success")
 	userID := domain.NewID()
 	param := NewUpdateUserParamBuilder().WithName("name").Build()
 	userRepository := mocks.NewUserRepository(t)
@@ -232,7 +239,8 @@ func UserUpdateFailureRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserUpdateSuite) TestUpdate_Failure(t provider.T) {
-	t.Title("Update failure")
+	t.Parallel()
+	t.Title("Update user failure")
 	userID := domain.NewID()
 	param := NewUpdateUserParamBuilder().WithName("name").Build()
 	userRepository := mocks.NewUserRepository(t)
@@ -243,7 +251,7 @@ func (s *UserUpdateSuite) TestUpdate_Failure(t provider.T) {
 }
 
 func TestUserUpdateSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Update", new(UserUpdateSuite))
+	suite.RunNamedSuite(t, "Update user", new(UserUpdateSuite))
 }
 
 // Delete Suite
@@ -258,7 +266,8 @@ func UserDeleteSuccessRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserDeleteSuite) TestDelete_Success(t provider.T) {
-	t.Title("Delete success")
+	t.Parallel()
+	t.Title("Delete user success")
 	userID := domain.NewID()
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
@@ -274,7 +283,8 @@ func UserDeleteFailureRepositoryMock(repository *mocks.UserRepository, userID do
 }
 
 func (s *UserDeleteSuite) TestDelete_Failure(t provider.T) {
-	t.Title("Delete failure")
+	t.Parallel()
+	t.Title("Delete user failure")
 	userID := domain.NewID()
 	userRepository := mocks.NewUserRepository(t)
 	userService := service.NewUserService(userRepository, s.logger)
@@ -284,5 +294,5 @@ func (s *UserDeleteSuite) TestDelete_Failure(t provider.T) {
 }
 
 func TestUserDeleteSuite(t *testing.T) {
-	suite.RunNamedSuite(t, "Delete", new(UserDeleteSuite))
+	suite.RunNamedSuite(t, "Delete user", new(UserDeleteSuite))
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/paw1a/eschool/internal/core/domain"
 )
 
-// CourseBuilder - билдер для структуры domain.Course
 type CourseBuilder struct {
 	course domain.Course
 }
