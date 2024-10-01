@@ -6,6 +6,28 @@ import (
 	"github.com/paw1a/eschool/internal/core/port"
 )
 
+type LessonMother struct {
+	title         string
+	score         int
+	lessonBuilder *LessonBuilder
+	testBuilder   *TestBuilder
+}
+
+func NewLessonMother(title string, score int) *LessonMother {
+	return &LessonMother{
+		title:         title,
+		score:         score,
+		lessonBuilder: NewLessonBuilder(),
+		testBuilder:   NewTestBuilder(),
+	}
+}
+
+func (l *LessonMother) Create() domain.Lesson {
+	return l.lessonBuilder.WithScore(l.score).WithTitle(l.title).
+		WithTests([]domain.Test{l.testBuilder.Build(), l.testBuilder.Build()}).
+		Build()
+}
+
 type LessonBuilder struct {
 	lesson domain.Lesson
 }

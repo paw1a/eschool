@@ -34,7 +34,7 @@ type LessonFindAllSuite struct {
 func LessonFindAllSuccessRepositoryMock(repository *mocks.LessonRepository) {
 	repository.
 		On("FindAll", context.Background()).
-		Return([]domain.Lesson{NewLessonBuilder().Build()}, nil)
+		Return([]domain.Lesson{NewLessonMother("title", 10).Create()}, nil)
 }
 
 func (s *LessonFindAllSuite) TestFindAll_Success(t provider.T) {
@@ -74,23 +74,24 @@ type LessonFindByIDSuite struct {
 	LessonSuite
 }
 
-func LessonFindByIDSuccessRepositoryMock(repository *mocks.LessonRepository, lessonID domain.ID) {
+func LessonFindByIDSuccessRepositoryMock(repository *mocks.LessonRepository,
+	lesson domain.Lesson) {
 	repository.
-		On("FindByID", context.Background(), lessonID).
-		Return(NewLessonBuilder().WithID(lessonID).Build(), nil)
+		On("FindByID", context.Background(), lesson.ID).
+		Return(lesson, nil)
 }
 
 func (s *LessonFindByIDSuite) TestFindByID_Success(t provider.T) {
 	t.Parallel()
 	t.Title("Lesson service find by id success")
-	lessonID := domain.NewID()
+	lesson := NewLessonMother("title", 10).Create()
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
 	lessonService := service.NewLessonService(lessonRepository, objectStorage, s.logger)
-	LessonFindByIDSuccessRepositoryMock(lessonRepository, lessonID)
-	lesson, err := lessonService.FindByID(context.Background(), lessonID)
+	LessonFindByIDSuccessRepositoryMock(lessonRepository, lesson)
+	actual, err := lessonService.FindByID(context.Background(), lesson.ID)
 	t.Assert().Nil(err)
-	t.Assert().Equal(lessonID, lesson.ID)
+	t.Assert().Equal(actual.ID, lesson.ID)
 }
 
 func LessonFindByIDFailureRepositoryMock(repository *mocks.LessonRepository, lessonID domain.ID) {
@@ -120,21 +121,22 @@ type LessonFindCourseLessonsSuite struct {
 	LessonSuite
 }
 
-func LessonFindCourseLessonsSuccessRepositoryMock(repository *mocks.LessonRepository, userID domain.ID) {
+func LessonFindCourseLessonsSuccessRepositoryMock(repository *mocks.LessonRepository, userID domain.ID,
+	lesson domain.Lesson) {
 	repository.
 		On("FindCourseLessons", context.Background(), userID).
-		Return([]domain.Lesson{NewLessonBuilder().Build()}, nil)
+		Return([]domain.Lesson{lesson}, nil)
 }
 
 func (s *LessonFindCourseLessonsSuite) TestFindUserLessons_Success(t provider.T) {
 	t.Parallel()
 	t.Title("Lesson service find course lessons success")
 	courseID := domain.NewID()
-	lesson := NewLessonBuilder().Build()
+	lesson := NewLessonMother("title", 10).Create()
 	lessonRepository := mocks.NewLessonRepository(t)
 	objectStorage := mocks.NewObjectStorage(t)
 	lessonService := service.NewLessonService(lessonRepository, objectStorage, s.logger)
-	LessonFindCourseLessonsSuccessRepositoryMock(lessonRepository, courseID)
+	LessonFindCourseLessonsSuccessRepositoryMock(lessonRepository, courseID, lesson)
 	lessons, err := lessonService.FindCourseLessons(context.Background(), courseID)
 	t.Assert().Nil(err)
 	t.Assert().Equal(lessons[0].Title, lesson.Title)
