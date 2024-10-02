@@ -14,7 +14,6 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	testminio "github.com/testcontainers/testcontainers-go/modules/minio"
 	testpg "github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -37,16 +36,18 @@ var (
 )
 
 func newPostgresContainer(ctx context.Context) (*testpg.PostgresContainer, error) {
-	container, err := testpg.RunContainer(
+	container, err := testpg.Run(
 		ctx,
+		"docker.io/postgres:16-alpine",
 		testpg.WithDatabase(postgresConfig.Database),
 		testpg.WithUsername(postgresConfig.User),
 		testpg.WithPassword(postgresConfig.Password),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(5*time.Second)),
+		testpg.BasicWaitStrategies(),
+		testpg.WithSQLDriver("pgx"),
 	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to start postgres container: %w", err)
+	}
 
 	_, path, _, ok := runtime.Caller(0)
 	if !ok {
