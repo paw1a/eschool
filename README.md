@@ -168,3 +168,12 @@
 ## UML диаграммы классов
 
 ![class](docs/images/class.svg)
+
+## Тестирование
+
+```bash
+make test
+make allure
+```
+
+![components](docs/images/allure.jpeg)
