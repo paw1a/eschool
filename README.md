@@ -168,3 +168,7 @@
 ## UML диаграммы классов
 
 ![class](docs/images/class.svg)
+
+## Экраны будущего web-приложения
+
+![wireframes](docs/images/wireframes.svg)
