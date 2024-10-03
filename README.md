@@ -151,6 +151,10 @@
 
 ![BPMN](docs/images/bpmn.png)
 
+## Диаграмма БД
+
+![scheme](docs/images/scheme.png)
+
 ## Описание технологического стека
 - Язык - Golang
 - Тип UI - Web SPA (фреймворк React с TypeScript)
