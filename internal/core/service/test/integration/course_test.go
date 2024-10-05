@@ -98,6 +98,9 @@ func (s *CourseSuite) AfterEach(t provider.T) {
 }
 
 func (s *CourseSuite) TestUserService_FindAll(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewCourseRepo(s.db)
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)
@@ -111,6 +114,9 @@ func (s *CourseSuite) TestUserService_FindAll(t provider.T) {
 }
 
 func (s *CourseSuite) TestUserService_FindByID(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewCourseRepo(s.db)
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)
@@ -124,6 +130,9 @@ func (s *CourseSuite) TestUserService_FindByID(t provider.T) {
 }
 
 func (s *CourseSuite) TestUserService_FindStudentCourses(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewCourseRepo(s.db)
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)
@@ -139,6 +148,9 @@ func (s *CourseSuite) TestUserService_FindStudentCourses(t provider.T) {
 }
 
 func (s *CourseSuite) TestUserService_FindTeacherCourses(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewCourseRepo(s.db)
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)
@@ -154,6 +166,9 @@ func (s *CourseSuite) TestUserService_FindTeacherCourses(t provider.T) {
 }
 
 func (s *CourseSuite) TestUserService_AddCourseStudent(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewCourseRepo(s.db)
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)
@@ -166,6 +181,9 @@ func (s *CourseSuite) TestUserService_AddCourseStudent(t provider.T) {
 }
 
 func (s *CourseSuite) TestUserService_Delete(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewCourseRepo(s.db)
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)

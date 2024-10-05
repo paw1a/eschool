@@ -86,6 +86,9 @@ func (s *ReviewSuite) AfterEach(t provider.T) {
 }
 
 func (s *ReviewSuite) TestUserService_FindAll(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewReviewRepo(s.db)
 	reviewService := service.NewReviewService(repo, s.logger)
 	found, err := reviewService.FindAll(context.Background())
@@ -99,6 +102,9 @@ func (s *ReviewSuite) TestUserService_FindAll(t provider.T) {
 }
 
 func (s *ReviewSuite) TestUserService_FindByID(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewReviewRepo(s.db)
 	reviewService := service.NewReviewService(repo, s.logger)
 	review, err := reviewService.FindByID(context.Background(), reviews[0].ID)
@@ -109,6 +115,9 @@ func (s *ReviewSuite) TestUserService_FindByID(t provider.T) {
 }
 
 func (s *ReviewSuite) TestUserService_FindUserReviews(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewReviewRepo(s.db)
 	reviewService := service.NewReviewService(repo, s.logger)
 	found, err := reviewService.FindUserReviews(context.Background(), userID)
@@ -122,6 +131,9 @@ func (s *ReviewSuite) TestUserService_FindUserReviews(t provider.T) {
 }
 
 func (s *ReviewSuite) TestUserService_FindCourseReviews(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewReviewRepo(s.db)
 	reviewService := service.NewReviewService(repo, s.logger)
 	found, err := reviewService.FindCourseReviews(context.Background(), courseID)
@@ -135,6 +147,9 @@ func (s *ReviewSuite) TestUserService_FindCourseReviews(t provider.T) {
 }
 
 func (s *ReviewSuite) TestUserService_Delete(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewReviewRepo(s.db)
 	reviewService := service.NewReviewService(repo, s.logger)
 	err := reviewService.Delete(context.Background(), reviews[0].ID)

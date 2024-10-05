@@ -189,6 +189,9 @@ func (s *LessonSuite) AfterEach(t provider.T) {
 }
 
 func (s *LessonSuite) TestUserService_FindAll(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewLessonRepo(s.db)
 	objectStorage := storage.NewObjectStorage(s.minioClient, &minioConfig)
 	lessonService := service.NewLessonService(repo, objectStorage, s.logger)
@@ -211,6 +214,9 @@ func (s *LessonSuite) TestUserService_FindAll(t provider.T) {
 }
 
 func (s *LessonSuite) TestUserService_FindByID(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewLessonRepo(s.db)
 	objectStorage := storage.NewObjectStorage(s.minioClient, &minioConfig)
 	lessonService := service.NewLessonService(repo, objectStorage, s.logger)
@@ -227,6 +233,9 @@ func (s *LessonSuite) TestUserService_FindByID(t provider.T) {
 }
 
 func (s *LessonSuite) TestUserService_FindCourseLessons(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewLessonRepo(s.db)
 	objectStorage := storage.NewObjectStorage(s.minioClient, &minioConfig)
 	lessonService := service.NewLessonService(repo, objectStorage, s.logger)
@@ -249,6 +258,9 @@ func (s *LessonSuite) TestUserService_FindCourseLessons(t provider.T) {
 }
 
 func (s *LessonSuite) TestUserService_CreateTheoryLesson(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewLessonRepo(s.db)
 	objectStorage := storage.NewObjectStorage(s.minioClient, &minioConfig)
 	lessonService := service.NewLessonService(repo, objectStorage, s.logger)
@@ -260,6 +272,9 @@ func (s *LessonSuite) TestUserService_CreateTheoryLesson(t provider.T) {
 }
 
 func (s *LessonSuite) TestUserService_Delete(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewLessonRepo(s.db)
 	objectStorage := storage.NewObjectStorage(s.minioClient, &minioConfig)
 	lessonService := service.NewLessonService(repo, objectStorage, s.logger)

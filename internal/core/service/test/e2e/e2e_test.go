@@ -117,6 +117,9 @@ func (s *EndToEndSuite) AfterEach(t provider.T) {
 }
 
 func (s *EndToEndSuite) Test_EndToEnd(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	lessonRepo := repository.NewLessonRepo(s.db)
 	schoolRepo := repository.NewSchoolRepo(s.db)
 	courseRepo := repository.NewCourseRepo(s.db)

@@ -108,6 +108,9 @@ func (s *UserSuite) AfterEach(t provider.T) {
 }
 
 func (s *UserSuite) TestUserService_FindAll(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	t.Title("User service find all")
 	repo := repository.NewUserRepo(s.db)
 	userService := service.NewUserService(repo, s.logger)
@@ -122,6 +125,9 @@ func (s *UserSuite) TestUserService_FindAll(t provider.T) {
 }
 
 func (s *UserSuite) TestUserService_FindByID(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	t.Title("User service find by id")
 	repo := repository.NewUserRepo(s.db)
 	userService := service.NewUserService(repo, s.logger)
@@ -133,6 +139,9 @@ func (s *UserSuite) TestUserService_FindByID(t provider.T) {
 }
 
 func (s *UserSuite) TestUserService_Create(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewUserRepo(s.db)
 	userService := service.NewUserService(repo, s.logger)
 	user, err := userService.Create(context.Background(), createdUser)
@@ -144,6 +153,9 @@ func (s *UserSuite) TestUserService_Create(t provider.T) {
 }
 
 func (s *UserSuite) TestUserService_Update(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewUserRepo(s.db)
 	userService := service.NewUserService(repo, s.logger)
 	user, err := userService.Update(context.Background(), users[0].ID, updatedUser)
@@ -155,6 +167,9 @@ func (s *UserSuite) TestUserService_Update(t provider.T) {
 }
 
 func (s *UserSuite) TestUserService_Delete(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewUserRepo(s.db)
 	userService := service.NewUserService(repo, s.logger)
 	err := userService.Delete(context.Background(), users[0].ID)

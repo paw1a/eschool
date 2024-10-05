@@ -107,6 +107,9 @@ func (s *SchoolSuite) AfterEach(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_FindAll(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	found, err := schoolService.FindAll(context.Background())
@@ -120,6 +123,9 @@ func (s *SchoolSuite) TestSchoolService_FindAll(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_FindById(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	school, err := schoolService.FindByID(context.Background(), schools[0].ID)
@@ -130,6 +136,9 @@ func (s *SchoolSuite) TestSchoolService_FindById(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_FindSchoolTeachers(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	found, err := schoolService.FindSchoolTeachers(context.Background(), schools[0].ID)
@@ -143,6 +152,9 @@ func (s *SchoolSuite) TestSchoolService_FindSchoolTeachers(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_IsSchoolTeacher(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	ok, err := schoolService.IsSchoolTeacher(context.Background(), schools[0].ID, teachers[0].ID)
@@ -159,6 +171,9 @@ func (s *SchoolSuite) TestSchoolService_IsSchoolTeacher(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_Create(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	school, err := schoolService.CreateUserSchool(context.Background(), users[0].ID, createdSchool)
@@ -169,6 +184,9 @@ func (s *SchoolSuite) TestSchoolService_Create(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_Update(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	school, err := schoolService.Update(context.Background(), schools[0].ID, updatedSchool)
@@ -179,6 +197,9 @@ func (s *SchoolSuite) TestSchoolService_Update(t provider.T) {
 }
 
 func (s *SchoolSuite) TestSchoolService_Delete(t provider.T) {
+	if isPreviousTestsFailed() {
+		t.Skip()
+	}
 	repo := repository.NewSchoolRepo(s.db)
 	schoolService := service.NewSchoolService(repo, s.logger)
 	err := schoolService.Delete(context.Background(), schools[0].ID)

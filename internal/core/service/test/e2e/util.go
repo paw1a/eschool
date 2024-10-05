@@ -14,6 +14,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	testminio "github.com/testcontainers/testcontainers-go/modules/minio"
 	testpg "github.com/testcontainers/testcontainers-go/modules/postgres"
+	"os"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -159,4 +160,12 @@ func newMinioClient(url string) (*minio.Client, error) {
 	}
 
 	return minioClient, nil
+}
+
+func isPreviousTestsFailed() bool {
+	if os.Getenv("INTEGRATION_SUCCESS") == "1" &&
+		os.Getenv("UNIT_SUCCESS") == "1" {
+		return false
+	}
+	return true
 }
