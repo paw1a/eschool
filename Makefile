@@ -1,7 +1,7 @@
 include .env
 export
 
-build:
+build: swagger
 	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/web/main.go
 
 run: build
@@ -63,5 +63,10 @@ allure:
 	allure serve allure-results -p 4000
 
 report: test allure
+
+swagger:
+	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/web/main.go
+	swagger2openapi docs/swagger.yaml -o docs/openapi3.yaml
+
 
 .DEFAULT_GOAL := run

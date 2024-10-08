@@ -14,15 +14,22 @@ func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 		authenticated := users.Group("/", h.verifyToken)
 		{
 			authenticated.GET("/account", h.findUserAccount)
-			authenticated.PUT("/account", h.updateUser)
+			authenticated.PUT("/:id", h.updateUser)
 
 			authenticated.GET("/courses", h.findUserCourses)
 			authenticated.PUT("/courses/:course_id", h.addUserFreeCourse)
-			authenticated.GET("/certificates", h.findUserCertificates)
 		}
 	}
 }
 
+// @Summary GetAllUsers
+// @Tags user
+// @Description get all users
+// @Accept  json
+// @Produce json
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.UserDTO
+// @Router /users [get]
 func (h *Handler) findAllUsers(context *gin.Context) {
 	users, err := h.userService.FindAll(context.Request.Context())
 	if err != nil {
@@ -38,6 +45,17 @@ func (h *Handler) findAllUsers(context *gin.Context) {
 	h.successResponse(context, userDTOs)
 }
 
+// @Summary GetUserByID
+// @Tags user
+// @Description get user by id
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "user id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.UserDTO
+// @Router /users/{id} [get]
 func (h *Handler) findUserByID(context *gin.Context) {
 	userID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -55,6 +73,16 @@ func (h *Handler) findUserByID(context *gin.Context) {
 	h.successResponse(context, userDTO)
 }
 
+// @Summary GetUserAccount
+// @Tags user
+// @Security ApiKeyAuth
+// @Description get user account
+// @Accept  json
+// @Produce json
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.UserInfoDTO
+// @Router /users/account [get]
 func (h *Handler) findUserAccount(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
@@ -76,6 +104,18 @@ func (h *Handler) findUserAccount(context *gin.Context) {
 	h.successResponse(context, userInfoDTO)
 }
 
+// @Summary UpdateUser
+// @Tags user
+// @Security ApiKeyAuth
+// @Description update user information
+// @Accept  json
+// @Produce json
+// @Param input body dto.UpdateUserDTO true "update user info"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.UserDTO
+// @Router /users [put]
 func (h *Handler) updateUser(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
@@ -102,6 +142,19 @@ func (h *Handler) updateUser(context *gin.Context) {
 	h.successResponse(context, userDTO)
 }
 
+// @Summary AddUserFreeCourse
+// @Tags user
+// @Security ApiKeyAuth
+// @Description add user free course
+// @Accept  json
+// @Produce json
+// @Param id path string true "course id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string
+// @Router /users/courses/{id} [put]
 func (h *Handler) addUserFreeCourse(context *gin.Context) {
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
@@ -135,28 +188,18 @@ func (h *Handler) addUserFreeCourse(context *gin.Context) {
 	h.successResponse(context, "successfully added free course")
 }
 
+// @Summary FindUserCourses
+// @Tags user
+// @Security ApiKeyAuth
+// @Description find user courses
+// @Accept  json
+// @Produce json
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.CourseDTO
+// @Router /users/courses [get]
 func (h *Handler) findUserCourses(context *gin.Context) {
-	userID, err := getIdFromRequestContext(context)
-	if err != nil {
-		h.errorResponse(context, UnauthorizedError)
-		return
-	}
-
-	courses, err := h.courseService.FindStudentCourses(context.Request.Context(), userID)
-	if err != nil {
-		h.errorResponse(context, err)
-		return
-	}
-
-	courseDTOs := make([]dto.CourseDTO, len(courses))
-	for i, course := range courses {
-		courseDTOs[i] = dto.NewCourseDTO(course)
-	}
-
-	h.successResponse(context, courseDTOs)
-}
-
-func (h *Handler) findUserCertificates(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
 		h.errorResponse(context, UnauthorizedError)

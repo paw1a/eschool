@@ -32,6 +32,14 @@ func (h *Handler) initSchoolRoutes(api *gin.RouterGroup) {
 	}
 }
 
+// @Summary GetAllSchools
+// @Tags school
+// @Description get all schools
+// @Accept  json
+// @Produce json
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.SchoolDTO
+// @Router /schools [get]
 func (h *Handler) findAllSchools(context *gin.Context) {
 	schools, err := h.schoolService.FindAll(context.Request.Context())
 	if err != nil {
@@ -47,6 +55,17 @@ func (h *Handler) findAllSchools(context *gin.Context) {
 	h.successResponse(context, schoolDTOs)
 }
 
+// @Summary GetSchoolByID
+// @Tags school
+// @Description get school by id
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "school id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.SchoolDTO
+// @Router /schools/{id} [get]
 func (h *Handler) findSchoolByID(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -64,6 +83,18 @@ func (h *Handler) findSchoolByID(context *gin.Context) {
 	h.successResponse(context, schoolDTO)
 }
 
+// @Summary CreateSchool
+// @Tags school
+// @Security ApiKeyAuth
+// @Description create school
+// @Accept  json
+// @Produce json
+// @Param input body dto.CreateSchoolDTO true "created school info"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 201 {object} dto.SchoolDTO
+// @Router /schools [post]
 func (h *Handler) createSchool(context *gin.Context) {
 	var createSchoolDTO dto.CreateSchoolDTO
 	err := context.ShouldBindJSON(&createSchoolDTO)
@@ -92,6 +123,20 @@ func (h *Handler) createSchool(context *gin.Context) {
 	h.createdResponse(context, schoolDTO)
 }
 
+// @Summary UpdateSchool
+// @Tags school
+// @Security ApiKeyAuth
+// @Description update school
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "school id"
+// @Param input body dto.UpdateSchoolDTO true "updated school info"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} dto.SchoolDTO
+// @Router /schools/{id} [put]
 func (h *Handler) updateSchool(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -119,6 +164,17 @@ func (h *Handler) updateSchool(context *gin.Context) {
 	h.successResponse(context, schoolDTO)
 }
 
+// @Summary GetSchoolCourses
+// @Tags school
+// @Description get school courses
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "school id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.CourseDTO
+// @Router /schools/{id}/courses [get]
 func (h *Handler) findSchoolCourses(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -140,6 +196,20 @@ func (h *Handler) findSchoolCourses(context *gin.Context) {
 	h.successResponse(context, courseDTOs)
 }
 
+// @Summary CreateSchoolCourse
+// @Tags school
+// @Security ApiKeyAuth
+// @Description create school course
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "school id"
+// @Param input body dto.CreateCourseDTO true "created course info"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.CourseDTO
+// @Router /schools/{id}/courses [post]
 func (h *Handler) createSchoolCourse(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -170,6 +240,21 @@ func (h *Handler) createSchoolCourse(context *gin.Context) {
 	h.createdResponse(context, courseDTO)
 }
 
+// @Summary UpdateSchoolCourse
+// @Tags school
+// @Security ApiKeyAuth
+// @Description update school course
+// @Accept  json
+// @Produce json
+// @Param   schoolID   path    string  true  "school id"
+// @Param   courseID   path    string  true  "course id"
+// @Param input body dto.UpdateCourseDTO true "updated course info"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} dto.CourseDTO
+// @Router /schools/{schoolID}/courses/{courseID} [put]
 func (h *Handler) updateSchoolCourse(context *gin.Context) {
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
@@ -200,6 +285,20 @@ func (h *Handler) updateSchoolCourse(context *gin.Context) {
 	h.successResponse(context, courseDTO)
 }
 
+// @Summary DeleteSchoolCourse
+// @Tags school
+// @Security ApiKeyAuth
+// @Description delete school course
+// @Accept  json
+// @Produce json
+// @Param   schoolID   path    string  true  "school id"
+// @Param   courseID   path    string  true  "course id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string "message"
+// @Router /schools/{schoolID}/courses/{courseID} [delete]
 func (h *Handler) deleteSchoolCourse(context *gin.Context) {
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
@@ -216,6 +315,17 @@ func (h *Handler) deleteSchoolCourse(context *gin.Context) {
 	h.successResponse(context, "successfully deleted")
 }
 
+// @Summary GetSchoolTeachers
+// @Tags school
+// @Description get school teachers
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "school id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.UserDTO
+// @Router /schools/{id}/teachers [get]
 func (h *Handler) findSchoolTeachers(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -237,6 +347,20 @@ func (h *Handler) findSchoolTeachers(context *gin.Context) {
 	h.successResponse(context, teacherDTOs)
 }
 
+// @Summary AddSchoolTeacher
+// @Tags school
+// @Security ApiKeyAuth
+// @Description add school teacher
+// @Accept  json
+// @Produce json
+// @Param   schoolID   path    string  true  "school id"
+// @Param   teacherID   path    string  true  "course id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 201 {string} string "message"
+// @Router /schools/{schoolID}/teachers/{teacherID} [put]
 func (h *Handler) addSchoolTeacher(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {

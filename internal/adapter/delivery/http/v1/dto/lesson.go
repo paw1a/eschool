@@ -14,9 +14,9 @@ const (
 type CreateLessonDTO struct {
 	Title    string          `json:"title" binding:"required"`
 	Type     string          `json:"type" binding:"required,oneof=theory video practice"`
-	Score    null.Int        `json:"score" binding:"required"`
-	Theory   null.String     `json:"theory" binding:"omitempty"`
-	VideoUrl null.String     `json:"video_url" binding:"omitempty,url"`
+	Score    null.Int        `json:"score" binding:"required" swaggertype:"string"`
+	Theory   null.String     `json:"theory" binding:"omitempty" swaggertype:"string"`
+	VideoUrl null.String     `json:"video_url" binding:"omitempty,url" swaggertype:"string"`
 	Tests    []CreateTestDTO `json:"tests" binding:"omitempty"`
 }
 
@@ -24,15 +24,15 @@ type CreateTestDTO struct {
 	Task    string   `json:"task" binding:"required"`
 	Options []string `json:"options" binding:"required"`
 	Answer  string   `json:"answer" binding:"required"`
-	Level   null.Int `json:"level" binding:"required"`
-	Score   null.Int `json:"score" binding:"required"`
+	Level   null.Int `json:"level" binding:"required" swaggertype:"string"`
+	Score   null.Int `json:"score" binding:"required" swaggertype:"string"`
 }
 
 type UpdateLessonDTO struct {
-	Title    null.String     `json:"title" binding:"required"`
-	Score    null.Int        `json:"score" binding:"required"`
-	Theory   null.String     `json:"theory" binding:"omitempty"`
-	VideoUrl null.String     `json:"video_url" binding:"omitempty,url"`
+	Title    null.String     `json:"title" binding:"required" swaggertype:"string"`
+	Score    null.Int        `json:"score" binding:"required" swaggertype:"string"`
+	Theory   null.String     `json:"theory" binding:"omitempty" swaggertype:"string"`
+	VideoUrl null.String     `json:"video_url" binding:"omitempty,url" swaggertype:"string"`
 	Tests    []CreateTestDTO `json:"tests" binding:"omitempty"`
 }
 
@@ -53,8 +53,8 @@ type LessonDTO struct {
 	Score    int    `json:"score"`
 	Type     string `json:"type"`
 
-	TheoryUrl null.String `json:"theory_url" binding:"omitempty"`
-	VideoUrl  null.String `json:"video_url" binding:"omitempty"`
+	TheoryUrl null.String `json:"theory_url" binding:"omitempty" swaggertype:"string"`
+	VideoUrl  null.String `json:"video_url" binding:"omitempty" swaggertype:"string"`
 	Tests     []TestDTO   `json:"tests" binding:"omitempty"`
 }
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/paw1a/eschool/docs"
 	v1 "github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
 	"github.com/paw1a/eschool/internal/app/config"
 	"github.com/swaggo/files"

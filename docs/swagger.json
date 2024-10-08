@@ -1,0 +1,2405 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a Eschool API.",
+        "title": "Eschool API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "email": "shpakovskiipa@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/auth/logout": {
+            "post": {
+                "description": "logout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout",
+                "responses": {
+                    "200": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "description": "refresh",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "TokenRefresh",
+                "parameters": [
+                    {
+                        "description": "refresh payload",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.RefreshDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "auth token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/sign-in": {
+            "post": {
+                "description": "sign-in",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "SignIn",
+                "parameters": [
+                    {
+                        "description": "credentials",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SignInDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "auth token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/sign-up": {
+            "post": {
+                "description": "sign-up",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "SignUp",
+                "parameters": [
+                    {
+                        "description": "user information",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SignUpDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorConflict"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses": {
+            "get": {
+                "description": "get all courses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetAllCourses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{courseID}/lessons/{lessonID}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lesson by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetLessonByID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "lesson id",
+                        "name": "lessonID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update course lesson",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "UpdateCourseLesson",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "lesson id",
+                        "name": "lessonID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "updated lesson info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateLessonDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{courseID}/teachers/{teacherID}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "add course teacher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "AddCourseTeacher",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "teacherID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}": {
+            "get": {
+                "description": "get course by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetCourseByID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}/lessons": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get course lessons",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetCourseLessons",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create course lesson",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "CreateCourseLesson",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "created lesson info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateLessonDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}/teachers": {
+            "get": {
+                "description": "get course teachers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetCourseTeachers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools": {
+            "get": {
+                "description": "get all schools",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "GetAllSchools",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create school",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "CreateSchool",
+                "parameters": [
+                    {
+                        "description": "created school info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateSchoolDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{courseID}/courses/{lessonID}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete course lesson",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "DeleteCourseLesson",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "lesson id",
+                        "name": "lessonID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{courseID}/courses/{lessonID}/stat": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get lesson statistics",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetLessonStat",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "lesson id",
+                        "name": "lessonID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonStatDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "pass course lesson",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "PassCourseLesson",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "lesson id",
+                        "name": "lessonID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "passed lesson info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.PassLessonDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonStatDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{id}": {
+            "get": {
+                "description": "get school by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "GetSchoolByID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update school",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "UpdateSchool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "updated school info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateSchoolDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{id}/courses": {
+            "get": {
+                "description": "get school courses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "GetSchoolCourses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create school course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "CreateSchoolCourse",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "created course info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateCourseDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{id}/teachers": {
+            "get": {
+                "description": "get school teachers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "GetSchoolTeachers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{schoolID}/courses/{courseID}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update school course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "UpdateSchoolCourse",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "schoolID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "updated course info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateCourseDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete school course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "DeleteSchoolCourse",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "schoolID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "courseID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/schools/{schoolID}/teachers/{teacherID}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "add school teacher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "AddSchoolTeacher",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "schoolID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "teacherID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "description": "get all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "GetAllUsers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserDTO"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "UpdateUser",
+                "parameters": [
+                    {
+                        "description": "update user info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateUserDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/account": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get user account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "GetUserAccount",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserInfoDTO"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/courses": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "find user courses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "FindUserCourses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/courses/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "add user free course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "AddUserFreeCourse",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorForbidden"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "get user by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "GetUserByID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "30e18bc1-4354-4937-9a4d-03cf0b7027ca"
+                },
+                "language": {
+                    "type": "string",
+                    "example": "english"
+                },
+                "level": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Course name"
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 3990
+                },
+                "school_id": {
+                    "type": "string",
+                    "example": "30e18bc1-4354-4937-9a3b-03cf0b7034cc"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "published"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateCourseDTO": {
+            "type": "object",
+            "required": [
+                "language",
+                "level",
+                "name",
+                "price"
+            ],
+            "properties": {
+                "language": {
+                    "type": "string",
+                    "example": "english"
+                },
+                "level": {
+                    "type": "string",
+                    "example": "5"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Course name"
+                },
+                "price": {
+                    "type": "string",
+                    "example": "3990"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateLessonDTO": {
+            "type": "object",
+            "required": [
+                "score",
+                "title",
+                "type"
+            ],
+            "properties": {
+                "score": {
+                    "type": "string"
+                },
+                "tests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateTestDTO"
+                    }
+                },
+                "theory": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "theory",
+                        "video",
+                        "practice"
+                    ]
+                },
+                "video_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateSchoolDTO": {
+            "type": "object",
+            "required": [
+                "description",
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "School description"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateTestDTO": {
+            "type": "object",
+            "required": [
+                "answer",
+                "level",
+                "options",
+                "score",
+                "task"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "score": {
+                    "type": "string"
+                },
+                "task": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO": {
+            "type": "object",
+            "properties": {
+                "course_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "tests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.TestDTO"
+                    }
+                },
+                "theory_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "video_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonStatDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "lesson_id": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "tests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.TestStatDTO"
+                    }
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.PassLessonDTO": {
+            "type": "object",
+            "required": [
+                "lesson_id"
+            ],
+            "properties": {
+                "lesson_id": {
+                    "type": "string"
+                },
+                "tests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.PassTestDTO"
+                    }
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.PassTestDTO": {
+            "type": "object",
+            "required": [
+                "answer",
+                "test_id"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "test_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.RefreshDTO": {
+            "type": "object",
+            "required": [
+                "fingerprint"
+            ],
+            "properties": {
+                "fingerprint": {
+                    "type": "string",
+                    "example": "fingerprint"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "School description"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "30e18bc1-4354-4937-9a3b-03cf0b7034cc"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "School name"
+                },
+                "owner_id": {
+                    "type": "string",
+                    "example": "30e18bc1-4354-4937-9a3b-03cf0b7027ca"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SignInDTO": {
+            "type": "object",
+            "required": [
+                "email",
+                "fingerprint",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "paw1a@yandex.ru"
+                },
+                "fingerprint": {
+                    "type": "string",
+                    "example": "fingerprint"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SignUpDTO": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "surname"
+            ],
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "example": "image.io/avatar.png"
+                },
+                "city": {
+                    "type": "string",
+                    "example": "Moscow"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "user@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Maxim"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+79999999999"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Ivanov"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.TestDTO": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lesson_id": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "task_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.TestStatDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "test_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateCourseDTO": {
+            "type": "object",
+            "properties": {
+                "language": {
+                    "type": "string",
+                    "example": "english"
+                },
+                "level": {
+                    "type": "string",
+                    "example": "5"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Updated name"
+                },
+                "price": {
+                    "type": "string",
+                    "example": "3990"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateLessonDTO": {
+            "type": "object",
+            "required": [
+                "score",
+                "title"
+            ],
+            "properties": {
+                "score": {
+                    "type": "string"
+                },
+                "tests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateTestDTO"
+                    }
+                },
+                "theory": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "video_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateSchoolDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Updated description"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateUserDTO": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "example": "image.io/avatar.png"
+                },
+                "city": {
+                    "type": "string",
+                    "example": "Moscow"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Pavel"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+79999999999"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Shpakovskiy"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserDTO": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "example": "image.io/avatar.png"
+                },
+                "city": {
+                    "type": "string",
+                    "example": "Moscow"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "paw1a@yandex.ru"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "30e18bc1-4354-4937-9a3b-03cf0b7027ca"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Pavel"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+79999999999"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Shpakovskiy"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UserInfoDTO": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Pavel"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Shpakovskiy"
+                }
+            }
+        },
+        "internal_adapter_delivery_http_v1.RestErrorBadRequest": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "bad request"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2020-11-10T23:00:00+00:00"
+                }
+            }
+        },
+        "internal_adapter_delivery_http_v1.RestErrorConflict": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "conflict"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 409
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2020-11-10T23:00:00+00:00"
+                }
+            }
+        },
+        "internal_adapter_delivery_http_v1.RestErrorForbidden": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "forbidden"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 403
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2020-11-10T23:00:00+00:00"
+                }
+            }
+        },
+        "internal_adapter_delivery_http_v1.RestErrorInternalError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "internal server error"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 500
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2020-11-10T23:00:00+00:00"
+                }
+            }
+        },
+        "internal_adapter_delivery_http_v1.RestErrorNotFound": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "not found"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 404
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2020-11-10T23:00:00+00:00"
+                }
+            }
+        },
+        "internal_adapter_delivery_http_v1.RestErrorUnauthorized": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "unauthorized"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 401
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2020-11-10T23:00:00+00:00"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

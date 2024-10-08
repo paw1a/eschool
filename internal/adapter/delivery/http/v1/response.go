@@ -84,6 +84,42 @@ type RestError struct {
 	Timestamp  time.Time `json:"timestamp,omitempty"`
 }
 
+type RestErrorBadRequest struct {
+	ErrStatus  int       `json:"status,omitempty" example:"400"`
+	ErrMessage string    `json:"error,omitempty" example:"bad request"`
+	Timestamp  time.Time `json:"timestamp,omitempty" example:"2020-11-10T23:00:00+00:00"`
+}
+
+type RestErrorUnauthorized struct {
+	ErrStatus  int       `json:"status,omitempty" example:"401"`
+	ErrMessage string    `json:"error,omitempty" example:"unauthorized"`
+	Timestamp  time.Time `json:"timestamp,omitempty" example:"2020-11-10T23:00:00+00:00"`
+}
+
+type RestErrorForbidden struct {
+	ErrStatus  int       `json:"status,omitempty" example:"403"`
+	ErrMessage string    `json:"error,omitempty" example:"forbidden"`
+	Timestamp  time.Time `json:"timestamp,omitempty" example:"2020-11-10T23:00:00+00:00"`
+}
+
+type RestErrorNotFound struct {
+	ErrStatus  int       `json:"status,omitempty" example:"404"`
+	ErrMessage string    `json:"error,omitempty" example:"not found"`
+	Timestamp  time.Time `json:"timestamp,omitempty" example:"2020-11-10T23:00:00+00:00"`
+}
+
+type RestErrorConflict struct {
+	ErrStatus  int       `json:"status,omitempty" example:"409"`
+	ErrMessage string    `json:"error,omitempty" example:"conflict"`
+	Timestamp  time.Time `json:"timestamp,omitempty" example:"2020-11-10T23:00:00+00:00"`
+}
+
+type RestErrorInternalError struct {
+	ErrStatus  int       `json:"status,omitempty" example:"500"`
+	ErrMessage string    `json:"error,omitempty" example:"internal server error"`
+	Timestamp  time.Time `json:"timestamp,omitempty" example:"2020-11-10T23:00:00+00:00"`
+}
+
 func (e RestError) Error() string {
 	return fmt.Sprintf("status: %d, error: %s", e.ErrStatus, e.ErrMessage)
 }

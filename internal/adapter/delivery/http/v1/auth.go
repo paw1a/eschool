@@ -20,6 +20,17 @@ func (h *Handler) initAuthRoutes(api *gin.RouterGroup) {
 	}
 }
 
+// @Summary SignIn
+// @Tags auth
+// @Description sign-in
+// @Accept  json
+// @Produce json
+// @Param input body dto.SignInDTO true "credentials"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string "auth token"
+// @Router /auth/sign-in [post]
 func (h *Handler) userSignIn(context *gin.Context) {
 	var signInDTO dto.SignInDTO
 	err := context.ShouldBindJSON(&signInDTO)
@@ -45,6 +56,17 @@ func (h *Handler) userSignIn(context *gin.Context) {
 	h.successResponse(context, authDetails.AccessToken.String())
 }
 
+// @Summary SignUp
+// @Tags auth
+// @Description sign-up
+// @Accept  json
+// @Produce json
+// @Param input body dto.SignUpDTO true "user information"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 409 {object} RestErrorConflict
+// @Failure 500 {object} RestErrorInternalError
+// @Success 201 {string} string "message"
+// @Router /auth/sign-up [post]
 func (h *Handler) userSignUp(context *gin.Context) {
 	var signUpDTO dto.SignUpDTO
 	err := context.ShouldBindJSON(&signUpDTO)
@@ -70,10 +92,30 @@ func (h *Handler) userSignUp(context *gin.Context) {
 	h.createdResponse(context, "successfully signed up")
 }
 
+// @Summary TokenRefresh
+// @Tags auth
+// @Description refresh
+// @Accept  json
+// @Produce json
+// @Param input body dto.RefreshDTO true "refresh payload"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string "auth token"
+// @Router /auth/refresh [post]
 func (h *Handler) userRefresh(context *gin.Context) {
 	h.refreshToken(context)
 }
 
+// @Summary Logout
+// @Tags auth
+// @Description logout
+// @Accept  json
+// @Produce json
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string "message"
+// @Router /auth/logout [post]
 func (h *Handler) userLogout(context *gin.Context) {
 	refreshCookie, err := context.Cookie("refreshToken")
 	if err != nil {
