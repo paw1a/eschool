@@ -190,6 +190,67 @@ paths:
       tags:
         - course
   "/courses/{courseID}/lessons/{lessonID}":
+    delete:
+      description: delete course lesson
+      parameters:
+        - description: course id
+          in: path
+          name: courseID
+          required: true
+          schema:
+            type: string
+        - description: lesson id
+          in: path
+          name: lessonID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: message
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
+                  st"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
+                  ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
+                  Error"
+      security:
+        - ApiKeyAuth: []
+      summary: DeleteCourseLesson
+      tags:
+        - course
     get:
       description: get lesson by id
       parameters:
@@ -222,6 +283,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
                   st"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -240,7 +308,7 @@ paths:
       summary: GetLessonByID
       tags:
         - course
-    put:
+    patch:
       description: update course lesson
       parameters:
         - description: course id
@@ -285,6 +353,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -301,6 +376,139 @@ paths:
       security:
         - ApiKeyAuth: []
       summary: UpdateCourseLesson
+      tags:
+        - course
+  "/courses/{courseID}/lessons/{lessonID}/stat":
+    get:
+      description: get lesson statistics
+      parameters:
+        - description: course id
+          in: path
+          name: courseID
+          required: true
+          schema:
+            type: string
+        - description: lesson id
+          in: path
+          name: lessonID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
+                  http_v1_dto.LessonStatDTO"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
+                  st"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
+                  ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
+                  Error"
+      security:
+        - ApiKeyAuth: []
+      summary: GetLessonStat
+      tags:
+        - course
+    post:
+      description: pass course lesson
+      parameters:
+        - description: course id
+          in: path
+          name: courseID
+          required: true
+          schema:
+            type: string
+        - description: lesson id
+          in: path
+          name: lessonID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
+                http_v1_dto.PassLessonDTO"
+        description: passed lesson info
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
+                  http_v1_dto.LessonStatDTO"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
+                  st"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
+                  ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
+                  Error"
+      security:
+        - ApiKeyAuth: []
+      summary: PassCourseLesson
       tags:
         - course
   "/courses/{courseID}/teachers/{teacherID}":
@@ -340,6 +548,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -435,6 +650,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -492,6 +714,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -553,6 +782,53 @@ paths:
       summary: GetCourseTeachers
       tags:
         - course
+  "/payment/courses/{id}":
+    get:
+      description: get course payment url
+      parameters:
+        - description: course id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: url
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
+                  st"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
+                  ized"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
+                  Error"
+      summary: GetCoursePaymentUrl
+      tags:
+        - payment
   /schools:
     get:
       description: get all schools
@@ -620,180 +896,6 @@ paths:
       summary: CreateSchool
       tags:
         - school
-  "/schools/{courseID}/courses/{lessonID}":
-    delete:
-      description: delete course lesson
-      parameters:
-        - description: course id
-          in: path
-          name: courseID
-          required: true
-          schema:
-            type: string
-        - description: lesson id
-          in: path
-          name: lessonID
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: message
-          content:
-            application/json:
-              schema:
-                type: string
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
-                  st"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
-                  ized"
-        "404":
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
-                  Error"
-      security:
-        - ApiKeyAuth: []
-      summary: DeleteCourseLesson
-      tags:
-        - course
-  "/schools/{courseID}/courses/{lessonID}/stat":
-    get:
-      description: get lesson statistics
-      parameters:
-        - description: course id
-          in: path
-          name: courseID
-          required: true
-          schema:
-            type: string
-        - description: lesson id
-          in: path
-          name: lessonID
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-                  http_v1_dto.LessonStatDTO"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
-                  st"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
-                  ized"
-        "404":
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
-                  Error"
-      security:
-        - ApiKeyAuth: []
-      summary: GetLessonStat
-      tags:
-        - course
-    post:
-      description: pass course lesson
-      parameters:
-        - description: course id
-          in: path
-          name: courseID
-          required: true
-          schema:
-            type: string
-        - description: lesson id
-          in: path
-          name: lessonID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-                http_v1_dto.PassLessonDTO"
-        description: passed lesson info
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-                  http_v1_dto.LessonStatDTO"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
-                  st"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
-                  ized"
-        "404":
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorNotFound"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
-                  Error"
-      security:
-        - ApiKeyAuth: []
-      summary: PassCourseLesson
-      tags:
-        - course
   "/schools/{id}":
     get:
       description: get school by id
@@ -837,7 +939,7 @@ paths:
       summary: GetSchoolByID
       tags:
         - school
-    put:
+    patch:
       description: update school
       parameters:
         - description: school id
@@ -876,6 +978,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -978,6 +1087,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -1076,6 +1192,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -1094,7 +1217,7 @@ paths:
       summary: DeleteSchoolCourse
       tags:
         - school
-    put:
+    patch:
       description: update school course
       parameters:
         - description: school id
@@ -1139,6 +1262,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -1194,6 +1324,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
+                  n"
         "404":
           description: Not Found
           content:
@@ -1233,52 +1370,6 @@ paths:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
                   Error"
       summary: GetAllUsers
-      tags:
-        - user
-    put:
-      description: update user information
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-                http_v1_dto.UpdateUserDTO"
-        description: update user info
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-                    http_v1_dto.UserDTO"
-                type: array
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
-                  st"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
-                  ized"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
-                  Error"
-      security:
-        - ApiKeyAuth: []
-      summary: UpdateUser
       tags:
         - user
   "/users/{id}":
@@ -1324,7 +1415,7 @@ paths:
       summary: GetUserByID
       tags:
         - user
-  /users/account:
+  /users/me:
     get:
       description: get user account
       responses:
@@ -1356,7 +1447,53 @@ paths:
       summary: GetUserAccount
       tags:
         - user
-  /users/courses:
+    patch:
+      description: update user information
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
+                http_v1_dto.UpdateUserDTO"
+        description: update user info
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
+                    http_v1_dto.UserDTO"
+                type: array
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorBadReque\
+                  st"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
+                  ized"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorInternal\
+                  Error"
+      security:
+        - ApiKeyAuth: []
+      summary: UpdateUser
+      tags:
+        - user
+  /users/me/courses:
     get:
       description: find user courses
       responses:
@@ -1395,7 +1532,7 @@ paths:
       summary: FindUserCourses
       tags:
         - user
-  "/users/courses/{id}":
+  "/users/me/courses/{id}":
     put:
       description: add user free course
       parameters:
@@ -1426,13 +1563,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorUnauthor\
                   ized"
-        "403":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/internal_adapter_delivery_http_v1.RestErrorForbidde\
-                  n"
         "500":
           description: Internal Server Error
           content:
@@ -1499,30 +1629,6 @@ components:
         - price
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateLessonDTO:
-      properties:
-        score:
-          type: string
-        tests:
-          items:
-            $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-              http_v1_dto.CreateTestDTO"
-          type: array
-        theory:
-          type: string
-        title:
-          type: string
-        type:
-          enum:
-            - theory
-            - video
-            - practice
-          type: string
-        video_url:
-          type: string
-      required:
-        - score
-        - title
-        - type
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateSchoolDTO:
       properties:
@@ -1534,27 +1640,6 @@ components:
       required:
         - description
         - name
-      type: object
-    github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateTestDTO:
-      properties:
-        answer:
-          type: string
-        level:
-          type: string
-        options:
-          items:
-            type: string
-          type: array
-        score:
-          type: string
-        task:
-          type: string
-      required:
-        - answer
-        - level
-        - options
-        - score
-        - task
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO:
       properties:
@@ -1596,15 +1681,11 @@ components:
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.PassLessonDTO:
       properties:
-        lesson_id:
-          type: string
         tests:
           items:
             $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
               http_v1_dto.PassTestDTO"
           type: array
-      required:
-        - lesson_id
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.PassTestDTO:
       properties:
@@ -1730,23 +1811,6 @@ components:
           type: string
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateLessonDTO:
-      properties:
-        score:
-          type: string
-        tests:
-          items:
-            $ref: "#/components/schemas/github_com_paw1a_eschool_internal_adapter_delivery_\
-              http_v1_dto.CreateTestDTO"
-          type: array
-        theory:
-          type: string
-        title:
-          type: string
-        video_url:
-          type: string
-      required:
-        - score
-        - title
       type: object
     github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateSchoolDTO:
       properties:

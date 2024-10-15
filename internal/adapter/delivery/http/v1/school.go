@@ -15,11 +15,11 @@ func (h *Handler) initSchoolRoutes(api *gin.RouterGroup) {
 		authenticated := schools.Group("/", h.verifyToken)
 		{
 			authenticated.POST("/", h.createSchool)
-			authenticated.PUT("/:id", h.verifySchoolOwner, h.updateSchool)
+			authenticated.PATCH("/:id", h.verifySchoolOwner, h.updateSchool)
 
 			authenticated.GET("/:id/courses", h.findSchoolCourses)
 			authenticated.POST("/:id/courses", h.verifySchoolOwner, h.createSchoolCourse)
-			authenticated.PUT("/:id/courses/:course_id", h.verifySchoolOwner, h.updateSchoolCourse)
+			authenticated.PATCH("/:id/courses/:course_id", h.verifySchoolOwner, h.updateSchoolCourse)
 			authenticated.DELETE("/:id/courses/:course_id", h.verifySchoolOwner, h.deleteSchoolCourse)
 
 			authenticated.GET("/:id/teachers", h.findSchoolTeachers)
@@ -119,6 +119,12 @@ func (h *Handler) createSchool(context *gin.Context) {
 		return
 	}
 
+	err = h.schoolService.AddSchoolTeacher(context.Request.Context(), school.ID, userID)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
 	schoolDTO := dto.NewSchoolDTO(school)
 	h.createdResponse(context, schoolDTO)
 }
@@ -133,10 +139,11 @@ func (h *Handler) createSchool(context *gin.Context) {
 // @Param input body dto.UpdateSchoolDTO true "updated school info"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} dto.SchoolDTO
-// @Router /schools/{id} [put]
+// @Router /schools/{id} [patch]
 func (h *Handler) updateSchool(context *gin.Context) {
 	schoolID, err := getIdFromPath(context, "id")
 	if err != nil {
@@ -206,6 +213,7 @@ func (h *Handler) findSchoolCourses(context *gin.Context) {
 // @Param input body dto.CreateCourseDTO true "created course info"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} []dto.CourseDTO
@@ -236,6 +244,18 @@ func (h *Handler) createSchoolCourse(context *gin.Context) {
 		return
 	}
 
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		h.errorResponse(context, UnauthorizedError)
+		return
+	}
+
+	err = h.courseService.AddCourseTeacher(context.Request.Context(), userID, course.ID)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
 	courseDTO := dto.NewCourseDTO(course)
 	h.createdResponse(context, courseDTO)
 }
@@ -251,10 +271,11 @@ func (h *Handler) createSchoolCourse(context *gin.Context) {
 // @Param input body dto.UpdateCourseDTO true "updated course info"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} dto.CourseDTO
-// @Router /schools/{schoolID}/courses/{courseID} [put]
+// @Router /schools/{schoolID}/courses/{courseID} [patch]
 func (h *Handler) updateSchoolCourse(context *gin.Context) {
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
@@ -295,6 +316,7 @@ func (h *Handler) updateSchoolCourse(context *gin.Context) {
 // @Param   courseID   path    string  true  "course id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {string} string "message"
@@ -357,6 +379,7 @@ func (h *Handler) findSchoolTeachers(context *gin.Context) {
 // @Param   teacherID   path    string  true  "course id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 201 {string} string "message"

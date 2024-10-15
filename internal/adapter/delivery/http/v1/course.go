@@ -18,7 +18,7 @@ func (h *Handler) initCourseRoutes(api *gin.RouterGroup) {
 			authenticated.GET("/:id/lessons", h.verifyCourseReadAccess, h.findCourseLessons)
 			authenticated.GET("/:id/lessons/:lesson_id", h.verifyCourseReadAccess, h.findLessonByID)
 			authenticated.POST("/:id/lessons", h.verifyCourseWriteAccess, h.createCourseLesson)
-			authenticated.PUT("/:id/lessons/:lesson_id", h.verifyCourseWriteAccess, h.updateCourseLesson)
+			authenticated.PATCH("/:id/lessons/:lesson_id", h.verifyCourseWriteAccess, h.updateCourseLesson)
 			authenticated.DELETE("/:id/lessons/:lesson_id", h.verifyCourseWriteAccess, h.deleteCourseLesson)
 
 			authenticated.GET("/:id/teachers", h.findCourseTeachers)
@@ -93,6 +93,7 @@ func (h *Handler) findCourseByID(context *gin.Context) {
 // @Param   courseID   path    string  true  "course id"
 // @Param   lessonID   path    string  true  "lesson id"
 // @Failure 400 {object} RestErrorBadRequest
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} []dto.LessonDTO
@@ -156,6 +157,7 @@ func (h *Handler) findCourseTeachers(context *gin.Context) {
 // @Param   teacherID   path    string  true  "course id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 201 {string} string "message"
@@ -202,6 +204,7 @@ func (h *Handler) addCourseTeacher(context *gin.Context) {
 // @Param   id   path    string  true  "course id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} []dto.LessonDTO
@@ -237,6 +240,7 @@ func (h *Handler) findCourseLessons(context *gin.Context) {
 // @Param input body dto.CreateLessonDTO true "created lesson info"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 201 {object} dto.LessonDTO
@@ -325,10 +329,11 @@ func (h *Handler) createCourseLesson(context *gin.Context) {
 // @Param input body dto.UpdateLessonDTO true "updated lesson info"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} dto.LessonDTO
-// @Router /courses/{courseID}/lessons/{lessonID} [put]
+// @Router /courses/{courseID}/lessons/{lessonID} [patch]
 func (h *Handler) updateCourseLesson(context *gin.Context) {
 	lessonID, err := getIdFromPath(context, "lesson_id")
 	if err != nil {
@@ -418,10 +423,11 @@ func (h *Handler) updateCourseLesson(context *gin.Context) {
 // @Param   lessonID   path    string  true  "lesson id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {string} string "message"
-// @Router /schools/{courseID}/courses/{lessonID} [delete]
+// @Router /courses/{courseID}/lessons/{lessonID} [delete]
 func (h *Handler) deleteCourseLesson(context *gin.Context) {
 	lessonID, err := getIdFromPath(context, "lesson_id")
 	if err != nil {
@@ -496,10 +502,11 @@ func (h *Handler) findCourseReviews(context *gin.Context) {
 // @Param   lessonID   path    string  true  "lesson id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} dto.LessonStatDTO
-// @Router /schools/{courseID}/courses/{lessonID}/stat [get]
+// @Router /courses/{courseID}/lessons/{lessonID}/stat [get]
 func (h *Handler) findLessonStat(context *gin.Context) {
 	lessonID, err := getIdFromPath(context, "lesson_id")
 	if err != nil {
@@ -534,10 +541,11 @@ func (h *Handler) findLessonStat(context *gin.Context) {
 // @Param input body dto.PassLessonDTO true "passed lesson info"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
 // @Failure 404 {object} RestErrorNotFound
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} dto.LessonStatDTO
-// @Router /schools/{courseID}/courses/{lessonID}/stat [post]
+// @Router /courses/{courseID}/lessons/{lessonID}/stat [post]
 func (h *Handler) passCourseLesson(context *gin.Context) {
 	lessonID, err := getIdFromPath(context, "lesson_id")
 	if err != nil {

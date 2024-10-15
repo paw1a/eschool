@@ -13,11 +13,11 @@ func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 		users.GET("/:id", h.findUserByID)
 		authenticated := users.Group("/", h.verifyToken)
 		{
-			authenticated.GET("/account", h.findUserAccount)
-			authenticated.PUT("/:id", h.updateUser)
+			authenticated.GET("/me", h.findUserAccount)
+			authenticated.PATCH("/me", h.updateUser)
 
-			authenticated.GET("/courses", h.findUserCourses)
-			authenticated.PUT("/courses/:course_id", h.addUserFreeCourse)
+			authenticated.GET("/me/courses", h.findUserCourses)
+			authenticated.PUT("/me/courses/:course_id", h.addUserFreeCourse)
 		}
 	}
 }
@@ -82,7 +82,7 @@ func (h *Handler) findUserByID(context *gin.Context) {
 // @Failure 401 {object} RestErrorUnauthorized
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} []dto.UserInfoDTO
-// @Router /users/account [get]
+// @Router /users/me [get]
 func (h *Handler) findUserAccount(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
@@ -115,7 +115,7 @@ func (h *Handler) findUserAccount(context *gin.Context) {
 // @Failure 401 {object} RestErrorUnauthorized
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} []dto.UserDTO
-// @Router /users [put]
+// @Router /users/me [patch]
 func (h *Handler) updateUser(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {
@@ -151,10 +151,9 @@ func (h *Handler) updateUser(context *gin.Context) {
 // @Param id path string true "course id"
 // @Failure 400 {object} RestErrorBadRequest
 // @Failure 401 {object} RestErrorUnauthorized
-// @Failure 403 {object} RestErrorForbidden
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {string} string
-// @Router /users/courses/{id} [put]
+// @Router /users/me/courses/{id} [put]
 func (h *Handler) addUserFreeCourse(context *gin.Context) {
 	courseID, err := getIdFromPath(context, "course_id")
 	if err != nil {
@@ -198,7 +197,7 @@ func (h *Handler) addUserFreeCourse(context *gin.Context) {
 // @Failure 401 {object} RestErrorUnauthorized
 // @Failure 500 {object} RestErrorInternalError
 // @Success 200 {object} []dto.CourseDTO
-// @Router /users/courses [get]
+// @Router /users/me/courses [get]
 func (h *Handler) findUserCourses(context *gin.Context) {
 	userID, err := getIdFromRequestContext(context)
 	if err != nil {

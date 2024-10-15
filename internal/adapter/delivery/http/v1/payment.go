@@ -17,6 +17,18 @@ func (h *Handler) initPaymentRoutes(api *gin.RouterGroup) {
 	}
 }
 
+// @Summary GetCoursePaymentUrl
+// @Tags payment
+// @Description get course payment url
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "course id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string "url"
+// @Router /payment/courses/{id} [get]
 func (h *Handler) getCoursePaymentUrl(context *gin.Context) {
 	courseID, err := getIdFromPath(context, "id")
 	if err != nil {
