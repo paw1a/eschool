@@ -3,13 +3,12 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/paw1a/eschool/docs"
 	v1 "github.com/paw1a/eschool/internal/adapter/delivery/http/v1"
 	"github.com/paw1a/eschool/internal/app/config"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"net/http"
@@ -18,9 +17,7 @@ import (
 
 func NewGinRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
-
-	router.Use(cors.Default())
+	router := gin.Default()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")

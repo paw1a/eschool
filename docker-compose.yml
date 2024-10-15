@@ -136,6 +136,20 @@ services:
     networks:
       - backend
 
+  proxy:
+    image: nginx
+    container_name: 'proxy'
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/static/dist:/static/dist
+      - ./docs:/static/docs
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - backend
+    depends_on:
+      - app
 networks:
   backend:
     name: "backend"
