@@ -51,11 +51,11 @@
 
 ## Use-Case диаграмма
 
-![Use-case](docs/images/usecase.svg)
+![usecase](docs/images/usecase.svg)
 
 ## ER диаграмма
 
-![ER](docs/images/er.svg)
+![er](docs/images/er.svg)
 
 ## Сложные сценарии
 

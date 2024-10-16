@@ -145,6 +145,9 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/static/dist:/static/dist
       - ./docs:/static/docs
+      - ./README.md:/static/README.md
+      - ./nginx/static/index.html:/static/index.html
+      - ./nginx/static/md-renderer.html:/static/md-renderer.html
       - ./logs/nginx:/var/log/nginx
     networks:
       - backend
