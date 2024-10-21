@@ -5,7 +5,7 @@ build: swagger
 	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/web/main.go
 
 run: build
-	docker-compose up postgres redis minio pgadmin proxy app
+	docker-compose up postgres postgres-slave redis minio pgadmin proxy app app-read1 app-read2 app-mirror
 
 debug: build
 	docker-compose up postgres redis minio pgadmin debug

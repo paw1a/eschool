@@ -2,25 +2,58 @@ version: '3.9'
 
 services:
   postgres:
-    image: postgres
-    container_name: 'postgres'
+    image: bitnami/postgresql
+    container_name: postgres
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres -U dashori" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     logging:
       driver: none
     restart: always
     shm_size: 128mb
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
-      POSTGRES_DB: eschool
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
-      interval: 1s
-      timeout: 3s
-      retries: 30
-    volumes:
-      - ./.data/postgres:/var/lib/postgresql/data
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: repliaction_user
+      POSTGRESQL_REPLICATION_PASSWORD: repliaction_password
+      POSTGRESQL_USERNAME: user
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: eschool
+      POSTGRESQL_PORT: 5432
+      TZ: "Europe/Moscow"
     ports:
       - "5432:5432"
+    networks:
+      - backend
+
+  postgres-slave:
+    image: bitnami/postgresql
+    container_name: postgres-slave
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres -U dashori" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRESQL_REPLICATION_MODE: slave
+      POSTGRESQL_REPLICATION_USER: repliaction_user
+      POSTGRESQL_REPLICATION_PASSWORD: repliaction_password
+      POSTGRESQL_MASTER_HOST: postgres
+      POSTGRESQL_USERNAME: user
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: eschool
+      POSTGRESQL_PORT: 5433
+      TZ: "Europe/Moscow"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5433:5432"
     networks:
       - backend
 
@@ -31,7 +64,7 @@ services:
       - ./migrations:/migrations
     command: ["-path", "/migrations", "-database",
               "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable",
-              "up", "2"]
+              "up", "3"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,8 +104,6 @@ services:
   app:
     image: 'app'
     container_name: 'app'
-    logging:
-      driver: none
     build:
       context: .
       dockerfile: Dockerfile
@@ -91,6 +122,90 @@ services:
         condition: service_started
     ports:
       - "8080:8080"
+    networks:
+      - backend
+
+  app-read1:
+    image: 'app'
+    container_name: 'app-read1'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+      - ./logs/:/app/logs
+    env_file:
+      - .env
+    environment:
+      DB_HOST: "postgres-slave"
+    depends_on:
+      postgres-slave:
+        condition: service_healthy
+      app:
+        condition: service_started
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8081:8080"
+    networks:
+      - backend
+
+  app-read2:
+    image: 'app'
+    container_name: 'app-read2'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+      - ./logs/:/app/logs
+    env_file:
+      - .env
+    environment:
+      DB_HOST: "postgres-slave"
+    depends_on:
+      postgres-slave:
+        condition: service_healthy
+      app:
+        condition: service_started
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8082:8080"
+    networks:
+      - backend
+
+  app-mirror:
+    image: 'app'
+    container_name: 'app-mirror'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+      - ./logs/:/app/logs
+    env_file:
+      - .env
+    environment:
+      DB_HOST: "postgres-slave"
+    depends_on:
+      postgres-slave:
+        condition: service_healthy
+      app:
+        condition: service_started
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8083:8080"
     networks:
       - backend
 
@@ -153,6 +268,9 @@ services:
       - backend
     depends_on:
       - app
+      - app-read1
+      - app-read2
+      - app-mirror
 networks:
   backend:
     name: "backend"

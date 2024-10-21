@@ -138,3 +138,90 @@
 ## Экраны будущего web-приложения
 
 ![wireframes](docs/images/wireframes.svg)
+
+## Нагрузочное тестирование
+
+Запуск тестирования с Apache Benchmark
+```bash
+ab -k -n 1000 -c 10 -L 'http://localhost/api/v1/courses/'
+```
+
+Запуск одного инстанса
+```text
+Server Software:        nginx
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /api/v1/courses/
+Document Length:        188499 bytes
+
+Concurrency Level:      10
+Time taken for tests:   8.422 seconds
+Complete requests:      1000
+Failed requests:        0
+Keep-Alive requests:    0
+Total transferred:      188653000 bytes
+HTML transferred:       188499000 bytes
+Requests per second:    118.74 [#/sec] (mean)
+Time per request:       84.219 [ms] (mean)
+Time per request:       8.422 [ms] (mean, across all concurrent requests)
+Transfer rate:          21875.29 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       2
+Processing:    12   84 347.4     45    6149
+Waiting:       10   77 347.4     38    6140
+Total:         12   84 347.4     45    6149
+
+Percentage of the requests served within a certain time (ms)
+  50%     45
+  66%     58
+  75%     66
+  80%     70
+  90%     80
+  95%     90
+  98%    134
+  99%   3045
+ 100%   6149 (longest request)
+```
+
+Запуск с двумя дополнительными инстансами
+```text
+Server Software:        nginx
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /api/v1/courses/
+Document Length:        188499 bytes
+
+Concurrency Level:      10
+Time taken for tests:   4.858 seconds
+Complete requests:      1000
+Failed requests:        0
+Keep-Alive requests:    0
+Total transferred:      188653000 bytes
+HTML transferred:       188499000 bytes
+Requests per second:    205.83 [#/sec] (mean)
+Time per request:       48.584 [ms] (mean)
+Time per request:       4.858 [ms] (mean, across all concurrent requests)
+Transfer rate:          37920.47 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.4      0      11
+Processing:    15   48  24.9     41     302
+Waiting:       12   40  20.6     34     142
+Total:         15   48  24.9     41     302
+
+Percentage of the requests served within a certain time (ms)
+  50%     41
+  66%     49
+  75%     57
+  80%     63
+  90%     77
+  95%     92
+  98%    113
+  99%    132
+ 100%    302 (longest request)
+```

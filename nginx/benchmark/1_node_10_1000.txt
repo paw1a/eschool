@@ -1,0 +1,47 @@
+TCP Connect.....................: Avg/mean=19.08ms     Median=24.00ms  p(95)=30.00ms
+Server Processing...............: Avg/mean=51.98ms     Median=43.00ms  p(95)=94.00ms
+Content Transfer................: Avg/mean=6.60ms      Median=5.00ms   p(95)=17.00ms
+
+Summary:
+ Total Req.......................: 1000
+ Failed Req......................: 0
+ DNS Lookup......................: 2.00ms
+ Req/s...........................: 181.71
+
+
+Server Software:        nginx
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /api/v1/courses/
+Document Length:        188499 bytes
+
+Concurrency Level:      10
+Time taken for tests:   8.422 seconds
+Complete requests:      1000
+Failed requests:        0
+Keep-Alive requests:    0
+Total transferred:      188653000 bytes
+HTML transferred:       188499000 bytes
+Requests per second:    118.74 [#/sec] (mean)
+Time per request:       84.219 [ms] (mean)
+Time per request:       8.422 [ms] (mean, across all concurrent requests)
+Transfer rate:          21875.29 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       2
+Processing:    12   84 347.4     45    6149
+Waiting:       10   77 347.4     38    6140
+Total:         12   84 347.4     45    6149
+
+Percentage of the requests served within a certain time (ms)
+  50%     45
+  66%     58
+  75%     66
+  80%     70
+  90%     80
+  95%     90
+  98%    134
+  99%   3045
+ 100%   6149 (longest request)
