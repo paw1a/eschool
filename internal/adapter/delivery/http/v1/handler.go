@@ -62,8 +62,7 @@ func NewHandler(params HandlerParams, router *gin.Engine) *Handler {
 		paymentService: params.PaymentService,
 	}
 
-	api := router.Group("/api")
-	v1 := api.Group("/v1")
+	v1 := router.Group("/api/v1")
 	v1.Use(LoggerMiddleware(params.Logger))
 	{
 		handler.initAuthRoutes(v1)
