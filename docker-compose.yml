@@ -7,7 +7,7 @@ services:
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d postgres -U dashori" ]
+      test: [ "CMD-SHELL", "pg_isready -d postgres -U user" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,7 +35,7 @@ services:
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d postgres -U dashori" ]
+      test: [ "CMD-SHELL", "pg_isready -d postgres -U user" ]
       interval: 10s
       timeout: 5s
       retries: 5
