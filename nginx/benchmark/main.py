@@ -67,7 +67,7 @@ def generate_data(user_count, school_count, course_count, lesson_count, test_cou
 
     for i in range(0, user_count):
         user = User(id=uuid.uuid4(),
-                    email=fake.email(),
+                    email=(uuid.uuid4().hex + fake.email()),
                     password=fake.password(),
                     name=fake.last_name(),
                     surname=fake.first_name(),

@@ -3,9 +3,12 @@ export
 
 build: swagger
 	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/app ./cmd/web/main.go
+	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/gin ./cmd/gin/main.go
+	go mod download && CGO_ENABLED=0 GOOS=linux go build -gcflags="all=-N -l" -o ./.bin/echo ./cmd/echo/main.go
 
 run: build
-	docker-compose up postgres postgres-slave redis minio pgadmin proxy app app-read1 app-read2 app-mirror
+	docker-compose up postgres postgres-slave redis minio pgadmin proxy \
+	app app-read1 app-read2 app-mirror app-gin app-echo prometheus grafana
 
 debug: build
 	docker-compose up postgres redis minio pgadmin debug
@@ -68,5 +71,7 @@ swagger:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/web/main.go
 	swagger2openapi docs/swagger.yaml -o docs/openapi3.yaml
 
+pandora:
+	cd bench && ./run.sh
 
 .DEFAULT_GOAL := run

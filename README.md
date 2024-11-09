@@ -225,3 +225,12 @@ Percentage of the requests served within a certain time (ms)
   99%    132
  100%    302 (longest request)
 ```
+
+## Бенчмарки (Gin / Echo)
+Сгенерировать нагрузку на Gin и Echo сервера. Скрипты находятся в директории bench.
+```bash
+make pandora
+```
+![response-time](docs/images/response-time.jpeg)
+![rps](docs/images/rps.jpeg)
+![mem-cpu](docs/images/mem-cpu.jpeg)

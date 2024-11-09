@@ -8,3 +8,4 @@
 logs
 allure-reports
 allure-results
+**/*.log

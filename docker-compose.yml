@@ -271,6 +271,85 @@ services:
       - app-read1
       - app-read2
       - app-mirror
+
+  app-gin:
+    image: 'app'
+    container_name: 'app-gin'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/gin:/app/app
+      - ./config/:/app/config/
+      - ./logs/:/app/logs
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8085:8080"
+    networks:
+      - backend
+
+  app-echo:
+    image: 'app'
+    container_name: 'app-echo'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/echo:/app/app
+      - ./config/:/app/config/
+      - ./logs/:/app/logs
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8086:8080"
+    networks:
+      - backend
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: 'prometheus'
+    volumes:
+      - "./bench/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./.data/prometheus:/prometheus"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: 'grafana'
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.data/grafana:/var/lib/grafana
+      - ./bench/grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./bench/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./bench/grafana/gin-vs-echo-dashboard.json:/var/lib/grafana/dashboards/gin-vs-echo-dashboard.json
+    networks:
+      - backend
+
 networks:
   backend:
     name: "backend"
