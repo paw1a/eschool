@@ -72,6 +72,6 @@ swagger:
 	swagger2openapi docs/swagger.yaml -o docs/openapi3.yaml
 
 pandora:
-	cd bench && ./run.sh
+	cd bench && ./run-line.sh
 
 .DEFAULT_GOAL := run

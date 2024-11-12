@@ -233,4 +233,4 @@ make pandora
 ```
 ![response-time](docs/images/response-time.jpeg)
 ![rps](docs/images/rps.jpeg)
-![mem-cpu](docs/images/mem-cpu.jpeg)
+![mem-cpu](docs/images/resources.jpeg)
