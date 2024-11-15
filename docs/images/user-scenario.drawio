@@ -1,0 +1,158 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="rMuyzdkXo9kzSpG_U4lg">
+    <mxGraphModel dx="1371" dy="1037" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-19" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="270" width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-1" target="vhlRlryjKD2WHOxAGdkV-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-1" value="Register" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-3" value="Unknown user" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="205" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-4" target="vhlRlryjKD2WHOxAGdkV-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-4" value="Login" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-5" target="vhlRlryjKD2WHOxAGdkV-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-5" value="View courses catalog, prices, common description" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-6" target="vhlRlryjKD2WHOxAGdkV-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-6" value="View specific course" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-11" value="redirect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-7" target="vhlRlryjKD2WHOxAGdkV-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-7" value="Press buy button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-8" target="vhlRlryjKD2WHOxAGdkV-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-12" value="redirect" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="vhlRlryjKD2WHOxAGdkV-10">
+          <mxGeometry x="0.0101" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-8" value="Yookassa widget / enter payment information / pay" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="310" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-9" target="vhlRlryjKD2WHOxAGdkV-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-9" value="View user purchased courses / press pass button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="940" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-13" value="Pass course lessons" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-20" value="External yookassa api" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="820" y="380" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-21" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="560" width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-24" value="Student" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="495" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-26" target="vhlRlryjKD2WHOxAGdkV-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-26" value="Login" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-28" target="vhlRlryjKD2WHOxAGdkV-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-28" value="View courses catalog, prices, common description" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-30" target="vhlRlryjKD2WHOxAGdkV-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-30" value="View specific course" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-31" value="redirect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-32" target="vhlRlryjKD2WHOxAGdkV-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-32" value="Press buy button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-35" target="vhlRlryjKD2WHOxAGdkV-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-34" value="redirect" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="vhlRlryjKD2WHOxAGdkV-33">
+          <mxGeometry x="0.0101" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-35" value="Yookassa widget / enter payment information / pay" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="600" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-37" target="vhlRlryjKD2WHOxAGdkV-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-37" value="View user purchased courses / press pass button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-38" value="Pass course lessons" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="940" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-39" value="External yookassa api" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="670" y="670" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-40" value="Teacher" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="830" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-41" target="vhlRlryjKD2WHOxAGdkV-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-41" value="Login" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-42" target="vhlRlryjKD2WHOxAGdkV-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-42" value="View teacher courses" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-43" target="vhlRlryjKD2WHOxAGdkV-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-43" value="Create or edit own courses" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-44" target="vhlRlryjKD2WHOxAGdkV-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-44" value="Edit course common info / course content" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vhlRlryjKD2WHOxAGdkV-45" target="vhlRlryjKD2WHOxAGdkV-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-45" value="Edit specific lesson / submit" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vhlRlryjKD2WHOxAGdkV-46" value="Publish draft course" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="890" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
