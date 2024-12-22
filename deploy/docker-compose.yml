@@ -69,8 +69,6 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      - MINIO_ENDPOINT
-      - MINIO_BUCKET_NAME
       - MINIO_ROOT_USER
       - MINIO_ROOT_PASSWORD
     networks:
