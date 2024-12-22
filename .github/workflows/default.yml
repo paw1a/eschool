@@ -57,7 +57,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          source: "deploy/,!deploy/Dockerfile-backend,migrations/"
+          source: "migrations/,deploy/,!deploy/Dockerfile-backend"
           target: "app"
           strip_components: 1
 
@@ -93,7 +93,7 @@ jobs:
             export TAG="${{ env.TAG }}"
 
             cd app
-            docker-compose -f docker-compose.yml stop
+            docker-compose -f docker-compose.yml down
             docker-compose -f docker-compose.yml pull
             docker-compose -f docker-compose.yml up -d postgres redis minio migrate app
             docker image prune -f --filter="dangling=true"
