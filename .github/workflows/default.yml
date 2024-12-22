@@ -6,9 +6,8 @@ on:
   pull_request:
 
 env:
-  BACKEND_IMAGE: ecommerce
-  FRONTEND_IMAGE: ecommerce-frontend
-  GENERATE_IMAGE: generate
+  BACKEND_IMAGE: eschool
+  FRONTEND_IMAGE: eschool-frontend
   TAG: latest
 
 jobs:
@@ -29,7 +28,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Push to Docker Hub Ecommerce image
+      - name: Push to Docker Hub Eschool image
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -37,64 +36,57 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }}
 
-      - name: Push to Docker Hub React Frontend image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./frontend
-          file: ./deploy/Dockerfile-frontend
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
+#      - name: Push to Docker Hub React Frontend image
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: ./frontend
+#          file: ./deploy/Dockerfile-frontend
+#          push: true
+#          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
 
-      - name: Push to Docker Hub generate mongodb image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./db
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.GENERATE_IMAGE }}:${{ env.TAG }}
-
-  deploy:
-    name: Deploy to AWS
-    runs-on: ubuntu-latest
-    needs: build-and-push
-
-    steps:
-      - uses: actions/checkout@master
-      - name: Copy files
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          source: "deploy/,!deploy/Dockerfile-frontend,!deploy/Dockerfile-backend"
-          target: "app"
-          strip_components: 1
-
-      - name: Deploy ssh
-        uses: appleboy/ssh-action@v0.1.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          script: |
-            export STRIPE_KEY="${{ secrets.STRIPE_KEY }}"
-            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
-            
-            export HOST="${{ secrets.HOST }}"
-            export PORT="${{ secrets.PORT }}"
-            
-            export DB_NAME="${{ secrets.DB_NAME }}"
-            export DB_URI="${{ secrets.DB_URI }}"
-            
-            export REDIS_URI="${{ secrets.REDIS_URI }}"
-            
-            export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
-            export GENERATE_IMAGE="${{ env.GENERATE_IMAGE }}"
-            export BACKEND_IMAGE="${{ env.BACKEND_IMAGE }}"
-            export FRONTEND_IMAGE="${{ env.FRONTEND_IMAGE }}"
-            export TAG="${{ env.TAG }}"
-                        
-            cd app
-            docker-compose -f docker-compose.yml stop
-            docker-compose -f docker-compose.yml pull
-            docker-compose -f docker-compose.yml up -d frontend app db redis
-            docker image prune -f --filter="dangling=true"
+#  deploy:
+#    name: Deploy to server
+#    runs-on: ubuntu-latest
+#    needs: build-and-push
+#
+#    steps:
+#      - uses: actions/checkout@master
+#      - name: Copy files
+#        uses: appleboy/scp-action@master
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.SERVER_USERNAME }}
+#          key: ${{ secrets.SSHKEY }}
+#          source: "deploy/,!deploy/Dockerfile-frontend,!deploy/Dockerfile-backend"
+#          target: "app"
+#          strip_components: 1
+#
+#      - name: Deploy ssh
+#        uses: appleboy/ssh-action@v0.1.3
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.SERVER_USERNAME }}
+#          key: ${{ secrets.SSHKEY }}
+#          script: |
+#            export STRIPE_KEY="${{ secrets.STRIPE_KEY }}"
+#            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+#
+#            export HOST="${{ secrets.HOST }}"
+#            export PORT="${{ secrets.PORT }}"
+#
+#            export DB_NAME="${{ secrets.DB_NAME }}"
+#            export DB_URI="${{ secrets.DB_URI }}"
+#
+#            export REDIS_URI="${{ secrets.REDIS_URI }}"
+#
+#            export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
+#            export GENERATE_IMAGE="${{ env.GENERATE_IMAGE }}"
+#            export BACKEND_IMAGE="${{ env.BACKEND_IMAGE }}"
+#            export FRONTEND_IMAGE="${{ env.FRONTEND_IMAGE }}"
+#            export TAG="${{ env.TAG }}"
+#
+#            cd app
+#            docker-compose -f docker-compose.yml stop
+#            docker-compose -f docker-compose.yml pull
+#            docker-compose -f docker-compose.yml up -d frontend app db redis
+#            docker image prune -f --filter="dangling=true"
