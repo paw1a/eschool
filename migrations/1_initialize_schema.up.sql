@@ -22,10 +22,12 @@ create type course_status as enum ('draft', 'ready', 'published');
 create table public.course (
     id uuid primary key,
     name varchar(255) not null,
+    description text not null,
     school_id uuid not null,
     level int not null,
     price bigint not null,
     language varchar(255) not null,
+    image_url text,
     status course_status not null,
     foreign key (school_id) references public.school(id) on delete cascade
 );

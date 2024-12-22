@@ -752,6 +752,64 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses/{id}/brief": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get course brief information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "course"
+                ],
+                "summary": "GetCourseBrief",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseBriefDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
         "/courses/{id}/lessons": {
             "get": {
                 "security": [
@@ -1402,6 +1460,73 @@ const docTemplate = `{
                 }
             }
         },
+        "/schools/{schoolID}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete school",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "school"
+                ],
+                "summary": "DeleteSchool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "school id",
+                        "name": "schoolID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorForbidden"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
         "/schools/{schoolID}/courses/{courseID}": {
             "delete": {
                 "security": [
@@ -1868,6 +1993,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/me/schools": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "find user schools",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "FindUserSchools",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "get": {
                 "description": "get user by id",
@@ -1923,12 +2097,55 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO": {
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseBriefDTO": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Course description"
+                },
                 "id": {
                     "type": "string",
                     "example": "30e18bc1-4354-4937-9a4d-03cf0b7027ca"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "image.io/image.png"
+                },
+                "language": {
+                    "type": "string",
+                    "example": "english"
+                },
+                "lessons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonBriefDTO"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Course name"
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 3990
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Course description"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "30e18bc1-4354-4937-9a4d-03cf0b7027ca"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "image.io/image.png"
                 },
                 "language": {
                     "type": "string",
@@ -1959,12 +2176,21 @@ const docTemplate = `{
         "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateCourseDTO": {
             "type": "object",
             "required": [
+                "description",
                 "language",
                 "level",
                 "name",
                 "price"
             ],
             "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Course description"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "image.io/image.png"
+                },
                 "language": {
                     "type": "string",
                     "example": "english"
@@ -1998,6 +2224,20 @@ const docTemplate = `{
                     "example": "School description"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonBriefDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -2226,6 +2466,14 @@ const docTemplate = `{
         "github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateCourseDTO": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Updated description"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "image.io/image.png"
+                },
                 "language": {
                     "type": "string",
                     "example": "english"

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/guregu/null"
 	"github.com/paw1a/eschool/internal/adapter/delivery/http/v1/dto"
@@ -13,6 +14,7 @@ func (h *Handler) initCourseRoutes(api *gin.RouterGroup) {
 	{
 		courses.GET("/", h.findAllCourses)
 		courses.GET("/:id", h.findCourseByID)
+		courses.GET("/:id/brief", h.findCourseBrief)
 		authenticated := courses.Group("/", h.verifyToken)
 		{
 			authenticated.GET("/:id/lessons", h.verifyCourseReadAccess, h.findCourseLessons)
@@ -230,6 +232,46 @@ func (h *Handler) findCourseLessons(context *gin.Context) {
 	h.successResponse(context, lessonDTOs)
 }
 
+// @Summary GetCourseBrief
+// @Tags course
+// @Security ApiKeyAuth
+// @Description get course brief information
+// @Accept  json
+// @Produce json
+// @Param   id   path    string  true  "course id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.CourseBriefDTO
+// @Router /courses/{id}/brief [get]
+func (h *Handler) findCourseBrief(context *gin.Context) {
+	courseID, err := getIdFromPath(context, "id")
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	course, err := h.courseService.FindByID(context.Request.Context(), courseID)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	lessons, err := h.lessonService.FindCourseLessons(context.Request.Context(), courseID)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	courseBrief := dto.NewCourseBriefDTO(course)
+	courseBrief.Lessons = make([]dto.LessonBriefDTO, len(lessons))
+	for i, lesson := range lessons {
+		courseBrief.Lessons[i] = dto.NewLessonBriefDTO(lesson)
+	}
+
+	h.successResponse(context, courseBrief)
+}
+
 // @Summary CreateCourseLesson
 // @Tags course
 // @Security ApiKeyAuth
@@ -262,10 +304,6 @@ func (h *Handler) createCourseLesson(context *gin.Context) {
 	var lesson domain.Lesson
 	switch createLessonDTO.Type {
 	case dto.LessonDTOTheory:
-		if !createLessonDTO.Theory.Valid {
-			h.errorResponse(context, BadRequestError)
-			return
-		}
 		lesson, err = h.lessonService.CreateTheoryLesson(context.Request.Context(),
 			courseID, port.CreateTheoryParam{
 				Title:  createLessonDTO.Title,
@@ -273,10 +311,6 @@ func (h *Handler) createCourseLesson(context *gin.Context) {
 				Theory: createLessonDTO.Theory.String,
 			})
 	case dto.LessonDTOVideo:
-		if !createLessonDTO.VideoUrl.Valid {
-			h.errorResponse(context, BadRequestError)
-			return
-		}
 		lesson, err = h.lessonService.CreateVideoLesson(context.Request.Context(),
 			courseID, port.CreateVideoParam{
 				Title:    createLessonDTO.Title,
@@ -284,11 +318,6 @@ func (h *Handler) createCourseLesson(context *gin.Context) {
 				VideoUrl: createLessonDTO.VideoUrl.String,
 			})
 	case dto.LessonDTOPractice:
-		if createLessonDTO.Tests == nil {
-			h.errorResponse(context, BadRequestError)
-			return
-		}
-
 		tests := make([]port.CreateTestParam, len(createLessonDTO.Tests))
 		for i, test := range createLessonDTO.Tests {
 			tests[i] = port.CreateTestParam{
@@ -527,6 +556,7 @@ func (h *Handler) findLessonStat(context *gin.Context) {
 	}
 
 	statDTO := dto.NewLessonStatDTO(stat)
+	fmt.Printf("%v\n", statDTO)
 	h.successResponse(context, statDTO)
 }
 
@@ -566,6 +596,8 @@ func (h *Handler) passCourseLesson(context *gin.Context) {
 		return
 	}
 
+	fmt.Printf("%v\n", passLessonDTO)
+
 	lesson, err := h.lessonService.FindByID(context, lessonID)
 	if err != nil {
 		h.errorResponse(context, err)
@@ -594,6 +626,8 @@ func (h *Handler) passCourseLesson(context *gin.Context) {
 					var newScore int
 					if passTest.Answer == test.Answer {
 						newScore = lesson.Tests[j].Score
+					} else {
+						newScore = 0
 					}
 
 					testStats[i] = port.UpdateTestStatParam{

@@ -9,11 +9,13 @@ const (
 )
 
 type Course struct {
-	ID       ID
-	SchoolID ID
-	Name     string
-	Level    int
-	Price    int64
-	Language string
-	Status   CourseStatus
+	ID          ID
+	SchoolID    ID
+	Name        string
+	Description string
+	Level       int
+	Price       int64
+	Language    string
+	ImageUrl    string
+	Status      CourseStatus
 }

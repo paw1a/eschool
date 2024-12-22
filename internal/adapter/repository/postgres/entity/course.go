@@ -12,13 +12,15 @@ const (
 )
 
 type PgCourse struct {
-	ID       uuid.UUID `db:"id"`
-	SchoolID uuid.UUID `db:"school_id"`
-	Name     string    `db:"name"`
-	Level    int       `db:"level"`
-	Price    int64     `db:"price"`
-	Language string    `db:"language"`
-	Status   string    `db:"status"`
+	ID          uuid.UUID `db:"id"`
+	SchoolID    uuid.UUID `db:"school_id"`
+	Name        string    `db:"name"`
+	Description string    `db:"description"`
+	Level       int       `db:"level"`
+	Price       int64     `db:"price"`
+	Language    string    `db:"language"`
+	ImageUrl    string    `db:"image_url"`
+	Status      string    `db:"status"`
 }
 
 func (s *PgCourse) ToDomain() domain.Course {
@@ -33,13 +35,15 @@ func (s *PgCourse) ToDomain() domain.Course {
 	}
 
 	return domain.Course{
-		ID:       domain.ID(s.ID.String()),
-		SchoolID: domain.ID(s.SchoolID.String()),
-		Name:     s.Name,
-		Level:    s.Level,
-		Price:    s.Price,
-		Language: s.Language,
-		Status:   status,
+		ID:          domain.ID(s.ID.String()),
+		SchoolID:    domain.ID(s.SchoolID.String()),
+		Name:        s.Name,
+		Description: s.Description,
+		Level:       s.Level,
+		Price:       s.Price,
+		Language:    s.Language,
+		ImageUrl:    s.ImageUrl,
+		Status:      status,
 	}
 }
 
@@ -57,12 +61,14 @@ func NewPgCourse(course domain.Course) PgCourse {
 	}
 
 	return PgCourse{
-		ID:       id,
-		SchoolID: schoolID,
-		Name:     course.Name,
-		Level:    course.Level,
-		Price:    course.Price,
-		Language: course.Language,
-		Status:   status,
+		ID:          id,
+		SchoolID:    schoolID,
+		Name:        course.Name,
+		Description: course.Description,
+		Level:       course.Level,
+		Price:       course.Price,
+		Language:    course.Language,
+		ImageUrl:    course.ImageUrl,
+		Status:      status,
 	}
 }

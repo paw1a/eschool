@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/paw1a/eschool/internal/core/domain"
@@ -64,12 +65,19 @@ func NewHandler(params HandlerParams, router *gin.Engine) *Handler {
 
 	v1 := router.Group("/api/v1")
 	v1.Use(LoggerMiddleware(params.Logger))
+	v1.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 	{
 		handler.initAuthRoutes(v1)
 		handler.initUsersRoutes(v1)
 		handler.initCourseRoutes(v1)
 		handler.initSchoolRoutes(v1)
 		handler.initPaymentRoutes(v1)
+		handler.initMediaRoutes(v1)
 	}
 
 	return handler

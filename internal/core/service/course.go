@@ -281,13 +281,15 @@ func (c *CourseService) CreateSchoolCourse(ctx context.Context, schoolID domain.
 	}
 
 	course, err := c.repo.Create(ctx, domain.Course{
-		ID:       domain.NewID(),
-		SchoolID: schoolID,
-		Name:     param.Name,
-		Level:    param.Level,
-		Price:    param.Price,
-		Language: param.Language,
-		Status:   domain.CourseDraft,
+		ID:          domain.NewID(),
+		SchoolID:    schoolID,
+		Name:        param.Name,
+		Description: param.Description,
+		Level:       param.Level,
+		Price:       param.Price,
+		Language:    param.Language,
+		ImageUrl:    param.ImageUrl,
+		Status:      domain.CourseDraft,
 	})
 	if err != nil {
 		c.logger.Error("failed to create course", zap.Error(err))
@@ -317,6 +319,9 @@ func (c *CourseService) Update(ctx context.Context, courseID domain.ID,
 	if param.Name.Valid {
 		course.Name = param.Name.String
 	}
+	if param.Description.Valid {
+		course.Description = param.Description.String
+	}
 	if param.Level.Valid {
 		if param.Level.Int64 < 1 {
 			return domain.Course{}, errs.ErrCourseInvalidLevel
@@ -325,6 +330,9 @@ func (c *CourseService) Update(ctx context.Context, courseID domain.ID,
 	}
 	if param.Language.Valid {
 		course.Language = param.Language.String
+	}
+	if param.ImageUrl.Valid {
+		course.ImageUrl = param.ImageUrl.String
 	}
 
 	course, err = c.repo.Update(ctx, course)

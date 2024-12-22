@@ -17,6 +17,7 @@ func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 			authenticated.PATCH("/me", h.updateUser)
 
 			authenticated.GET("/me/courses", h.findUserCourses)
+			authenticated.GET("/me/schools", h.findUserSchools)
 			authenticated.PUT("/me/courses/:course_id", h.addUserFreeCourse)
 		}
 	}
@@ -217,4 +218,36 @@ func (h *Handler) findUserCourses(context *gin.Context) {
 	}
 
 	h.successResponse(context, courseDTOs)
+}
+
+// @Summary FindUserSchools
+// @Tags user
+// @Security ApiKeyAuth
+// @Description find user schools
+// @Accept  json
+// @Produce json
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {object} []dto.SchoolDTO
+// @Router /users/me/schools [get]
+func (h *Handler) findUserSchools(context *gin.Context) {
+	userID, err := getIdFromRequestContext(context)
+	if err != nil {
+		h.errorResponse(context, UnauthorizedError)
+		return
+	}
+
+	schools, err := h.schoolService.FindUserSchools(context.Request.Context(), userID)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	schoolDTOs := make([]dto.SchoolDTO, len(schools))
+	for i, school := range schools {
+		schoolDTOs[i] = dto.NewSchoolDTO(school)
+	}
+
+	h.successResponse(context, schoolDTOs)
 }

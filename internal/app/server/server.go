@@ -38,8 +38,8 @@ func NewServer(lc fx.Lifecycle, params ServerParams) *http.Server {
 	server := &http.Server{
 		Handler:      params.Router,
 		Addr:         fmt.Sprintf(":%s", params.Cfg.Web.Port),
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
 	}
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

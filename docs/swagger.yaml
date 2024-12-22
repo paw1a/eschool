@@ -1,9 +1,40 @@
 basePath: /api/v1
 definitions:
-  github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO:
+  github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseBriefDTO:
     properties:
+      description:
+        example: Course description
+        type: string
       id:
         example: 30e18bc1-4354-4937-9a4d-03cf0b7027ca
+        type: string
+      image_url:
+        example: image.io/image.png
+        type: string
+      language:
+        example: english
+        type: string
+      lessons:
+        items:
+          $ref: '#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonBriefDTO'
+        type: array
+      name:
+        example: Course name
+        type: string
+      price:
+        example: 3990
+        type: integer
+    type: object
+  github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseDTO:
+    properties:
+      description:
+        example: Course description
+        type: string
+      id:
+        example: 30e18bc1-4354-4937-9a4d-03cf0b7027ca
+        type: string
+      image_url:
+        example: image.io/image.png
         type: string
       language:
         example: english
@@ -26,6 +57,12 @@ definitions:
     type: object
   github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CreateCourseDTO:
     properties:
+      description:
+        example: Course description
+        type: string
+      image_url:
+        example: image.io/image.png
+        type: string
       language:
         example: english
         type: string
@@ -39,6 +76,7 @@ definitions:
         example: "3990"
         type: string
     required:
+    - description
     - language
     - level
     - name
@@ -56,6 +94,15 @@ definitions:
     required:
     - description
     - name
+    type: object
+  github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonBriefDTO:
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
     type: object
   github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.LessonDTO:
     properties:
@@ -210,6 +257,12 @@ definitions:
     type: object
   github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.UpdateCourseDTO:
     properties:
+      description:
+        example: Updated description
+        type: string
+      image_url:
+        example: image.io/image.png
+        type: string
       language:
         example: english
         type: string
@@ -846,6 +899,43 @@ paths:
       summary: GetCourseByID
       tags:
       - course
+  /courses/{id}/brief:
+    get:
+      consumes:
+      - application/json
+      description: get course brief information
+      parameters:
+      - description: course id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.CourseBriefDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError'
+      security:
+      - ApiKeyAuth: []
+      summary: GetCourseBrief
+      tags:
+      - course
   /courses/{id}/lessons:
     get:
       consumes:
@@ -1270,6 +1360,49 @@ paths:
       summary: GetSchoolTeachers
       tags:
       - school
+  /schools/{schoolID}:
+    delete:
+      consumes:
+      - application/json
+      description: delete school
+      parameters:
+      - description: school id
+        in: path
+        name: schoolID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: message
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorForbidden'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError'
+      security:
+      - ApiKeyAuth: []
+      summary: DeleteSchool
+      tags:
+      - school
   /schools/{schoolID}/courses/{courseID}:
     delete:
       consumes:
@@ -1603,6 +1736,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: AddUserFreeCourse
+      tags:
+      - user
+  /users/me/schools:
+    get:
+      consumes:
+      - application/json
+      description: find user schools
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_paw1a_eschool_internal_adapter_delivery_http_v1_dto.SchoolDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorUnauthorized'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_adapter_delivery_http_v1.RestErrorInternalError'
+      security:
+      - ApiKeyAuth: []
+      summary: FindUserSchools
       tags:
       - user
 securityDefinitions:

@@ -8,7 +8,9 @@ import (
 	"github.com/pkg/errors"
 	"mime"
 	"net/url"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
 type Config struct {
@@ -38,10 +40,22 @@ func (m *MinioObjectStorage) SaveFile(ctx context.Context, file domain.File) (do
 	if err != nil {
 		return "", errors.Wrap(errs.ErrSaveFileError, err.Error())
 	}
+
 	fileUrl := url.URL{
 		Scheme: "http",
 		Host:   m.config.Endpoint,
 		Path:   filepath.Join(m.config.BucketName, minioFilename),
 	}
-	return domain.Url(fileUrl.String()), nil
+
+	urlString := fileUrl.String()
+	host := os.Getenv("HOST")
+	if host != "" {
+		parsedURL, err := url.Parse(urlString)
+		if err != nil {
+			return "", err
+		}
+		parsedURL.Host = strings.Replace(parsedURL.Host, parsedURL.Host, host+":"+parsedURL.Port(), 1)
+		urlString = parsedURL.String()
+	}
+	return domain.Url(urlString), nil
 }

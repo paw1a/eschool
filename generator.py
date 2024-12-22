@@ -2,12 +2,19 @@ import random
 import uuid
 import argparse
 from faker import Faker
-from faker.providers import phone_number
+from faker.providers import phone_number, lorem
 from dataclasses import dataclass
+
+IMAGES = [
+    'https://cdn.stepik.net/media/cache/images/courses/63054/cover_foIuz1t/6bc976a3abd69e9e3e5163a5973a8ccf.jpg',
+    'https://cdn.stepik.net/media/cache/images/courses/104774/cover_3mkW6vV/f5ae6ccd6cc779eeaecfa9da9d567613.png',
+    'https://cdn.stepik.net/media/cache/images/courses/154096/cover_LOGEM4B/5a9b962caa4a946a3d23bdfd49e0480a.png',
+]
 
 # Initialize Faker
 fake = Faker()
 fake.add_provider(phone_number)
+fake.add_provider(lorem)
 
 # Define dataclasses for all tables
 @dataclass
@@ -32,10 +39,12 @@ class School:
 class Course:
     id: uuid.UUID
     name: str
+    description: str
     school_id: uuid.UUID
     level: int
     price: int
     language: str
+    image: str
     status: str
 
 @dataclass
@@ -99,21 +108,24 @@ def generate_data(user_count, school_count, course_count, lesson_count, test_cou
 
     # Generate Courses
     sql_str = ''
-    sql_str += "insert into public.course (id, name, school_id, level, price, language, status) values "
+    sql_str += "insert into public.course (id, name, description, school_id, level, price, language, image_url, status) values "
     courses = []
     statuses = ['draft']
 
     for i in range(0, course_count):
+        image_url = random.choice(IMAGES)
         course = Course(id=uuid.uuid4(),
                         name=fake.job().replace('\'', ''),
+                        description=fake.paragraph(20),
                         school_id=random.choice(schools).id,
                         level=random.randint(1, 5),
                         price=random.randint(100, 1000),
                         language=fake.language_name(),
+                        image=image_url,
                         status=random.choice(statuses))
         courses.append(course)
-        sql_str += f"('{course.id}', '{course.name}', '{course.school_id}', {course.level}, "\
-                   f"{course.price}, '{course.language}', '{course.status}'),\n"
+        sql_str += f"('{course.id}', '{course.name}', '{course.description}', '{course.school_id}', {course.level}, "\
+                   f"{course.price}, '{course.language}', '{course.image}', '{course.status}'),\n"
 
     sql_str = sql_str.strip(',\n') + ';\n\n'
     output_file.write(sql_str)

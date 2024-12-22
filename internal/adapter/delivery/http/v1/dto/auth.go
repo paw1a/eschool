@@ -9,7 +9,7 @@ type SignUpDTO struct {
 	Password  string      `json:"password" binding:"required" example:"123"`
 	Phone     null.String `json:"phone" binding:"omitempty" swaggertype:"string" example:"+79999999999"`
 	City      null.String `json:"city" binding:"omitempty" swaggertype:"string" example:"Moscow"`
-	AvatarUrl null.String `json:"avatar_url" binding:"omitempty,url" swaggertype:"string" example:"image.io/avatar.png"`
+	AvatarUrl null.String `json:"avatar_url" binding:"omitempty" swaggertype:"string" example:"image.io/avatar.png"`
 }
 
 type SignInDTO struct {

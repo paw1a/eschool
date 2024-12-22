@@ -16,6 +16,7 @@ func (h *Handler) initSchoolRoutes(api *gin.RouterGroup) {
 		{
 			authenticated.POST("/", h.createSchool)
 			authenticated.PATCH("/:id", h.verifySchoolOwner, h.updateSchool)
+			authenticated.DELETE("/:id", h.verifySchoolOwner, h.deleteSchool)
 
 			authenticated.GET("/:id/courses", h.findSchoolCourses)
 			authenticated.POST("/:id/courses", h.verifySchoolOwner, h.createSchoolCourse)
@@ -171,6 +172,36 @@ func (h *Handler) updateSchool(context *gin.Context) {
 	h.successResponse(context, schoolDTO)
 }
 
+// @Summary DeleteSchool
+// @Tags school
+// @Security ApiKeyAuth
+// @Description delete school
+// @Accept  json
+// @Produce json
+// @Param   schoolID   path    string  true  "school id"
+// @Failure 400 {object} RestErrorBadRequest
+// @Failure 401 {object} RestErrorUnauthorized
+// @Failure 403 {object} RestErrorForbidden
+// @Failure 404 {object} RestErrorNotFound
+// @Failure 500 {object} RestErrorInternalError
+// @Success 200 {string} string "message"
+// @Router /schools/{schoolID} [delete]
+func (h *Handler) deleteSchool(context *gin.Context) {
+	schoolID, err := getIdFromPath(context, "id")
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	err = h.schoolService.Delete(context.Request.Context(), schoolID)
+	if err != nil {
+		h.errorResponse(context, err)
+		return
+	}
+
+	h.successResponse(context, "successfully deleted")
+}
+
 // @Summary GetSchoolCourses
 // @Tags school
 // @Description get school courses
@@ -234,10 +265,12 @@ func (h *Handler) createSchoolCourse(context *gin.Context) {
 
 	course, err := h.courseService.CreateSchoolCourse(context.Request.Context(),
 		schoolID, port.CreateCourseParam{
-			Name:     createCourseDTO.Name,
-			Level:    int(createCourseDTO.Level.Int64),
-			Price:    createCourseDTO.Price.Int64,
-			Language: createCourseDTO.Language,
+			Name:        createCourseDTO.Name,
+			Description: createCourseDTO.Description,
+			Level:       int(createCourseDTO.Level.Int64),
+			Price:       createCourseDTO.Price.Int64,
+			ImageUrl:    createCourseDTO.ImageUrl,
+			Language:    createCourseDTO.Language,
 		})
 	if err != nil {
 		h.errorResponse(context, err)
@@ -292,10 +325,12 @@ func (h *Handler) updateSchoolCourse(context *gin.Context) {
 
 	course, err := h.courseService.Update(context.Request.Context(),
 		courseID, port.UpdateCourseParam{
-			Name:     updateCourseDTO.Name,
-			Level:    updateCourseDTO.Level,
-			Price:    updateCourseDTO.Price,
-			Language: updateCourseDTO.Language,
+			Name:        updateCourseDTO.Name,
+			Description: updateCourseDTO.Description,
+			Level:       updateCourseDTO.Level,
+			Price:       updateCourseDTO.Price,
+			Language:    updateCourseDTO.Language,
+			ImageUrl:    updateCourseDTO.ImageUrl,
 		})
 	if err != nil {
 		h.errorResponse(context, err)

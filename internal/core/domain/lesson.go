@@ -41,10 +41,6 @@ func (l *Lesson) Validate() error {
 	}
 	switch l.Type {
 	case PracticeLesson:
-		if len(l.Tests) == 0 {
-			return errs.ErrCoursePracticeLessonEmptyTests
-		}
-
 		for _, test := range l.Tests {
 			if test.TaskUrl == "" {
 				return errs.ErrCoursePracticeLessonEmptyTestTaskUrl
@@ -60,13 +56,7 @@ func (l *Lesson) Validate() error {
 			}
 		}
 	case TheoryLesson:
-		if !l.TheoryUrl.Valid {
-			return errs.ErrCourseTheoryLessonEmptyUrl
-		}
 	case VideoLesson:
-		if !l.VideoUrl.Valid {
-			return errs.ErrCourseVideoLessonEmptyUrl
-		}
 	}
 
 	return nil

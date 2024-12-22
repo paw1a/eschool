@@ -51,7 +51,7 @@ func (s *SchoolService) FindSchoolCourses(ctx context.Context, schoolID domain.I
 func (s *SchoolService) FindUserSchools(ctx context.Context, userID domain.ID) ([]domain.School, error) {
 	schools, err := s.repo.FindUserSchools(ctx, userID)
 	if err != nil {
-		s.logger.Error("failed to get school by id", zap.Error(err),
+		s.logger.Error("failed to get user schools", zap.Error(err),
 			zap.String("userID", userID.String()))
 		return nil, err
 	}

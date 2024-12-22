@@ -13,17 +13,20 @@ insert into school (id, name, description, owner_id)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7034cd', 'school2', 'desc2', '30e18bc1-4354-4937-9a3b-03cf0b7027cb');
 
 -- insert courses
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a4d-03cf0b7027ca', 'course1', '30e18bc1-4354-4937-9a3b-03cf0b7034cc',
-        4, 1200, 'russian', 'draft');
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a4d-03cf0b7027cb', 'course2', '30e18bc1-4354-4937-9a3b-03cf0b7034cc',
-        2, 1500, 'english', 'published');
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a4d-03cf0b7026cc', 'course3', '30e18bc1-4354-4937-9a3b-03cf0b7034cd',
-        3, 12000, 'russian', 'ready');
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a4d-03cf0b7026cd', 'course4', '30e18bc1-4354-4937-9a3b-03cf0b7034cd',
+insert into course (id, name, description, school_id, level, price, image_url, language, status)
+values ('30e18bc1-4354-4937-9a4d-03cf0b7027ca', 'course1', 'Course description', '30e18bc1-4354-4937-9a3b-03cf0b7034cc',
+        4, 1200, 'https://cdn.stepik.net/media/cache/images/courses/63054/cover_foIuz1t/6bc976a3abd69e9e3e5163a5973a8ccf.jpg',
+        'russian', 'draft');
+insert into course (id, name, description, school_id, level, price, image_url, language, status)
+values ('30e18bc1-4354-4937-9a4d-03cf0b7027cb', 'course2', 'Course description', '30e18bc1-4354-4937-9a3b-03cf0b7034cc',
+        2, 1500, 'https://cdn.stepik.net/media/cache/images/courses/63054/cover_foIuz1t/6bc976a3abd69e9e3e5163a5973a8ccf.jpg',
+        'english', 'published');
+insert into course (id, name, description, school_id, level, price, image_url, language, status)
+values ('30e18bc1-4354-4937-9a4d-03cf0b7026cc', 'course3', 'Course description', '30e18bc1-4354-4937-9a3b-03cf0b7034cd',
+        3, 12000, 'https://cdn.stepik.net/media/cache/images/courses/104774/cover_3mkW6vV/f5ae6ccd6cc779eeaecfa9da9d567613.png',
+        'russian', 'ready');
+insert into course (id, name, description, school_id, level, price, image_url, language, status)
+values ('30e18bc1-4354-4937-9a4d-03cf0b7026cd', 'course4', 'Course description', '30e18bc1-4354-4937-9a3b-03cf0b7034cd',
         2, 0, 'english', 'published');
 
 -- insert reviews

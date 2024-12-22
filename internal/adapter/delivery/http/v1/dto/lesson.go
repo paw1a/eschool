@@ -16,7 +16,7 @@ type CreateLessonDTO struct {
 	Type     string          `json:"type" binding:"required,oneof=theory video practice"`
 	Score    null.Int        `json:"score" binding:"required" swaggertype:"int"`
 	Theory   null.String     `json:"theory" binding:"omitempty" swaggertype:"string"`
-	VideoUrl null.String     `json:"video_url" binding:"omitempty,url" swaggertype:"string"`
+	VideoUrl null.String     `json:"video_url" binding:"omitempty" swaggertype:"string"`
 	Tests    []CreateTestDTO `json:"tests" binding:"omitempty"`
 }
 
@@ -32,7 +32,7 @@ type UpdateLessonDTO struct {
 	Title    null.String     `json:"title" binding:"required" swaggertype:"string"`
 	Score    null.Int        `json:"score" binding:"required" swaggertype:"int"`
 	Theory   null.String     `json:"theory" binding:"omitempty" swaggertype:"string"`
-	VideoUrl null.String     `json:"video_url" binding:"omitempty,url" swaggertype:"string"`
+	VideoUrl null.String     `json:"video_url" binding:"omitempty" swaggertype:"string"`
 	Tests    []CreateTestDTO `json:"tests" binding:"omitempty"`
 }
 
@@ -55,6 +55,12 @@ type LessonDTO struct {
 	TheoryUrl null.String `json:"theory_url" binding:"omitempty" swaggertype:"string"`
 	VideoUrl  null.String `json:"video_url" binding:"omitempty" swaggertype:"string"`
 	Tests     []TestDTO   `json:"tests" binding:"omitempty"`
+}
+
+type LessonBriefDTO struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	Type  string `json:"type"`
 }
 
 type TestDTO struct {
@@ -94,6 +100,24 @@ func NewLessonDTO(lesson domain.Lesson) LessonDTO {
 		TheoryUrl: lesson.TheoryUrl,
 		VideoUrl:  lesson.VideoUrl,
 		Tests:     tests,
+	}
+}
+
+func NewLessonBriefDTO(lesson domain.Lesson) LessonBriefDTO {
+	var lessonType string
+	switch lesson.Type {
+	case domain.TheoryLesson:
+		lessonType = LessonDTOTheory
+	case domain.VideoLesson:
+		lessonType = LessonDTOVideo
+	case domain.PracticeLesson:
+		lessonType = LessonDTOPractice
+	}
+
+	return LessonBriefDTO{
+		ID:    lesson.ID.String(),
+		Title: lesson.Title,
+		Type:  lessonType,
 	}
 }
 

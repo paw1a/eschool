@@ -11,15 +11,21 @@ insert into school (id, name, description, owner_id)
 values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', 'School 1', 'description', '30e18bc1-4354-4937-9a3b-03cf0b7027ca');
 
 -- insert courses
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', 'Course 1', '30e18bc1-4354-4937-9a3b-03cf0b7027ca',
-        4, 0, 'russian', 'published');
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', 'Course 2', '30e18bc1-4354-4937-9a3b-03cf0b7027ca',
-        2, 0, 'english', 'published');
-insert into course (id, name, school_id, level, price, language, status)
-values ('30e18bc1-4354-4937-9a3b-03cf0b7027cc', 'Course 3', '30e18bc1-4354-4937-9a3b-03cf0b7027ca',
-        3, 10, 'russian', 'draft');
+insert into course (id, name, description, school_id, level, price, language, image_url, status)
+values ('30e18bc1-4354-4937-9a3b-03cf0b7027ca', 'Course 1', 'Course description',
+        '30e18bc1-4354-4937-9a3b-03cf0b7027ca', 4, 0, 'russian',
+        'https://cdn.stepik.net/media/cache/images/courses/63054/cover_foIuz1t/6bc976a3abd69e9e3e5163a5973a8ccf.jpg',
+        'published');
+insert into course (id, name, description, school_id, level, price, language, image_url, status)
+values ('30e18bc1-4354-4937-9a3b-03cf0b7027cb', 'Course 2', 'Course description',
+        '30e18bc1-4354-4937-9a3b-03cf0b7027ca', 2, 0, 'english',
+        'https://cdn.stepik.net/media/cache/images/courses/104774/cover_3mkW6vV/f5ae6ccd6cc779eeaecfa9da9d567613.png',
+        'published');
+insert into course (id, name, description, school_id, level, price, language, image_url, status)
+values ('30e18bc1-4354-4937-9a3b-03cf0b7027cc', 'Course 3', 'Course description',
+        '30e18bc1-4354-4937-9a3b-03cf0b7027ca', 3, 10, 'russian',
+        'https://cdn.stepik.net/media/cache/images/courses/154096/cover_LOGEM4B/5a9b962caa4a946a3d23bdfd49e0480a.png',
+        'draft');
 
 -- insert school teachers
 insert into school_teacher (teacher_id, school_id)
