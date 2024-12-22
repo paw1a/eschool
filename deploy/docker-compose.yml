@@ -1,0 +1,103 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: bitnami/postgresql
+    container_name: postgres
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres -U user" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: none
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: repliaction_user
+      POSTGRESQL_REPLICATION_PASSWORD: repliaction_password
+      POSTGRESQL_USERNAME: user
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: eschool
+      POSTGRESQL_PORT: 5432
+      TZ: "Europe/Moscow"
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  migrate:
+    image: migrate/migrate
+    container_name: 'migrate'
+    volumes:
+      - ./migrations:/migrations
+    command: ["-path", "/migrations", "-database",
+              "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable",
+              "up", "3"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+
+  redis:
+    image: redis
+    container_name: 'redis'
+    command: redis-server --save 60 1 --loglevel warning
+    logging:
+      driver: none
+    volumes:
+      - ./.data/redis:/var/lib/redis
+      - ./.data/redis-config:/usr/local/etc/storage/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  minio:
+    image: minio/minio
+    container_name: 'minio'
+    command: minio server /data --console-address :9001
+    logging:
+      driver: none
+    volumes:
+      - ./.data/minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env
+    networks:
+      - backend
+
+  app:
+    image: hostrey/eschool
+    container_name: 'app'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.bin/:/app/
+      - ./config/:/app/config/
+      - ./logs/:/app/logs
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: "backend"
+    driver: bridge
