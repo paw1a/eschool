@@ -79,13 +79,6 @@ services:
   app:
     image: hostrey/eschool
     container_name: 'app'
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./.bin/:/app/
-      - ./config/:/app/config/
-      - ./logs/:/app/logs
     environment:
       - HOST
       - PORT
