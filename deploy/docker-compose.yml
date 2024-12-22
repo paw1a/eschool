@@ -68,8 +68,11 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-    env_file:
-      - .env
+    environment:
+      - MINIO_ENDPOINT
+      - MINIO_BUCKET_NAME
+      - MINIO_ROOT_USER
+      - MINIO_ROOT_PASSWORD
     networks:
       - backend
 
@@ -83,8 +86,21 @@ services:
       - ./.bin/:/app/
       - ./config/:/app/config/
       - ./logs/:/app/logs
-    env_file:
-      - .env
+    environment:
+      - HOST
+      - PORT
+      - JWT_SECRET
+      - DB_NAME
+      - DB_HOST
+      - DB_PORT
+      - DB_USER
+      - DB_PASSWORD
+      - REDIS_URI
+      - MINIO_ENDPOINT
+      - MINIO_BUCKET_NAME
+      - MINIO_ROOT_USER
+      - MINIO_ROOT_PASSWORD
+      - PAYMENT_WALLET
     depends_on:
       postgres:
         condition: service_healthy
